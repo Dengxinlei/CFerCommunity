@@ -50,6 +50,8 @@ public class DynamicsServiceImpl implements DynamicsService {
 				dyClient.setOwner(dy.getOwner());
 				dyClient.setDescription(dy.getDescription());
 				dyClient.setCoverUrl(dy.getMaterials().get(0).getUrl());
+				dyClient.setPraisedCount(dy.getPraisedCount());
+				dyClient.setCommentCount(dy.getCommentCount());
 				List<String> urls = new ArrayList<>();
 				for(DynamicsMaterial dm : dy.getMaterials()) {
 					urls.add(dm.getUrl());

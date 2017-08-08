@@ -9,6 +9,9 @@
         <result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
         <result column="LOCATION" property="location" jdbcType="VARCHAR"/>
         <result column="STATUS" property="status" jdbcType="INTEGER"/>
+        <result column="PRAISED_COUNT" property="praisedCount" jdbcType="INTEGER"/>
+        <result column="COMMENT_COUNT" property="commentCount" jdbcType="INTEGER"/>
+        <result column="REPORT_COUNT" property="reportCount" jdbcType="INTEGER"/>
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
         <collection property="materials" ofType="com.yn.cfer.community.model.DynamicsMaterial" column="ID" select="findMaterials">
@@ -22,10 +25,10 @@
         </collection>
     </resultMap>
     <sql id="base_col" >
-    	ID, USER_ID, OWNER, HEAD_URL, DESCRIPTION, LOCATION, STATUS, CREATE_TIME, UPDATE_TIME
+    	ID, USER_ID, OWNER, HEAD_URL, DESCRIPTION, LOCATION, STATUS, PRAISED_COUNT, COMMENT_COUNT, REPORT_COUNT, CREATE_TIME, UPDATE_TIME
     </sql>
     <sql id="base_col_without_id" >
-    	USER_ID, OWNER, HEAD_URL, DESCRIPTION, LOCATION, STATUS, CREATE_TIME, UPDATE_TIME
+    	USER_ID, OWNER, HEAD_URL, DESCRIPTION, LOCATION, STATUS, PRAISED_COUNT, COMMENT_COUNT, REPORT_COUNT, CREATE_TIME, UPDATE_TIME
     </sql>
     <sql id="material_col_without_id" >
     	DYNAMICS_ID, URL, TYPE, CONTENT, CREATE_TIME, UPDATE_TIME

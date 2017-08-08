@@ -30,6 +30,20 @@ public class Dynamics {
 	 * 状态
 	 */
 	private Integer status;
+	/**
+	 * 点赞数量
+	 */
+	private Integer praisedCount;
+	/**
+	 * 评论数量
+	 */
+	private Integer commentCount;
+	/**
+	 * 举报数量
+	 */
+	private Integer reportCount;
+	
+	
 	private Date createTime;
 	private Date updateTime;
 	
@@ -93,5 +107,23 @@ public class Dynamics {
 	}
 	public void setMaterials(List<DynamicsMaterial> materials) {
 		this.materials = materials;
+	}
+	public Integer getPraisedCount() {
+		return praisedCount;
+	}
+	public void setPraisedCount(Integer praisedCount) {
+		this.praisedCount = praisedCount;
+	}
+	public Integer getCommentCount() {
+		return commentCount;
+	}
+	public void setCommentCount(Integer commentCount) {
+		this.commentCount = commentCount;
+	}
+	public Integer getReportCount() {
+		return reportCount;
+	}
+	public void setReportCount(Integer reportCount) {
+		this.reportCount = reportCount;
 	}
 }

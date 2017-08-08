@@ -1,4 +1,4 @@
-package com.jqxx.loan.web.servlet;
+package com.yn.cfer.web.servlet;
 
 import java.io.BufferedReader;
 import java.io.IOException;

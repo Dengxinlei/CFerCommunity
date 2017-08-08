@@ -1,4 +1,4 @@
-package com.jqxx.loan.web.converter;
+package com.yn.cfer.web.converter;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;

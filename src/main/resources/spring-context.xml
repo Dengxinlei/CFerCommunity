@@ -16,10 +16,10 @@
 
     <aop:aspectj-autoproxy proxy-target-class="true"/>
     <!-- 引入属性文件-->
-    <!-- <context:property-placeholder location="classpath:jdbc.properties"/> -->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
 
     <!-- 自动扫描包下的所有类-->
-    <context:component-scan base-package="com.jqxx.loan">
+    <context:component-scan base-package="com.yn.cfer">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 

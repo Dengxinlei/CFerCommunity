@@ -3,10 +3,10 @@
          id="WebApp_ID" version="2.4"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
-    <display-name>LoanExternal</display-name>
+    <display-name>CFerCommunity</display-name>
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:spring-context.xml</param-value>
+        <param-value>classpath:spring-context.xml,classpath:spring-mybatis.xml</param-value>
     </context-param>
 
     <!--字符集过滤器-->
@@ -25,7 +25,7 @@
     </filter-mapping>
     <filter>
         <filter-name>cors</filter-name>
-        <filter-class>com.jqxx.loan.web.servlet.CrossFilter</filter-class>
+        <filter-class>com.yn.cfer.web.servlet.CrossFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>cors</filter-name>

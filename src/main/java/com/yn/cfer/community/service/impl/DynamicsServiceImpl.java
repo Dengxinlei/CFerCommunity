@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.yn.cfer.community.dao.DynamicsDao;
 import com.yn.cfer.community.model.Dynamics;
@@ -62,5 +63,14 @@ public class DynamicsServiceImpl implements DynamicsService {
 			return destination;
 		}
 		return null;
+	}
+	@Transactional
+	public boolean publish(Integer userId, String description, List<String> picUrls) {
+		// 根据用户Id查询用户
+		
+		Dynamics dy = new Dynamics();
+		dy.setDescription(description);
+		
+		return false;
 	}
 }

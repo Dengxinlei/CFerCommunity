@@ -3,6 +3,8 @@
  */
 package com.yn.cfer.community.model;
 
+import java.util.List;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -14,6 +16,12 @@ public class CommunityRequest {
 	private Integer lastId;
 	private Integer count;
 	private Integer orientation;
+	
+	private String description;
+	@SerializedName("user_id")
+	private Integer userId;
+	@SerializedName("pic_urls")
+	private List<String> picUrls;
 	public Integer getLastId() {
 		return lastId;
 	}
@@ -31,5 +39,23 @@ public class CommunityRequest {
 	}
 	public void setOrientation(Integer orientation) {
 		this.orientation = orientation;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public Integer getUserId() {
+		return userId;
+	}
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+	public List<String> getPicUrls() {
+		return picUrls;
+	}
+	public void setPicUrls(List<String> picUrls) {
+		this.picUrls = picUrls;
 	}
 }

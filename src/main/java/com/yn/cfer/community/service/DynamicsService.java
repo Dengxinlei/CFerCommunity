@@ -18,4 +18,12 @@ public interface DynamicsService {
 	 * @return
 	 */
 	public List<DynamicsForClient> getHotList(Integer lastId, Integer orientation, Integer count);
+	/**
+	 * 发布动态
+	 * @param userId
+	 * @param description
+	 * @param picUrls
+	 * @return
+	 */
+	public boolean publish(Integer userId, String description, List<String> picUrls);
 }

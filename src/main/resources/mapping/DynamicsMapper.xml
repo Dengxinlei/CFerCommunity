@@ -34,13 +34,13 @@
     	DYNAMICS_ID, URL, TYPE, CONTENT, CREATE_TIME, UPDATE_TIME
     </sql>
     <select id="findDefault" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS ORDER BY CREATE_TIME DESC LIMIT #{count};
+    	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE REPORT_COUNT &lt;= 9 ORDER BY CREATE_TIME DESC LIMIT #{count};
     </select>
     <select id="findLatest" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE id &gt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count};
+    	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE REPORT_COUNT &lt;= 9 AND ID &gt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count};
     </select>
     <select id="findHistory" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE id &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count};
+    	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE REPORT_COUNT &lt;= 9 AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count};
     </select>
     
     <resultMap type="com.yn.cfer.community.model.DynamicsMaterial" id="MaterialResultMap">

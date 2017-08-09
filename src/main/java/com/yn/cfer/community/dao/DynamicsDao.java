@@ -13,6 +13,7 @@ import com.yn.cfer.community.model.Dynamics;
  * @author user
  */
 public interface DynamicsDao {
+	public int add(Dynamics dynamics);
 	/**
 	 * 查询20条数据， 不满20则全部返回
 	 * @return
@@ -32,4 +33,6 @@ public interface DynamicsDao {
 	 * @return
 	 */
 	public List<Dynamics> findHistory(@Param("lastId") Integer lastId, @Param("count")Integer count);
+	
+	public Dynamics findById(Integer id);
 }

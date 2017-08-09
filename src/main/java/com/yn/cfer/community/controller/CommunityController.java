@@ -4,6 +4,7 @@
 package com.yn.cfer.community.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class CommunityController {
 	@RequestMapping(value = "hot_list")
     @ResponseBody
     public ResponseMessage<List<DynamicsForClient>> hotList(@RequestBody CommunityRequest message) {
-    	ResponseMessage<List<DynamicsForClient>> responseMessage = new ResponseMessage<>();
+    	ResponseMessage<List<DynamicsForClient>> responseMessage = new ResponseMessage<List<DynamicsForClient>>();
     	Integer lastId = message.getLastId();
     	Integer count = message.getCount() == null ? 20 : message.getCount();
     	Integer orientation = message.getOrientation() == null ? 2 : message.getOrientation();
@@ -48,7 +49,7 @@ public class CommunityController {
 	@RequestMapping(value = "dynamics_publish")
     @ResponseBody
     public ResponseMessage<List<DynamicsForClient>> dynamicsPublish(@RequestBody CommunityRequest message) {
-    	ResponseMessage<List<DynamicsForClient>> responseMessage = new ResponseMessage<>();
+    	ResponseMessage<List<DynamicsForClient>> responseMessage = new ResponseMessage<List<DynamicsForClient>>();
     	String description = message.getDescription();
     	Integer userId = message.getUserId();
     	List<String> picUrls = message.getPicUrls();
@@ -57,13 +58,32 @@ public class CommunityController {
     		responseMessage.setMessage("miss required param");
     		return responseMessage;
     	}
-
-    	if(dynamicsService.publish(userId, description, picUrls)) {
-        	responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-    	} else {
+    	try{
+	    	if(dynamicsService.publish(userId, description, picUrls)) {
+	        	responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+	    	} else {
+	    		responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
+	    		responseMessage.setMessage("动态发布失败");
+	    	}
+    	} catch(Exception e) {
+    		e.printStackTrace();
     		responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
     		responseMessage.setMessage("动态发布失败");
     	}
+    	return responseMessage;
+    }
+	@RequestMapping(value = "dynamics_detail")
+    @ResponseBody
+    public ResponseMessage<Map<String, Object>> dynamicsDetail(@RequestBody CommunityRequest message) {
+    	ResponseMessage<Map<String, Object>> responseMessage = new ResponseMessage<Map<String, Object>>();
+    	Integer dynamicsId = message.getDynamicsId();
+    	if(dynamicsId == null) {
+    		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
+    		responseMessage.setMessage("miss required param");
+    		return responseMessage;
+    	}
+    	responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+		responseMessage.setData(dynamicsService.getDetail(dynamicsId));
     	return responseMessage;
     }
 }

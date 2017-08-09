@@ -8,6 +8,8 @@ import java.util.List;
  * 动态
  */
 public class Dynamics {
+	public final static Integer STATUS_NORMAL = 0;				// 正常
+	public final static Integer STATUS_CLOSE = 0;				// 屏蔽
 	private Integer id;
 	private Integer userId;
 	/**
@@ -29,19 +31,19 @@ public class Dynamics {
 	/**
 	 * 状态
 	 */
-	private Integer status;
+	private Integer status = 0;
 	/**
 	 * 点赞数量
 	 */
-	private Integer praisedCount;
+	private Integer praisedCount = 0;
 	/**
 	 * 评论数量
 	 */
-	private Integer commentCount;
+	private Integer commentCount = 0;
 	/**
 	 * 举报数量
 	 */
-	private Integer reportCount;
+	private Integer reportCount = 0;
 	
 	
 	private Date createTime;

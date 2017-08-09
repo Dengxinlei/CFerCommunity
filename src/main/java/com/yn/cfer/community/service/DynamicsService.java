@@ -4,6 +4,7 @@
 package com.yn.cfer.community.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.yn.cfer.community.model.DynamicsForClient;
 
@@ -26,4 +27,5 @@ public interface DynamicsService {
 	 * @return
 	 */
 	public boolean publish(Integer userId, String description, List<String> picUrls);
+	public Map<String, Object> getDetail(Integer dynamicsId);
 }

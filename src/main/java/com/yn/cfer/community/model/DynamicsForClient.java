@@ -3,6 +3,7 @@
  */
 package com.yn.cfer.community.model;
 
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
@@ -29,6 +30,8 @@ public class DynamicsForClient {
 	private String location;
 	@SerializedName("pic_list")
 	private List<String> picList;
+	@SerializedName("publish_time")
+	private Date publishTime;
 	public Integer getId() {
 		return id;
 	}
@@ -94,5 +97,11 @@ public class DynamicsForClient {
 	}
 	public void setPicList(List<String> picList) {
 		this.picList = picList;
+	}
+	public Date getPublishTime() {
+		return publishTime;
+	}
+	public void setPublishTime(Date publishTime) {
+		this.publishTime = publishTime;
 	}
 }

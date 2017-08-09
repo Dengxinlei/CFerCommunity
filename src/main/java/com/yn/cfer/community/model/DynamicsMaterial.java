@@ -7,6 +7,9 @@ import java.util.Date;
  * 动态素材
  */
 public class DynamicsMaterial {
+	public final static Integer TYPE_PIC = 0;
+	public final static Integer TYPE_VIDEO = 1;
+	public final static Integer TYPE_TEXT = 2;
 	private Integer id;
 	/**
 	 * 动态Id 外键
@@ -17,7 +20,7 @@ public class DynamicsMaterial {
 	 */
 	private String url;
 	/**
-	 * 素材类型   0=图片 1=视频 2=文本 4=语音...
+	 * 素材类型   0=图片 1=视频 2=文本 3=语音...
 	 */
 	private Integer type;
 	/**

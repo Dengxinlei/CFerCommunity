@@ -22,6 +22,8 @@ public class CommunityRequest {
 	private Integer userId;
 	@SerializedName("pic_urls")
 	private List<String> picUrls;
+	@SerializedName("dynamics_id")
+	private Integer dynamicsId;
 	public Integer getLastId() {
 		return lastId;
 	}
@@ -57,5 +59,11 @@ public class CommunityRequest {
 	}
 	public void setPicUrls(List<String> picUrls) {
 		this.picUrls = picUrls;
+	}
+	public Integer getDynamicsId() {
+		return dynamicsId;
+	}
+	public void setDynamicsId(Integer dynamicsId) {
+		this.dynamicsId = dynamicsId;
 	}
 }

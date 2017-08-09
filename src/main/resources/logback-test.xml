@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+	<jmxConfigurator />
+
+	<!--日志文件保存目录-->
+	<property name="LOG_HOME" value="C:/workfile/CFer/logs/"/>
+	<!--程序日志文件保存目录-->
+	<property name="SYSTEM_HOME" value="C:/workfile/CFer/logs/system"/>
+
+	<!--默认日志文件保存天数-->
+	<property name="LOG_MAX_HISTORY" value="180"/>
+	<!--警告日志文件保存天数-->
+	<property name="WARN_MAX_HISTORY" value="180"/>
+	<!--错误日志文件保存天数-->
+	<property name="ERROR_MAX_HISTORY" value="180"/>
+
+	<!--  控制台输出  -->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder charset="UTF-8">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{80}:%L - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!--  正常日志文件压缩保存  -->
+	<appender name="infoFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/loan-all.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<maxHistory>${LOG_MAX_HISTORY}</maxHistory>
+			<fileNamePattern>${LOG_HOME}/cfer-all.%d{yyyy-MM-dd}.log</fileNamePattern>
+		</rollingPolicy>
+
+		<encoder charset="UTF-8">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{80}:%L - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="gyroFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/gyroscop/gyro.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<maxHistory>${LOG_MAX_HISTORY}</maxHistory>
+			<fileNamePattern>${LOG_HOME}/gyroscop/gyro.%d{yyyy-MM-dd}.log</fileNamePattern>
+		</rollingPolicy>
+
+		<encoder charset="UTF-8">
+			<pattern>%msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="realTimeFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/realTimeFile/realTimeFile.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<maxHistory>${LOG_MAX_HISTORY}</maxHistory>
+			<fileNamePattern>${LOG_HOME}/realTimeFile/realTimeFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+		</rollingPolicy>
+
+		<encoder charset="UTF-8">
+			<pattern>%msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="userActionFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/userActionFile/userActionFile.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<maxHistory>${LOG_MAX_HISTORY}</maxHistory>
+			<fileNamePattern>${LOG_HOME}/userActionFile/userActionFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+		</rollingPolicy>
+		<encoder charset="UTF-8">
+			<pattern>%msg%n</pattern>
+		</encoder>
+	</appender>
+	<!--  程序异常日志文件压缩保存  -->
+	<appender name="sysWarnFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${SYSTEM_HOME}/loan-warn.system.log</file>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>WARN</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<maxHistory>${WARN_MAX_HISTORY}</maxHistory>
+			<fileNamePattern>${SYSTEM_HOME}/warn/loan-warn.system.%d{yyyy-MM-dd}.log</fileNamePattern>
+		</rollingPolicy>
+
+		<encoder charset="UTF-8">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{80}:%L - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!--  程序错误日志文件压缩保存  -->
+	<appender name="sysErrorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${SYSTEM_HOME}/loan-error.system.log</file>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<maxHistory>${ERROR_MAX_HISTORY}</maxHistory>
+			<fileNamePattern>${SYSTEM_HOME}/error/cfer-error.system.%d{yyyy-MM-dd}.log</fileNamePattern>
+		</rollingPolicy>
+
+		<encoder charset="UTF-8">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{80}:%L - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<root level="info">
+		<appender-ref ref="console"/>
+		<appender-ref ref="infoFile"/>
+	</root>
+	<!--程序日志-->
+	<logger name="com.yn.cfer" level="debug">
+		<appender-ref ref="sysWarnFile"/>
+		<appender-ref ref="sysErrorFile"/>
+	</logger>
+
+	<!--程序日志-->
+	<logger name="errorLogger" level="error">
+		<appender-ref ref="sysErrorFile"/>
+	</logger>
+	
+	<!-- 定义第三方日志输出级别  -->
+	<logger name="org.mybatis" level="info"/>
+	<logger name="org.springframework" level="info"/>
+	<logger name="org.springframework.jdbc" level="info"/>
+	<logger name="java.sql" level="info"/>
+	<logger name="com.opensymphony" level="INFO"/>
+	<logger name="org.apache" level="INFO"/>
+</configuration>

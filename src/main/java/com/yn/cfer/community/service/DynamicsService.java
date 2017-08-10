@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.yn.cfer.community.model.DynamicsForClient;
+import com.yn.cfer.web.exceptions.BusinessException;
 
 /**
  * @author user
@@ -27,5 +28,26 @@ public interface DynamicsService {
 	 * @return
 	 */
 	public boolean publish(Integer userId, String description, List<String> picUrls);
+	/**
+	 * 获取动态详情
+	 * @param dynamicsId
+	 * @return
+	 */
 	public Map<String, Object> getDetail(Integer dynamicsId);
+	/**
+	 * 动态-点赞
+	 * @param dynamicsId
+	 * @param userId
+	 * @return
+	 * @throws BusinessException
+	 */
+	public boolean praise(Integer dynamicsId, Integer userId) throws BusinessException;
+	/**
+	 * 动态-举报
+	 * @param dynamicsId
+	 * @param userId
+	 * @return
+	 * @throws BusinessException
+	 */
+	public boolean report(Integer dynamicsId, Integer userId) throws BusinessException;
 }

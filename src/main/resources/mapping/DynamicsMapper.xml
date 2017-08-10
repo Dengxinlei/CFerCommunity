@@ -63,4 +63,18 @@
     <select id="findMaterials" resultMap="MaterialResultMap" parameterType="int">
     	SELECT <include refid="material_col_without_id"></include> FROM T_CY_DYNAMICS_MATERIAL WHERE DYNAMICS_ID = #{dynamicsId}
     </select>
+    <update id="updateActionCount" parameterType="java.util.Map">
+    	<!-- SELECT * FROM T_CY_DYNAMICS where PRAISED_COUNT = #{praisedCount} and COMMENT_COUNT = #{commentCount} and REPORT_COUNT = #{reportCount} and REPORT_COUNT = #{type} -->
+    	UPDATE T_CY_DYNAMICS 
+    	<trim prefix="SET" suffixOverrides=",">
+    		<if test="praisedCount != null and type == 1">PRAISED_COUNT = PRAISED_COUNT + 1,</if>
+    		<if test="praisedCount != null and type == 2">PRAISED_COUNT = PRAISED_COUNT - 1,</if>
+    		<if test="commentCount != null and type == 1">COMMENT_COUNT = COMMENT_COUNT + 1,</if>
+    		<if test="commentCount != null and type == 2">COMMENT_COUNT = COMMENT_COUNT - 1,</if>
+    		<if test="reportCount != null and type == 1">REPORT_COUNT = REPORT_COUNT + 1,</if>
+    		<if test="reportCount != null and type == 2">REPORT_COUNT = REPORT_COUNT - 1,</if>
+    		UPDATE_TIME = NOW()
+    	</trim>
+    	 WHERE ID = #{dynamicsId}
+    </update>
 </mapper>

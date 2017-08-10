@@ -18,6 +18,7 @@ import com.yn.cfer.community.model.CommunityRequest;
 import com.yn.cfer.community.model.DynamicsForClient;
 import com.yn.cfer.community.service.DynamicsService;
 import com.yn.cfer.web.common.constant.ErrorCode;
+import com.yn.cfer.web.exceptions.BusinessException;
 import com.yn.cfer.web.protocol.ResponseMessage;
 
 /**
@@ -84,6 +85,56 @@ public class CommunityController {
     	}
     	responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
 		responseMessage.setData(dynamicsService.getDetail(dynamicsId));
+    	return responseMessage;
+    }
+	@RequestMapping(value = "praise")
+    @ResponseBody
+    public ResponseMessage<Boolean> praise(@RequestBody CommunityRequest message) {
+    	ResponseMessage<Boolean> responseMessage = new ResponseMessage<Boolean>();
+    	Integer dynamicsId = message.getDynamicsId();
+    	Integer userId = message.getUserId();
+    	if(dynamicsId == null || userId == null) {
+    		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
+    		responseMessage.setMessage("miss required param");
+    		return responseMessage;
+    	}
+		try {
+			responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+			responseMessage.setData(dynamicsService.praise(dynamicsId, userId));
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			responseMessage.setCode(e.getCode());
+			responseMessage.setMessage(e.getMessage());
+		} catch(Exception ex) {
+			ex.printStackTrace();
+			responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
+			responseMessage.setMessage("点赞失败");
+		}
+    	return responseMessage;
+    }
+	@RequestMapping(value = "report")
+    @ResponseBody
+    public ResponseMessage<Boolean> report(@RequestBody CommunityRequest message) {
+    	ResponseMessage<Boolean> responseMessage = new ResponseMessage<Boolean>();
+    	Integer dynamicsId = message.getDynamicsId();
+    	Integer userId = message.getUserId();
+    	if(dynamicsId == null || userId == null) {
+    		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
+    		responseMessage.setMessage("miss required param");
+    		return responseMessage;
+    	}
+		try {
+			responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+			responseMessage.setData(dynamicsService.report(dynamicsId, userId));
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			responseMessage.setCode(e.getCode());
+			responseMessage.setMessage(e.getMessage());
+		} catch(Exception ex) {
+			ex.printStackTrace();
+			responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
+			responseMessage.setMessage("举报失败");
+		}
     	return responseMessage;
     }
 }

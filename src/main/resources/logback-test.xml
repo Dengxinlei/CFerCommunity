@@ -2,7 +2,7 @@
 <configuration debug="false">
 	<jmxConfigurator />
 
-	<!--日志文件保存目录-->
+	<!--日志文件保存目录 /usr/local/backup_war/-->
 	<property name="LOG_HOME" value="C:/workfile/CFer/logs/"/>
 	<!--程序日志文件保存目录-->
 	<property name="SYSTEM_HOME" value="C:/workfile/CFer/logs/system"/>

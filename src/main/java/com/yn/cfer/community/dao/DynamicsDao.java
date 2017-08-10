@@ -4,6 +4,7 @@
 package com.yn.cfer.community.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -35,4 +36,7 @@ public interface DynamicsDao {
 	public List<Dynamics> findHistory(@Param("lastId") Integer lastId, @Param("count")Integer count);
 	
 	public Dynamics findById(Integer id);
+	
+	public int updateActionCount(Map<String, Object> map);
 }
+

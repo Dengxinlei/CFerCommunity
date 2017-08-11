@@ -25,4 +25,12 @@
      <delete id="delete">
     	DELETE FROM T_CY_ACTION_RECORD WHERE DYNAMICS_ID = #{dynamicsId} AND USER_ID = #{userId}
     </delete>
+    <select id="findByDynamicsIdsAndUserId" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_CY_ACTION_RECORD 
+    	WHERE DYNAMICS_ID in
+    	<foreach collection="dynamicsIds" index="index" item="item" separator="," open="(" close=")">
+    		#{item}	
+    	</foreach>
+    	AND USER_ID = #{userId} AND TYPE = #{type}
+    </select>
 </mapper>

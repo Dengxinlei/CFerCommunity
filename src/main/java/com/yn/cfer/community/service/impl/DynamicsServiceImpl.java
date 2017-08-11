@@ -43,7 +43,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 	private CommentDao commentDao;
 	@Autowired
 	private DynamicsActionRecordDao dynamicsActionRecordDao;
-	public List<DynamicsForClient> getHotList(Integer lastId, Integer orientation, Integer count) {
+	public List<DynamicsForClient> getHotList(Integer lastId, Integer orientation, Integer userId, Integer count) {
 		// TODO Auto-generated method stub
 		List<Dynamics> dynamicsList = null;
 		if(lastId.intValue() == -1) {
@@ -55,15 +55,28 @@ public class DynamicsServiceImpl implements DynamicsService {
 				dynamicsList = dynamicsDao.findHistory(lastId, count);
 			}
 		}
-		return buildDynamicsForClientList(dynamicsList);
+		return buildDynamicsForClientList(dynamicsList, userId);
 	}
-	private List<DynamicsForClient> buildDynamicsForClientList(List<Dynamics> dynamicsList) {
+	private List<DynamicsForClient> buildDynamicsForClientList(List<Dynamics> dynamicsList, Integer userId) {
 		if(dynamicsList != null && dynamicsList.size() >= 1) {
 			List<DynamicsForClient> destination = new ArrayList<DynamicsForClient>();
 			DynamicsForClient dyClient = null;
+			List<Integer> dynamicsIds = new ArrayList<Integer>();
 			for(Dynamics dy : dynamicsList) {
 				dyClient = buildDynamicsForClient(dy);
+				dynamicsIds.add(dy.getId());
 				destination.add(dyClient);
+			}
+			List<DynamicsActionRecord> actionRecords = dynamicsActionRecordDao.findByDynamicsIdsAndUserId(dynamicsIds, userId, DynamicsActionRecord.TYPE_PRAISE);
+			if(actionRecords != null && actionRecords.size() >= 1) {
+				for(int i = 0; i < destination.size(); i++) {
+					for(int j = 0; j < actionRecords.size(); j++) {
+						if(destination.get(i).getId().intValue() == actionRecords.get(j).getDynamicsId().intValue()) {
+							// 已赞
+							destination.get(i).setIsPraise(1);		
+						}
+					}
+				}
 			}
 			return destination;
 		}
@@ -115,9 +128,14 @@ public class DynamicsServiceImpl implements DynamicsService {
 		return true;
 	}
 	
-	public Map<String, Object> getDetail(Integer dynamicsId) {
+	public Map<String, Object> getDetail(Integer dynamicsId, Integer userId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("dynamics", buildDynamicsForClient(dynamicsDao.findById(dynamicsId)));
+		DynamicsForClient dc = buildDynamicsForClient(dynamicsDao.findById(dynamicsId));
+		if(dynamicsActionRecordDao.findByDynamicsIdAndUserId(dynamicsId, userId, DynamicsActionRecord.TYPE_PRAISE) != null) {
+			// 已赞
+			dc.setIsPraise(1);
+		}
+		map.put("dynamics", dc);
 		map.put("commentList", buildCommentForClientList(commentDao.findDefault(dynamicsId, 20)));
 		return map;
 	}

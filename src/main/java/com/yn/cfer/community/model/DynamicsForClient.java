@@ -25,6 +25,9 @@ public class DynamicsForClient {
 	private Integer praisedCount = 0;
 	@SerializedName("comment_count")
 	private Integer commentCount = 0;
+	/**
+	 * 1： 已赞    0： 未赞   默认未赞
+	 */
 	@SerializedName("is_praise")
 	private Integer isPraise = 0;
 	private String location;

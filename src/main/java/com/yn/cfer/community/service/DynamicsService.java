@@ -19,7 +19,7 @@ public interface DynamicsService {
 	 * @param count
 	 * @return
 	 */
-	public List<DynamicsForClient> getHotList(Integer lastId, Integer orientation, Integer count);
+	public List<DynamicsForClient> getHotList(Integer lastId, Integer orientation, Integer userId, Integer count);
 	/**
 	 * 发布动态
 	 * @param userId
@@ -33,7 +33,7 @@ public interface DynamicsService {
 	 * @param dynamicsId
 	 * @return
 	 */
-	public Map<String, Object> getDetail(Integer dynamicsId);
+	public Map<String, Object> getDetail(Integer dynamicsId, Integer userId);
 	/**
 	 * 动态-点赞
 	 * @param dynamicsId

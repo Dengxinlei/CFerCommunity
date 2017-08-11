@@ -3,7 +3,7 @@
 <mapper namespace="com.yn.cfer.community.dao.DynamicsDao">
     <resultMap id="BaseResultMap" type="com.yn.cfer.community.model.Dynamics">
         <id column="ID" property="id" jdbcType="INTEGER"/>
-        <result column="USER_ID" property="userId" jdbcType="INTEGER"/>
+        <result column="MEMBER_ID" property="memberId" jdbcType="INTEGER"/>
         <result column="OWNER" property="owner" jdbcType="VARCHAR"/>
         <result column="HEAD_URL" property="headUrl" jdbcType="VARCHAR"/>
         <result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
@@ -25,17 +25,17 @@
         </collection>
     </resultMap>
     <sql id="base_col" >
-    	ID, USER_ID, OWNER, HEAD_URL, DESCRIPTION, LOCATION, STATUS, PRAISED_COUNT, COMMENT_COUNT, REPORT_COUNT, CREATE_TIME, UPDATE_TIME
+    	ID, MEMBER_ID, OWNER, HEAD_URL, DESCRIPTION, LOCATION, STATUS, PRAISED_COUNT, COMMENT_COUNT, REPORT_COUNT, CREATE_TIME, UPDATE_TIME
     </sql>
     <sql id="base_col_without_id" >
-    	USER_ID, OWNER, HEAD_URL, DESCRIPTION, LOCATION, STATUS, PRAISED_COUNT, COMMENT_COUNT, REPORT_COUNT, CREATE_TIME, UPDATE_TIME
+    	MEMBER_ID, OWNER, HEAD_URL, DESCRIPTION, LOCATION, STATUS, PRAISED_COUNT, COMMENT_COUNT, REPORT_COUNT, CREATE_TIME, UPDATE_TIME
     </sql>
     <sql id="material_col_without_id" >
     	DYNAMICS_ID, URL, TYPE, CONTENT, CREATE_TIME, UPDATE_TIME
     </sql>
     <insert id="add" parameterType="com.yn.cfer.community.model.Dynamics" useGeneratedKeys="true" keyProperty="id">
     	INSERT INTO T_CY_DYNAMICS (<include refid="base_col_without_id"></include>)
-    	VALUES (#{userId}, #{owner}, #{headUrl}, #{description}, #{location}, #{status},
+    	VALUES (#{memberId}, #{owner}, #{headUrl}, #{description}, #{location}, #{status},
     	 #{praisedCount}, #{commentCount}, #{reportCount}, #{createTime}, #{updateTime})
     </insert>
     <select id="findDefault" resultMap="BaseResultMap">

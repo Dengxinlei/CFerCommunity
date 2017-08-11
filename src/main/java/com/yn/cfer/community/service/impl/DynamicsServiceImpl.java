@@ -18,12 +18,13 @@ import com.yn.cfer.comment.model.CommentForClient;
 import com.yn.cfer.community.dao.DynamicsActionRecordDao;
 import com.yn.cfer.community.dao.DynamicsDao;
 import com.yn.cfer.community.dao.DynamicsMaterialDao;
+import com.yn.cfer.community.dao.MemberDao;
 import com.yn.cfer.community.dao.UserDao;
 import com.yn.cfer.community.model.Dynamics;
 import com.yn.cfer.community.model.DynamicsActionRecord;
 import com.yn.cfer.community.model.DynamicsForClient;
 import com.yn.cfer.community.model.DynamicsMaterial;
-import com.yn.cfer.community.model.User;
+import com.yn.cfer.community.model.Member;
 import com.yn.cfer.community.service.DynamicsService;
 import com.yn.cfer.web.common.constant.ErrorCode;
 import com.yn.cfer.web.exceptions.BusinessException;
@@ -42,8 +43,10 @@ public class DynamicsServiceImpl implements DynamicsService {
 	@Autowired
 	private CommentDao commentDao;
 	@Autowired
+	private MemberDao memberDao;
+	@Autowired
 	private DynamicsActionRecordDao dynamicsActionRecordDao;
-	public List<DynamicsForClient> getHotList(Integer lastId, Integer orientation, Integer userId, Integer count) {
+	public List<DynamicsForClient> getHotList(Integer lastId, Integer orientation, Integer memberId, Integer count) {
 		// TODO Auto-generated method stub
 		List<Dynamics> dynamicsList = null;
 		if(lastId.intValue() == -1) {
@@ -55,9 +58,9 @@ public class DynamicsServiceImpl implements DynamicsService {
 				dynamicsList = dynamicsDao.findHistory(lastId, count);
 			}
 		}
-		return buildDynamicsForClientList(dynamicsList, userId);
+		return buildDynamicsForClientList(dynamicsList, memberId);
 	}
-	private List<DynamicsForClient> buildDynamicsForClientList(List<Dynamics> dynamicsList, Integer userId) {
+	private List<DynamicsForClient> buildDynamicsForClientList(List<Dynamics> dynamicsList, Integer memberId) {
 		if(dynamicsList != null && dynamicsList.size() >= 1) {
 			List<DynamicsForClient> destination = new ArrayList<DynamicsForClient>();
 			DynamicsForClient dyClient = null;
@@ -67,7 +70,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 				dynamicsIds.add(dy.getId());
 				destination.add(dyClient);
 			}
-			List<DynamicsActionRecord> actionRecords = dynamicsActionRecordDao.findByDynamicsIdsAndUserId(dynamicsIds, userId, DynamicsActionRecord.TYPE_PRAISE);
+			List<DynamicsActionRecord> actionRecords = dynamicsActionRecordDao.findByDynamicsIdsAndUserId(dynamicsIds, memberId, DynamicsActionRecord.TYPE_PRAISE);
 			if(actionRecords != null && actionRecords.size() >= 1) {
 				for(int i = 0; i < destination.size(); i++) {
 					for(int j = 0; j < actionRecords.size(); j++) {
@@ -88,7 +91,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 			dyClient.setId(dy.getId());
 			dyClient.setLocation(dy.getLocation());
 			dyClient.setHeadUrl(dy.getHeadUrl());
-			dyClient.setUserId(dy.getUserId());
+			dyClient.setMemberId(dy.getMemberId());
 			dyClient.setOwner(dy.getOwner());
 			dyClient.setDescription(dy.getDescription());
 			dyClient.setCoverUrl(dy.getMaterials() != null && dy.getMaterials().size() >= 1? dy.getMaterials().get(0).getUrl() : null);
@@ -105,15 +108,15 @@ public class DynamicsServiceImpl implements DynamicsService {
 		return null;
 	}
 	@Transactional
-	public boolean publish(Integer userId, String description, List<String> picUrls) {
-		// 根据用户Id查询用户
-		User user = userDao.findById(userId);
+	public boolean publish(Integer memberId, String description, List<String> picUrls) {
+		// 根据memberId查询会员
+		Member member = memberDao.findById(memberId);
 		Dynamics dy = new Dynamics();
 		dy.setDescription(description);
-		dy.setHeadUrl(user.getHeadUrl());
+		dy.setHeadUrl(member.getAvatar());
 		dy.setStatus(Dynamics.STATUS_NORMAL);
-		dy.setUserId(userId);
-		dy.setOwner(user.getUserName());
+		dy.setMemberId(memberId);
+		dy.setOwner(member.getName());
 		dynamicsDao.add(dy);
 		List<DynamicsMaterial> dmList = new ArrayList<DynamicsMaterial>();
 		DynamicsMaterial dm = null;
@@ -128,10 +131,10 @@ public class DynamicsServiceImpl implements DynamicsService {
 		return true;
 	}
 	
-	public Map<String, Object> getDetail(Integer dynamicsId, Integer userId) {
+	public Map<String, Object> getDetail(Integer dynamicsId, Integer memberId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		DynamicsForClient dc = buildDynamicsForClient(dynamicsDao.findById(dynamicsId));
-		if(dynamicsActionRecordDao.findByDynamicsIdAndUserId(dynamicsId, userId, DynamicsActionRecord.TYPE_PRAISE) != null) {
+		if(dynamicsActionRecordDao.findByDynamicsIdAndUserId(dynamicsId, memberId, DynamicsActionRecord.TYPE_PRAISE) != null) {
 			// 已赞
 			dc.setIsPraise(1);
 		}
@@ -155,43 +158,43 @@ public class DynamicsServiceImpl implements DynamicsService {
 	private CommentForClient buildCommentForClient(Comment comment) {
 		if(comment != null) {
 			CommentForClient cc = new CommentForClient();
-			cc.setAuthor(comment.getUserName());
+			cc.setAuthor(comment.getMemberName());
 			cc.setContent(comment.getContent());
-			cc.setHeadUrl(comment.getUserHeadUrl());
+			cc.setHeadUrl(comment.getMemberHeadUrl());
 			cc.setPublishTime(comment.getCreateTime());
-			cc.setReply(comment.getReplyUserName());
-			cc.setUserId(comment.getUserId());
+			cc.setReply(comment.getReplyMemberName());
+			cc.setMemberId(comment.getMemberId());
 			return cc;
 		}
 		return null;
 	}
 	
 	@Transactional
-	public boolean praise(Integer dynamicsId, Integer userId) throws BusinessException {
+	public boolean praise(Integer dynamicsId, Integer memberId) throws BusinessException {
 		Dynamics dy = dynamicsDao.findById(dynamicsId);
 		if(dy == null) {
 			throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "动态不存在");
 		}
-		DynamicsActionRecord dar = dynamicsActionRecordDao.findByDynamicsIdAndUserId(dynamicsId, userId, DynamicsActionRecord.TYPE_PRAISE);
+		DynamicsActionRecord dar = dynamicsActionRecordDao.findByDynamicsIdAndUserId(dynamicsId, memberId, DynamicsActionRecord.TYPE_PRAISE);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("dynamicsId", dynamicsId);
 		map.put("praisedCount", dy.getPraisedCount());
 		if(dar != null) {
 			map.put("type", 2);
 			dynamicsDao.updateActionCount(map);
-			dynamicsActionRecordDao.delete(dynamicsId, userId);
+			dynamicsActionRecordDao.delete(dynamicsId, memberId);
 		} else {
 			map.put("type", 1);
 			dynamicsDao.updateActionCount(map);
-			saveActionRecord(dynamicsId, userId, DynamicsActionRecord.TYPE_PRAISE);
+			saveActionRecord(dynamicsId, memberId, DynamicsActionRecord.TYPE_PRAISE);
 		}
 		return true;
 	}
-	private int saveActionRecord(Integer dynamicsId, Integer userId, Integer type) {
+	private int saveActionRecord(Integer dynamicsId, Integer memberId, Integer type) {
 		DynamicsActionRecord actionRecord = new DynamicsActionRecord();
 		actionRecord.setDynamicsId(dynamicsId);
 		actionRecord.setType(type);
-		actionRecord.setUserId(userId);
+		actionRecord.setMemberId(memberId);
 		dynamicsActionRecordDao.add(actionRecord);
 		return 0;
 	}

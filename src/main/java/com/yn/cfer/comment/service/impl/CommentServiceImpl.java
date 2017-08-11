@@ -34,12 +34,12 @@ public class CommentServiceImpl implements CommentService {
 	private CommentForClient buildCommentForClient(Comment comment) {
 		if(comment != null) {
 			CommentForClient cc = new CommentForClient();
-			cc.setAuthor(comment.getUserName());
+			cc.setAuthor(comment.getMemberName());
 			cc.setContent(comment.getContent());
-			cc.setHeadUrl(comment.getUserHeadUrl());
+			cc.setHeadUrl(comment.getMemberHeadUrl());
 			cc.setPublishTime(comment.getCreateTime());
-			cc.setReply(comment.getReplyUserName());
-			cc.setUserId(comment.getUserId());
+			cc.setReply(comment.getReplyMemberName());
+			cc.setMemberId(comment.getMemberId());
 			return cc;
 		}
 		return null;

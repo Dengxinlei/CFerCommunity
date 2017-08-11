@@ -11,7 +11,7 @@ public class Dynamics {
 	public final static Integer STATUS_NORMAL = 0;				// 正常
 	public final static Integer STATUS_CLOSE = 0;				// 屏蔽
 	private Integer id;
-	private Integer userId;
+	private Integer memberId;
 	/**
 	 * 发布者
 	 */
@@ -56,11 +56,11 @@ public class Dynamics {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getUserId() {
-		return userId;
+	public Integer getMemberId() {
+		return memberId;
 	}
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setMemberId(Integer memberId) {
+		this.memberId = memberId;
 	}
 	public String getOwner() {
 		return owner;

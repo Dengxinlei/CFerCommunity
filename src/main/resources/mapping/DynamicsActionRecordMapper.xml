@@ -4,26 +4,26 @@
     <resultMap id="BaseResultMap" type="com.yn.cfer.community.model.DynamicsActionRecord">
         <id column="ID" property="id" jdbcType="INTEGER"/>
         <result column="DYNAMICS_ID" property="dynamicsId" jdbcType="INTEGER"/>
-        <result column="USER_ID" property="userId" jdbcType="INTEGER"/>
+        <result column="MEMBER_ID" property="memberId" jdbcType="INTEGER"/>
         <result column="TYPE" property="type" jdbcType="INTEGER"/>
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="base_col" >
-    	ID, DYNAMICS_ID, USER_ID, TYPE, CREATE_TIME, UPDATE_TIME
+    	ID, DYNAMICS_ID, MEMBER_ID, TYPE, CREATE_TIME, UPDATE_TIME
     </sql>
     <sql id="base_col_without_id" >
-    	DYNAMICS_ID, USER_ID, TYPE, CREATE_TIME, UPDATE_TIME
+    	DYNAMICS_ID, MEMBER_ID, TYPE, CREATE_TIME, UPDATE_TIME
     </sql>
     <insert id="add" parameterType="com.yn.cfer.community.model.DynamicsActionRecord">
     	INSERT INTO T_CY_ACTION_RECORD (<include refid="base_col_without_id"></include>) 
-    	VALUES(#{dynamicsId}, #{userId}, #{type}, #{createTime}, #{updateTime})
+    	VALUES(#{dynamicsId}, #{memberId}, #{type}, #{createTime}, #{updateTime})
     </insert>
     <select id="findByDynamicsIdAndUserId" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_CY_ACTION_RECORD WHERE DYNAMICS_ID = #{dynamicsId} AND USER_ID = #{userId} AND TYPE = #{type};
+    	SELECT <include refid="base_col"></include> FROM T_CY_ACTION_RECORD WHERE DYNAMICS_ID = #{dynamicsId} AND MEMBER_ID = #{memberId} AND TYPE = #{type};
     </select>
      <delete id="delete">
-    	DELETE FROM T_CY_ACTION_RECORD WHERE DYNAMICS_ID = #{dynamicsId} AND USER_ID = #{userId}
+    	DELETE FROM T_CY_ACTION_RECORD WHERE DYNAMICS_ID = #{dynamicsId} AND MEMBER_ID = #{memberId}
     </delete>
     <select id="findByDynamicsIdsAndUserId" resultMap="BaseResultMap">
     	SELECT <include refid="base_col"></include> FROM T_CY_ACTION_RECORD 
@@ -31,6 +31,6 @@
     	<foreach collection="dynamicsIds" index="index" item="item" separator="," open="(" close=")">
     		#{item}	
     	</foreach>
-    	AND USER_ID = #{userId} AND TYPE = #{type}
+    	AND MEMBER_ID = #{memberId} AND TYPE = #{type}
     </select>
 </mapper>

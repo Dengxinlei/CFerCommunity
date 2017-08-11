@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yn.cfer.community.dao.MemberDao">
+    <resultMap id="BaseResultMap" type="com.yn.cfer.community.model.Member">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="AVATAR" property="avatar" jdbcType="VARCHAR"/>
+        <result column="BOX_ID" property="boxId" jdbcType="INTEGER"/>
+        <result column="HEIGHT" property="height" jdbcType="INTEGER"/>
+        <result column="MEMBER_DAYS" property="memberDays" jdbcType="INTEGER"/>
+        <result column="MEMBER_START_TIME" property="memberStartTime" jdbcType="TIMESTAMP"/>
+        <result column="MEMBER_END_TIME" property="memberEndTime" jdbcType="TIMESTAMP"/>
+        <result column="MEMBER_REMAIN_NUM" property="memberRemainNum" jdbcType="INTEGER"/>
+        <result column="MEMBER_TYPE" property="memberType" jdbcType="INTEGER"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="PHONE" property="phone" jdbcType="VARCHAR"/>
+        <result column="PIN_CODE" property="pinCode" jdbcType="VARCHAR"/>
+        <result column="SEX" property="sex" jdbcType="INTEGER"/>
+        <result column="STATUS" property="status" jdbcType="INTEGER"/>
+        <result column="WEIGHT" property="weight" jdbcType="INTEGER"/>
+        <result column="BIRTHDAY" property="birthday" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="base_col" >
+    	ID, AVATAR, BOX_ID, HEIGHT, MEMBER_DAYS, MEMBER_START_TIME, MEMBER_END_TIME, MEMBER_REMAIN_NUM, MEMBER_TYPE,NAME,PHONE,PIN_CODE,SEX,STATUS,WEIGHT,BIRTHDAY       
+    </sql>
+    <sql id="base_col_without_id" >
+    	AVATAR, BOX_ID, HEIGHT, MEMBER_DAYS, MEMBER_START_TIME, MEMBER_END_TIME, MEMBER_REMAIN_NUM, MEMBER_TYPE,NAME,PHONE,PIN_CODE,SEX,STATUS,WEIGHT,BIRTHDAY
+    </sql>
+    <select id="findById" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER WHERE ID = #{id};
+    </select>
+</mapper>

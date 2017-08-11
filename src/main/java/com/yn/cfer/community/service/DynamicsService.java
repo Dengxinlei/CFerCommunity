@@ -19,35 +19,35 @@ public interface DynamicsService {
 	 * @param count
 	 * @return
 	 */
-	public List<DynamicsForClient> getHotList(Integer lastId, Integer orientation, Integer userId, Integer count);
+	public List<DynamicsForClient> getHotList(Integer lastId, Integer orientation, Integer memberId, Integer count);
 	/**
 	 * 发布动态
-	 * @param userId
+	 * @param memberId
 	 * @param description
 	 * @param picUrls
 	 * @return
 	 */
-	public boolean publish(Integer userId, String description, List<String> picUrls);
+	public boolean publish(Integer memberId, String description, List<String> picUrls);
 	/**
 	 * 获取动态详情
 	 * @param dynamicsId
 	 * @return
 	 */
-	public Map<String, Object> getDetail(Integer dynamicsId, Integer userId);
+	public Map<String, Object> getDetail(Integer dynamicsId, Integer memberId);
 	/**
 	 * 动态-点赞
 	 * @param dynamicsId
-	 * @param userId
+	 * @param memberId
 	 * @return
 	 * @throws BusinessException
 	 */
-	public boolean praise(Integer dynamicsId, Integer userId) throws BusinessException;
+	public boolean praise(Integer dynamicsId, Integer memberId) throws BusinessException;
 	/**
 	 * 动态-举报
 	 * @param dynamicsId
-	 * @param userId
+	 * @param memberId
 	 * @return
 	 * @throws BusinessException
 	 */
-	public boolean report(Integer dynamicsId, Integer userId) throws BusinessException;
+	public boolean report(Integer dynamicsId, Integer memberId) throws BusinessException;
 }

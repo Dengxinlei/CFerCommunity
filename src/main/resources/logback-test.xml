@@ -3,9 +3,9 @@
 	<jmxConfigurator />
 
 	<!--日志文件保存目录 /usr/local/backup_war/-->
-	<property name="LOG_HOME" value="C:/workfile/CFer/logs/"/>
+	<property name="LOG_HOME" value="/usr/local/backup_war/workfile/CFer/logs/"/>
 	<!--程序日志文件保存目录-->
-	<property name="SYSTEM_HOME" value="C:/workfile/CFer/logs/system"/>
+	<property name="SYSTEM_HOME" value="/usr/local/backup_war/workfile/CFer/logs/system"/>
 
 	<!--默认日志文件保存天数-->
 	<property name="LOG_MAX_HISTORY" value="180"/>

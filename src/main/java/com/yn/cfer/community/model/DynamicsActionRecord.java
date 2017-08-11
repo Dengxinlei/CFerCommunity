@@ -11,7 +11,7 @@ public class DynamicsActionRecord {
 	public final static Integer TYPE_REPORT = 2;
 	private Integer id;
 	private Integer dynamicsId;
-	private Integer userId;
+	private Integer memberId;
 	/**
 	 * 0=点赞 1=评论  2=举报
 	 */
@@ -30,11 +30,11 @@ public class DynamicsActionRecord {
 	public void setDynamicsId(Integer dynamicsId) {
 		this.dynamicsId = dynamicsId;
 	}
-	public Integer getUserId() {
-		return userId;
+	public Integer getMemberId() {
+		return memberId;
 	}
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setMemberId(Integer memberId) {
+		this.memberId = memberId;
 	}
 	public Integer getType() {
 		return type;

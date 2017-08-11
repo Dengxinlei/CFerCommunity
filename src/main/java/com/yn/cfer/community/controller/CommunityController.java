@@ -34,17 +34,17 @@ public class CommunityController {
     @ResponseBody
     public ResponseMessage<List<DynamicsForClient>> hotList(@RequestBody CommunityRequest message) {
     	ResponseMessage<List<DynamicsForClient>> responseMessage = new ResponseMessage<List<DynamicsForClient>>();
-    	Integer userId = message.getUserId();
+    	Integer memberId = message.getMemberId();
     	Integer lastId = message.getLastId();
     	Integer count = message.getCount() == null ? 20 : message.getCount();
     	Integer orientation = message.getOrientation() == null ? 2 : message.getOrientation();
-    	if(lastId == null || userId == null) {
+    	if(lastId == null || memberId == null) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
     		responseMessage.setMessage("miss required param");
     		return responseMessage;
     	}
     	responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-    	responseMessage.setData(dynamicsService.getHotList(lastId, orientation, userId, count));
+    	responseMessage.setData(dynamicsService.getHotList(lastId, orientation, memberId, count));
     	return responseMessage;
     }
 	
@@ -53,15 +53,15 @@ public class CommunityController {
     public ResponseMessage<List<DynamicsForClient>> dynamicsPublish(@RequestBody CommunityRequest message) {
     	ResponseMessage<List<DynamicsForClient>> responseMessage = new ResponseMessage<List<DynamicsForClient>>();
     	String description = message.getDescription();
-    	Integer userId = message.getUserId();
+    	Integer memberId = message.getMemberId();
     	List<String> picUrls = message.getPicUrls();
-    	if(StringUtils.isBlank(description) || userId == null || picUrls == null || picUrls.size() == 0) {
+    	if(StringUtils.isBlank(description) || memberId == null || picUrls == null || picUrls.size() == 0) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
     		responseMessage.setMessage("miss required param");
     		return responseMessage;
     	}
     	try{
-	    	if(dynamicsService.publish(userId, description, picUrls)) {
+	    	if(dynamicsService.publish(memberId, description, picUrls)) {
 	        	responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
 	    	} else {
 	    		responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
@@ -79,14 +79,14 @@ public class CommunityController {
     public ResponseMessage<Map<String, Object>> dynamicsDetail(@RequestBody CommunityRequest message) {
     	ResponseMessage<Map<String, Object>> responseMessage = new ResponseMessage<Map<String, Object>>();
     	Integer dynamicsId = message.getDynamicsId();
-    	Integer userId = message.getUserId();
-    	if(dynamicsId == null || userId == null) {
+    	Integer memberId = message.getMemberId();
+    	if(dynamicsId == null || memberId == null) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
     		responseMessage.setMessage("miss required param");
     		return responseMessage;
     	}
     	responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.getDetail(dynamicsId, userId));
+		responseMessage.setData(dynamicsService.getDetail(dynamicsId, memberId));
     	return responseMessage;
     }
 	@RequestMapping(value = "praise")
@@ -94,15 +94,15 @@ public class CommunityController {
     public ResponseMessage<Boolean> praise(@RequestBody CommunityRequest message) {
     	ResponseMessage<Boolean> responseMessage = new ResponseMessage<Boolean>();
     	Integer dynamicsId = message.getDynamicsId();
-    	Integer userId = message.getUserId();
-    	if(dynamicsId == null || userId == null) {
+    	Integer memberId = message.getMemberId();
+    	if(dynamicsId == null || memberId == null) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
     		responseMessage.setMessage("miss required param");
     		return responseMessage;
     	}
 		try {
 			responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-			responseMessage.setData(dynamicsService.praise(dynamicsId, userId));
+			responseMessage.setData(dynamicsService.praise(dynamicsId, memberId));
 		} catch (BusinessException e) {
 			e.printStackTrace();
 			responseMessage.setCode(e.getCode());
@@ -119,15 +119,15 @@ public class CommunityController {
     public ResponseMessage<Boolean> report(@RequestBody CommunityRequest message) {
     	ResponseMessage<Boolean> responseMessage = new ResponseMessage<Boolean>();
     	Integer dynamicsId = message.getDynamicsId();
-    	Integer userId = message.getUserId();
-    	if(dynamicsId == null || userId == null) {
+    	Integer memberId = message.getMemberId();
+    	if(dynamicsId == null || memberId == null) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
     		responseMessage.setMessage("miss required param");
     		return responseMessage;
     	}
 		try {
 			responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-			responseMessage.setData(dynamicsService.report(dynamicsId, userId));
+			responseMessage.setData(dynamicsService.report(dynamicsId, memberId));
 		} catch (BusinessException e) {
 			e.printStackTrace();
 			responseMessage.setCode(e.getCode());

@@ -54,8 +54,8 @@ public class StsUtil {
 	            "    \"Version\": \"1\", \n" +
 	            "    \"Statement\": [\n" +
 	            "        {\n" +
-	            "            \"Action\": \"*\",\n" +
-	            "            \"Resource\": \"acs:ram::1729880917802930:role/cferbucketrwtest\",\n" +
+	            "            \"Action\": [\"oss:*\"],\n" +
+	            "            \"Resource\": [\"acs:oss:*:*:cfer-social/my-cfer\",\"acs:oss:*:*:cfer-social/my-cfer/*\"],\n" +
 	            "            \"Effect\": \"Allow\"\n" +
 	            "        }\n" +
 	            "    ]\n" +
@@ -82,6 +82,6 @@ public class StsUtil {
 	    }
 	}
   public static void main(String[] args) {
-    
+	  getInfo();
   }
 }

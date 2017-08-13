@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yn.cfer.community.dao.MemberAttentionDao">
+    <resultMap id="BaseResultMap" type="com.yn.cfer.community.model.MemberAttention">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="MEMBER_ID" property="memberId" jdbcType="INTEGER"/>
+        <result column="ATTENTION_MEMBER_ID" property="attentionMemberId" jdbcType="INTEGER"/>
+        <result column="STATUS" property="status" jdbcType="INTEGER"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="base_col" >
+    	ID, MEMBER_ID, ATTENTION_MEMBER_ID, STATUS, CREATE_TIME, UPDATE_TIME
+    </sql>
+    <sql id="base_col_without_id" >
+    	MEMBER_ID, ATTENTION_MEMBER_ID, STATUS, CREATE_TIME, UPDATE_TIME
+    </sql>
+    <insert id="add" parameterType="com.yn.cfer.community.model.MemberAttention">
+    	INSERT INTO T_MEMBER_ATTENTION (<include refid="base_col_without_id"></include>)
+    	VALUES (#{memberId},#{attentionMemberId},#{status},#{createTime},#{updateTime})
+    </insert>
+    <select id="findByMemberId" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2 
+    </select>
+    <select id="findByAttentionMemberId" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND STATUS != 2 
+    </select>
+    <select id="find" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND ATTENTION_MEMBER_ID = #{attentionMemberId} AND STATUS != 2
+    </select>
+</mapper>

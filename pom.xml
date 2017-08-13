@@ -253,7 +253,7 @@
 		</repository>
 	</repositories>
 	<build>
-		<plugins>
+		<!-- <plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -279,7 +279,7 @@
 					<skipTests>true</skipTests>
 				</configuration>
 			</plugin>
-		</plugins>
+		</plugins> -->
 		<finalName>CFerCommunity</finalName>
 	</build>
 </project>

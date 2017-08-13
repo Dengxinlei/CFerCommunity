@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.yn.cfer.community.model.CommunityRequest;
 import com.yn.cfer.community.model.DynamicsForClient;
 import com.yn.cfer.community.service.DynamicsService;
+import com.yn.cfer.community.service.MemberAttentionService;
 import com.yn.cfer.web.common.constant.ErrorCode;
 import com.yn.cfer.web.exceptions.BusinessException;
 import com.yn.cfer.web.protocol.ResponseMessage;
@@ -29,6 +30,8 @@ import com.yn.cfer.web.protocol.ResponseMessage;
 public class CommunityController {
 	@Autowired
 	private DynamicsService dynamicsService;
+	@Autowired
+	private MemberAttentionService memberAttentionService;
 	
 	@RequestMapping(value = "hot_list")
     @ResponseBody
@@ -136,6 +139,32 @@ public class CommunityController {
 			ex.printStackTrace();
 			responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
 			responseMessage.setMessage("举报失败");
+		}
+    	return responseMessage;
+    }
+	
+	@RequestMapping(value = "attention")
+    @ResponseBody
+    public ResponseMessage<Boolean> attention(@RequestBody CommunityRequest message) {
+    	ResponseMessage<Boolean> responseMessage = new ResponseMessage<Boolean>();
+    	Integer memberId = message.getMemberId();
+    	Integer attentionMemberId = message.getAttentionMemberId();
+    	if(memberId == null || attentionMemberId == null) {
+    		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
+    		responseMessage.setMessage("miss required param");
+    		return responseMessage;
+    	}
+		try {
+			responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+			responseMessage.setData(memberAttentionService.attention(memberId, attentionMemberId));
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			responseMessage.setCode(e.getCode());
+			responseMessage.setMessage(e.getMessage());
+		} catch(Exception ex) {
+			ex.printStackTrace();
+			responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
+			responseMessage.setMessage("关注失败");
 		}
     	return responseMessage;
     }

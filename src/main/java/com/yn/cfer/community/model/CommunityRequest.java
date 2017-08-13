@@ -20,6 +20,8 @@ public class CommunityRequest {
 	private String description;
 	@SerializedName("member_id")
 	private Integer memberId;
+	@SerializedName("attention_member_id")
+	private Integer attentionMemberId;
 	@SerializedName("pic_urls")
 	private List<String> picUrls;
 	@SerializedName("dynamics_id")
@@ -65,5 +67,11 @@ public class CommunityRequest {
 	}
 	public void setDynamicsId(Integer dynamicsId) {
 		this.dynamicsId = dynamicsId;
+	}
+	public Integer getAttentionMemberId() {
+		return attentionMemberId;
+	}
+	public void setAttentionMemberId(Integer attentionMemberId) {
+		this.attentionMemberId = attentionMemberId;
 	}
 }

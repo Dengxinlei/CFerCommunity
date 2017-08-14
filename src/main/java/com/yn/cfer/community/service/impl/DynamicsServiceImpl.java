@@ -130,6 +130,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 			dmList.add(dm);
 		}
 		dynamicsMaterialDao.addBatch(dmList);
+		dy.setMaterials(dmList);
 		return buildDynamicsForClient(dy);
 	}
 	

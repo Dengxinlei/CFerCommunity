@@ -186,17 +186,6 @@
 		</dependency>
 		<!-- LOG end -->
 		<dependency>
-			<groupId>com.gexin.platform</groupId>
-			<artifactId>gexin-rp-sdk-http</artifactId>
-			<version>4.0.1.7</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.gexin.platform</groupId>
-			<artifactId>gexin-rp-sdk-template</artifactId>
-			<version>4.0.0.6</version>
-		</dependency>
-		<dependency>
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
 			<version>0.1.54</version>
@@ -253,7 +242,7 @@
 		</repository>
 	</repositories>
 	<build>
-		<!-- <plugins>
+		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -279,7 +268,7 @@
 					<skipTests>true</skipTests>
 				</configuration>
 			</plugin>
-		</plugins> -->
+		</plugins>
 		<finalName>CFerCommunity</finalName>
 	</build>
 </project>

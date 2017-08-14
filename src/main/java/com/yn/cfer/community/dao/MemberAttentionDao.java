@@ -23,4 +23,6 @@ public interface MemberAttentionDao {
 	public int add(MemberAttention memberAttention);
 	
 	public MemberAttention find(@Param("memberId") Integer memberId, @Param("attentionMemberId") Integer attentionMemberId);
+	
+	public int updateById(MemberAttention memberAttention);
 }

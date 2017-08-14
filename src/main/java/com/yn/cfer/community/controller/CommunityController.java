@@ -53,8 +53,8 @@ public class CommunityController {
 	
 	@RequestMapping(value = "dynamics_publish")
     @ResponseBody
-    public ResponseMessage<List<DynamicsForClient>> dynamicsPublish(@RequestBody CommunityRequest message) {
-    	ResponseMessage<List<DynamicsForClient>> responseMessage = new ResponseMessage<List<DynamicsForClient>>();
+    public ResponseMessage<DynamicsForClient> dynamicsPublish(@RequestBody CommunityRequest message) {
+    	ResponseMessage<DynamicsForClient> responseMessage = new ResponseMessage<DynamicsForClient>();
     	String description = message.getDescription();
     	Integer memberId = message.getMemberId();
     	List<String> picUrls = message.getPicUrls();
@@ -64,12 +64,8 @@ public class CommunityController {
     		return responseMessage;
     	}
     	try{
-	    	if(dynamicsService.publish(memberId, description, picUrls)) {
-	        	responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-	    	} else {
-	    		responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
-	    		responseMessage.setMessage("动态发布失败");
-	    	}
+    		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+    		responseMessage.setData(dynamicsService.publish(memberId, description, picUrls));
     	} catch(Exception e) {
     		e.printStackTrace();
     		responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);

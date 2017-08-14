@@ -12,6 +12,11 @@ public class CommentRequest {
 	private Integer count;
 	@SerializedName("dynamics_id")
 	private Integer dynamicsId;
+	@SerializedName("member_id")
+	private Integer memberId;
+	@SerializedName("reply_member_id")
+	private Integer replyMemberId;
+	private String content;
 	public Integer getLastId() {
 		return lastId;
 	}
@@ -29,5 +34,23 @@ public class CommentRequest {
 	}
 	public void setDynamicsId(Integer dynamicsId) {
 		this.dynamicsId = dynamicsId;
+	}
+	public Integer getMemberId() {
+		return memberId;
+	}
+	public void setMemberId(Integer memberId) {
+		this.memberId = memberId;
+	}
+	public Integer getReplyMemberId() {
+		return replyMemberId;
+	}
+	public void setReplyMemberId(Integer replyMemberId) {
+		this.replyMemberId = replyMemberId;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
 	}
 }

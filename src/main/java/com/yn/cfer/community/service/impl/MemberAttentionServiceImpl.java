@@ -20,7 +20,15 @@ public class MemberAttentionServiceImpl implements MemberAttentionService {
 		MemberAttention ma = new MemberAttention();
 		ma.setAttentionMemberId(attentionMemberId);
 		ma.setMemberId(memberId);
-		ma.setStatus(MemberAttention.STATUS_ONLY_ONE);
+		MemberAttention dbMa2 = memberAttentionDao.find(attentionMemberId, memberId);
+		if(dbMa2 != null) {
+			// 将状态更新为互关注
+			dbMa2.setStatus(MemberAttention.STATUS_EACH_OTHER);
+			memberAttentionDao.updateById(dbMa2);
+			ma.setStatus(MemberAttention.STATUS_EACH_OTHER);
+		} else {
+			ma.setStatus(MemberAttention.STATUS_ONLY_ONE);
+		}
 		memberAttentionDao.add(ma);
 		return true;
 	}

@@ -28,4 +28,14 @@
     <select id="find" resultMap="BaseResultMap">
     	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND ATTENTION_MEMBER_ID = #{attentionMemberId} AND STATUS != 2
     </select>
+    <update id="updateById" parameterType="com.yn.cfer.community.model.MemberAttention">
+    	UPDATE T_MEMBER_ATTENTION
+    	<trim prefix="SET" suffixOverrides=",">
+    		<if test="status != null">
+    			STATUS = #{status},
+    		</if>
+    		UPDATE_TIME = NOW()
+    	</trim>
+    	WHERE ID = #{id}
+    </update>
 </mapper>

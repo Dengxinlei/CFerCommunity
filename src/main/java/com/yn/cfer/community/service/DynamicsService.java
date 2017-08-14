@@ -27,7 +27,7 @@ public interface DynamicsService {
 	 * @param picUrls
 	 * @return
 	 */
-	public boolean publish(Integer memberId, String description, List<String> picUrls);
+	public DynamicsForClient publish(Integer memberId, String description, List<String> picUrls);
 	/**
 	 * 获取动态详情
 	 * @param dynamicsId

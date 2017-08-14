@@ -17,4 +17,8 @@ public class ErrorCode {
      * 缺少参数
      */
     public static final int ERROR_CODE_MISS_PARAM = 1001;
+    /**
+     * 会员不存在
+     */
+    public static final int ERROR_CODE_MEMBER_IS_NOT_EXISTS = 1002;
 }

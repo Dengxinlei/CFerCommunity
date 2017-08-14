@@ -5,6 +5,8 @@ import java.util.Date;
  * @author user
  */
 public class Comment {
+	public final static Integer TYPE_DYNAMICS = 0;
+	public final static Integer TYPE_COMMENT = 1;
 	private Integer id;
 	private Integer dynamicsId;
 	private Integer memberId;

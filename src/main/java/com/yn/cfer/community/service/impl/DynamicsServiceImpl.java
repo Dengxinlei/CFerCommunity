@@ -99,8 +99,10 @@ public class DynamicsServiceImpl implements DynamicsService {
 			dyClient.setCommentCount(dy.getCommentCount());
 			dyClient.setPublishTime(dy.getCreateTime());
 			List<String> urls = new ArrayList<String>();
-			for(DynamicsMaterial dm : dy.getMaterials()) {
-				urls.add(dm.getUrl());
+			if(dy.getMaterials() != null && dy.getMaterials().size() >= 1) {
+				for(DynamicsMaterial dm : dy.getMaterials()) {
+					urls.add(dm.getUrl());
+				}
 			}
 			dyClient.setPicList(urls);
 			return dyClient;
@@ -108,7 +110,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 		return null;
 	}
 	@Transactional
-	public boolean publish(Integer memberId, String description, List<String> picUrls) {
+	public DynamicsForClient publish(Integer memberId, String description, List<String> picUrls) {
 		// 根据memberId查询会员
 		Member member = memberDao.findById(memberId);
 		Dynamics dy = new Dynamics();
@@ -128,7 +130,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 			dmList.add(dm);
 		}
 		dynamicsMaterialDao.addBatch(dmList);
-		return true;
+		return buildDynamicsForClient(dy);
 	}
 	
 	public Map<String, Object> getDetail(Integer dynamicsId, Integer memberId) {

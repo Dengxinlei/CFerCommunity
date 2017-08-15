@@ -68,4 +68,13 @@ public interface DynamicsService {
 	 * @return
 	 */
 	public List<FansForClient> getAttentedList(Integer memberId, Integer lastId, Integer orientation, Integer count);
+	/**
+	 * 获取已关注会员的动态列表
+	 * @param memberId
+	 * @param lastId
+	 * @param orientation
+	 * @param count
+	 * @return
+	 */
+	public List<Map<String, Object>> attentionList(Integer memberId, Integer lastId, Integer orientation, Integer count);
 }

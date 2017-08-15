@@ -4,6 +4,7 @@
 package com.yn.cfer.community.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,6 +125,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 		dy.setStatus(Dynamics.STATUS_NORMAL);
 		dy.setMemberId(memberId);
 		dy.setOwner(member.getName());
+		dy.setCreateTime(new Date());
 		dynamicsDao.add(dy);
 		List<DynamicsMaterial> dmList = new ArrayList<DynamicsMaterial>();
 		DynamicsMaterial dm = null;
@@ -292,6 +294,28 @@ public class DynamicsServiceImpl implements DynamicsService {
 			dyList = dynamicsDao.findLikeByNameHistory(name, lastId, count);
 		}
 		
+		if(dyList != null && dyList.size() >= 1) {
+			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+			for(Dynamics dy : dyList) {
+				// 关注里默认两条评论
+				list.add(getDetail(dy.getId(),memberId, 2));
+			}
+			return list;
+		}
+		return null;
+	}
+	public List<Map<String, Object>> attentionList(Integer memberId, Integer lastId, Integer orientation,
+			Integer count) {
+		List<Dynamics> dyList = null;
+		if(lastId == -1) {
+			dyList = dynamicsDao.findAttentedMemberDynamicsListDefault(memberId, count);
+		} else {
+			if(orientation == 1) {
+				dyList = dynamicsDao.findAttentedMemberDynamicsListLatest(memberId, lastId, count);
+			} else {
+				dyList = dynamicsDao.findAttentedMemberDynamicsListHistory(memberId, lastId, count);
+			}
+		}
 		if(dyList != null && dyList.size() >= 1) {
 			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 			for(Dynamics dy : dyList) {

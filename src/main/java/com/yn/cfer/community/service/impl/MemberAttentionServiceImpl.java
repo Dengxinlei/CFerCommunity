@@ -1,5 +1,7 @@
 package com.yn.cfer.community.service.impl;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +31,7 @@ public class MemberAttentionServiceImpl implements MemberAttentionService {
 		if(dbMa != null) {
 			throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "已添加关注");
 		}
+		Date now = new Date();
 		MemberAttention ma = new MemberAttention();
 		ma.setAttentionMemberId(attentionMemberId);
 		ma.setMemberId(memberId);
@@ -36,6 +39,7 @@ public class MemberAttentionServiceImpl implements MemberAttentionService {
 		ma.setMemberHeadUrl(m.getAvatar());
 		ma.setAttentionMemberName(m2.getName());
 		ma.setAttentionMemberHeadUrl(m2.getAvatar());
+		ma.setCreateTime(now);
 		MemberAttention dbMa2 = memberAttentionDao.find(attentionMemberId, memberId);
 		if(dbMa2 != null) {
 			// 将状态更新为互关注

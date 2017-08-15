@@ -217,4 +217,21 @@ public class CommunityController {
 		responseMessage.setData(dynamicsService.searchLikeByName(memberId, name, lastId, count));
     	return responseMessage;
     }
+	@RequestMapping(value = "attention_list")
+    @ResponseBody
+    public ResponseMessage<List<Map<String, Object>>> attentionList(@RequestBody CommunityRequest message) {
+    	ResponseMessage<List<Map<String, Object>>> responseMessage = new ResponseMessage<List<Map<String, Object>>>();
+    	Integer memberId = message.getMemberId();
+    	Integer count = message.getCount() == null ? 10 : message.getCount();
+    	Integer lastId = message.getLastId() == null ? -1 : message.getLastId();
+    	Integer orientation = message.getOrientation() == null ? 2 : message.getOrientation();
+    	if(memberId == null) {
+    		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
+    		responseMessage.setMessage("miss required param");
+    		return responseMessage;
+    	}
+		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+		responseMessage.setData(dynamicsService.attentionList(memberId, lastId, orientation, count));
+    	return responseMessage;
+    }
 }

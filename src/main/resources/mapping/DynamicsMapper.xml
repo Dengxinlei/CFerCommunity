@@ -83,4 +83,13 @@
     <select id="findLikeByNameHistory" resultMap="BaseResultMap">
     	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE OWNER LIKE CONCAT('%', #{owner},'%') AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count}; 
     </select>
+    <select id = "findAttentedMemberDynamicsListDefault" resultMap="BaseResultMap">
+    	SELECT ID FROM T_CY_DYNAMICS WHERE MEMBER_ID IN (SELECT ATTENTION_MEMBER_ID FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2) ORDER BY CREATE_TIME DESC LIMIT #{count} 
+    </select>
+    <select id = "findAttentedMemberDynamicsListLatest" resultMap="BaseResultMap">
+    	SELECT ID FROM T_CY_DYNAMICS WHERE MEMBER_ID IN (SELECT ATTENTION_MEMBER_ID FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2) AND ID &gt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count} 
+    </select>
+    <select id = "findAttentedMemberDynamicsListHistory" resultMap="BaseResultMap">
+    	SELECT ID FROM T_CY_DYNAMICS WHERE MEMBER_ID IN (SELECT ATTENTION_MEMBER_ID FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2) AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count} 
+    </select>
 </mapper>

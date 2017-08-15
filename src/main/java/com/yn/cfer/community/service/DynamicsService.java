@@ -34,7 +34,12 @@ public interface DynamicsService {
 	 * @param dynamicsId
 	 * @return
 	 */
-	public Map<String, Object> getDetail(Integer dynamicsId, Integer memberId);
+	public Map<String, Object> getDetail(Integer dynamicsId, Integer memberId, Integer count);
+	/**
+	 * 根据姓名模糊搜索动态
+	 * @return
+	 */
+	public List<Map<String, Object>> searchLikeByName(Integer memberId, String name,Integer lastId, Integer count);
 	/**
 	 * 动态-点赞
 	 * @param dynamicsId
@@ -56,11 +61,11 @@ public interface DynamicsService {
 	 * @param memberId
 	 * @return
 	 */
-	public List<FansForClient> getFansList(Integer memberId);
+	public List<FansForClient> getFansList(Integer memberId, Integer lastId, Integer orientation, Integer count);
 	/**
 	 * 获取已关注列表
 	 * @param memberId
 	 * @return
 	 */
-	public List<FansForClient> getAttentedList(Integer memberId);
+	public List<FansForClient> getAttentedList(Integer memberId, Integer lastId, Integer orientation, Integer count);
 }

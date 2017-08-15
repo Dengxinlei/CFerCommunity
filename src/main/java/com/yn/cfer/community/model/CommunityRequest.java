@@ -15,6 +15,9 @@ public class CommunityRequest {
 	@SerializedName("last_id")
 	private Integer lastId;
 	private Integer count;
+	/**
+	 * 1：上拉  2：下拉 默认2
+	 */
 	private Integer orientation;
 	
 	private String description;
@@ -26,6 +29,7 @@ public class CommunityRequest {
 	private List<String> picUrls;
 	@SerializedName("dynamics_id")
 	private Integer dynamicsId;
+	private String name;
 	public Integer getLastId() {
 		return lastId;
 	}
@@ -73,5 +77,11 @@ public class CommunityRequest {
 	}
 	public void setAttentionMemberId(Integer attentionMemberId) {
 		this.attentionMemberId = attentionMemberId;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 }

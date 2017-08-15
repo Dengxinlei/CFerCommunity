@@ -77,4 +77,10 @@
     	</trim>
     	 WHERE ID = #{dynamicsId}
     </update>
+    <select id="findLikeByNameDefault" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE OWNER LIKE CONCAT('%', #{owner},'%') ORDER BY CREATE_TIME DESC LIMIT #{count}; 
+    </select>
+    <select id="findLikeByNameHistory" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE OWNER LIKE CONCAT('%', #{owner},'%') AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count}; 
+    </select>
 </mapper>

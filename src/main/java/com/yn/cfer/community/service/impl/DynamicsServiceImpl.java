@@ -139,7 +139,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 		return buildDynamicsForClient(dy);
 	}
 	
-	public Map<String, Object> getDetail(Integer dynamicsId, Integer memberId) {
+	public Map<String, Object> getDetail(Integer dynamicsId, Integer memberId, Integer count) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		DynamicsForClient dc = buildDynamicsForClient(dynamicsDao.findById(dynamicsId));
 		if(dynamicsActionRecordDao.findByDynamicsIdAndUserId(dynamicsId, memberId, DynamicsActionRecord.TYPE_PRAISE) != null) {
@@ -224,11 +224,33 @@ public class DynamicsServiceImpl implements DynamicsService {
 		}
 		return true;
 	}
-	public List<FansForClient> getFansList(Integer memberId) {
-		return buildFansForClientList(memberAttentionDao.findByAttentionMemberId(memberId), 2);
+	public List<FansForClient> getFansList(Integer memberId, Integer lastId, Integer orientation, Integer count) {
+		List<MemberAttention> maList = null;
+		if(lastId.intValue() == -1) {
+			maList = memberAttentionDao.findFansListDefault(memberId, count);
+		} else {
+			// 顶部滑动
+			if(orientation.intValue() == 1) {
+				maList = memberAttentionDao.findFansListLatest(memberId, lastId, count);
+			} else {
+				maList = memberAttentionDao.findFansListHistory(memberId, lastId, count);
+			}
+		}
+		return buildFansForClientList(maList, 2);
 	}
-	public List<FansForClient> getAttentedList(Integer memberId) {
-		return buildFansForClientList(memberAttentionDao.findByMemberId(memberId), 1);
+	public List<FansForClient> getAttentedList(Integer memberId, Integer lastId, Integer orientation, Integer count) {
+		List<MemberAttention> maList = null;
+		if(lastId.intValue() == -1) {
+			maList = memberAttentionDao.findAttentedListDefault(memberId, count);
+		} else {
+			// 顶部滑动
+			if(orientation.intValue() == 1) {
+				maList = memberAttentionDao.findAttentedListLatest(memberId, lastId, count);
+			} else {
+				maList = memberAttentionDao.findAttentedHistory(memberId, lastId, count);
+			}
+		}
+		return buildFansForClientList(maList, 1);
 	}
 	
 	private FansForClient buildFansForClient(MemberAttention ma, Integer type) {
@@ -244,6 +266,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 				fc.setMemberId(ma.getMemberId());
 				fc.setMemberName(ma.getMemberName());
 			}
+			fc.setId(ma.getId());
 			fc.setStatus(ma.getStatus());
 			return fc;
 		}
@@ -258,6 +281,24 @@ public class DynamicsServiceImpl implements DynamicsService {
 				ffcList.add(fc);
 			}
 			return ffcList;
+		}
+		return null;
+	}
+	public List<Map<String, Object>> searchLikeByName(Integer memberId, String name, Integer lastId, Integer count) {
+		List<Dynamics> dyList = null;
+		if(lastId == -1) {
+			dyList = dynamicsDao.findLikeByNameDefault(name, count);
+		} else {
+			dyList = dynamicsDao.findLikeByNameHistory(name, lastId, count);
+		}
+		
+		if(dyList != null && dyList.size() >= 1) {
+			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+			for(Dynamics dy : dyList) {
+				// 关注里默认两条评论
+				list.add(getDetail(dy.getId(),memberId, 2));
+			}
+			return list;
 		}
 		return null;
 	}

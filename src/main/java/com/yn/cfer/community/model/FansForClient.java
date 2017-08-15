@@ -7,6 +7,8 @@ import com.google.gson.annotations.SerializedName;
  *
  */
 public class FansForClient {
+	private Integer id;
+	@SerializedName("member_id")
 	private Integer memberId;
 	@SerializedName("member_name")
 	private String memberName;
@@ -39,5 +41,11 @@ public class FansForClient {
 	}
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
 	}
 }

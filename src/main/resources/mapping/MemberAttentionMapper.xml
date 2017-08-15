@@ -42,4 +42,24 @@
     	</trim>
     	WHERE ID = #{id}
     </update>
+    
+    <select id="findFansListDefault" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND STATUS != 2 ORDER BY CREATE_TIME DESC limit #{count}
+    </select>
+    <select id="findFansListLatest" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND STATUS != 2 AND ID &gt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count}
+    </select>
+    <select id="findFansListHistory" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND STATUS != 2 AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count}
+    </select>
+    
+    <select id="findAttentedListDefault" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2 ORDER BY CREATE_TIME DESC LIMIT #{count}
+    </select>
+    <select id="findAttentedListLatest" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2 AND ID &gt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count}
+    </select>
+    <select id="findAttentedHistory" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2 AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count}
+    </select>
 </mapper>

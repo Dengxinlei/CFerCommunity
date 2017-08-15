@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yn.cfer.community.model.CommunityRequest;
 import com.yn.cfer.community.model.DynamicsForClient;
+import com.yn.cfer.community.model.FansForClient;
 import com.yn.cfer.community.service.DynamicsService;
 import com.yn.cfer.community.service.MemberAttentionService;
 import com.yn.cfer.web.common.constant.ErrorCode;
@@ -162,6 +163,34 @@ public class CommunityController {
 			responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
 			responseMessage.setMessage("关注失败");
 		}
+    	return responseMessage;
+    }
+	@RequestMapping(value = "fans_list")
+    @ResponseBody
+    public ResponseMessage<List<FansForClient>> fans_list(@RequestBody CommunityRequest message) {
+    	ResponseMessage<List<FansForClient>> responseMessage = new ResponseMessage<List<FansForClient>>();
+    	Integer memberId = message.getMemberId();
+    	if(memberId == null) {
+    		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
+    		responseMessage.setMessage("miss required param");
+    		return responseMessage;
+    	}
+		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+		responseMessage.setData(dynamicsService.getFansList(memberId));
+    	return responseMessage;
+    }
+	@RequestMapping(value = "attented_list")
+    @ResponseBody
+    public ResponseMessage<List<FansForClient>> attented_list(@RequestBody CommunityRequest message) {
+    	ResponseMessage<List<FansForClient>> responseMessage = new ResponseMessage<List<FansForClient>>();
+    	Integer memberId = message.getMemberId();
+    	if(memberId == null) {
+    		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
+    		responseMessage.setMessage("miss required param");
+    		return responseMessage;
+    	}
+		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+		responseMessage.setData(dynamicsService.getAttentedList(memberId));
     	return responseMessage;
     }
 }

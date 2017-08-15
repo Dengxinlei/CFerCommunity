@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.yn.cfer.community.model.DynamicsForClient;
+import com.yn.cfer.community.model.FansForClient;
 import com.yn.cfer.web.exceptions.BusinessException;
 
 /**
@@ -50,4 +51,16 @@ public interface DynamicsService {
 	 * @throws BusinessException
 	 */
 	public boolean report(Integer dynamicsId, Integer memberId) throws BusinessException;
+	/**
+	 * 获取粉丝列表
+	 * @param memberId
+	 * @return
+	 */
+	public List<FansForClient> getFansList(Integer memberId);
+	/**
+	 * 获取已关注列表
+	 * @param memberId
+	 * @return
+	 */
+	public List<FansForClient> getAttentedList(Integer memberId);
 }

@@ -18,13 +18,16 @@ import com.yn.cfer.comment.model.CommentForClient;
 import com.yn.cfer.community.dao.DynamicsActionRecordDao;
 import com.yn.cfer.community.dao.DynamicsDao;
 import com.yn.cfer.community.dao.DynamicsMaterialDao;
+import com.yn.cfer.community.dao.MemberAttentionDao;
 import com.yn.cfer.community.dao.MemberDao;
 import com.yn.cfer.community.dao.UserDao;
 import com.yn.cfer.community.model.Dynamics;
 import com.yn.cfer.community.model.DynamicsActionRecord;
 import com.yn.cfer.community.model.DynamicsForClient;
 import com.yn.cfer.community.model.DynamicsMaterial;
+import com.yn.cfer.community.model.FansForClient;
 import com.yn.cfer.community.model.Member;
+import com.yn.cfer.community.model.MemberAttention;
 import com.yn.cfer.community.service.DynamicsService;
 import com.yn.cfer.web.common.constant.ErrorCode;
 import com.yn.cfer.web.exceptions.BusinessException;
@@ -46,6 +49,8 @@ public class DynamicsServiceImpl implements DynamicsService {
 	private MemberDao memberDao;
 	@Autowired
 	private DynamicsActionRecordDao dynamicsActionRecordDao;
+	@Autowired
+	private MemberAttentionDao memberAttentionDao;
 	public List<DynamicsForClient> getHotList(Integer lastId, Integer orientation, Integer memberId, Integer count) {
 		// TODO Auto-generated method stub
 		List<Dynamics> dynamicsList = null;
@@ -198,8 +203,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 		actionRecord.setDynamicsId(dynamicsId);
 		actionRecord.setType(type);
 		actionRecord.setMemberId(memberId);
-		dynamicsActionRecordDao.add(actionRecord);
-		return 0;
+		return dynamicsActionRecordDao.add(actionRecord);
 	}
 	@Transactional
 	public boolean report(Integer dynamicsId, Integer userId) throws BusinessException {
@@ -219,5 +223,42 @@ public class DynamicsServiceImpl implements DynamicsService {
 			throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "已经举报过该动态");
 		}
 		return true;
+	}
+	public List<FansForClient> getFansList(Integer memberId) {
+		return buildFansForClientList(memberAttentionDao.findByAttentionMemberId(memberId), 2);
+	}
+	public List<FansForClient> getAttentedList(Integer memberId) {
+		return buildFansForClientList(memberAttentionDao.findByMemberId(memberId), 1);
+	}
+	
+	private FansForClient buildFansForClient(MemberAttention ma, Integer type) {
+		if(ma != null) {
+			FansForClient fc = new FansForClient();
+			// 关注
+			if(type == 1) {
+				fc.setHeadUrl(ma.getAttentionMemberHeadUrl());
+				fc.setMemberId(ma.getAttentionMemberId());
+				fc.setMemberName(ma.getAttentionMemberName());
+			} else if(type == 2) {	// 粉丝
+				fc.setHeadUrl(ma.getMemberHeadUrl());
+				fc.setMemberId(ma.getMemberId());
+				fc.setMemberName(ma.getMemberName());
+			}
+			fc.setStatus(ma.getStatus());
+			return fc;
+		}
+		return null;
+	}
+	private List<FansForClient> buildFansForClientList(List<MemberAttention> maList, Integer type) {
+		if(maList != null && maList.size() >= 1) {
+			List<FansForClient> ffcList = new ArrayList<FansForClient>();
+			FansForClient fc = null;
+			for(MemberAttention ma : maList) {
+				fc = buildFansForClient(ma, type);
+				ffcList.add(fc);
+			}
+			return ffcList;
+		}
+		return null;
 	}
 }

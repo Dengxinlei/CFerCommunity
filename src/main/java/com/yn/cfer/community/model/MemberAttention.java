@@ -8,7 +8,11 @@ public class MemberAttention {
 	public final static Integer STATUS_CANCEL = 2;			// 取消关注
 	private Integer id;
 	private Integer memberId;
+	private String memberName;
+	private String memberHeadUrl;
 	private Integer attentionMemberId;
+	private String attentionMemberName;
+	private String attentionMemberHeadUrl;
 	/**
 	 * 0=单关注  1=互关注 2=取消关注
 	 */
@@ -50,5 +54,29 @@ public class MemberAttention {
 	}
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+	public String getMemberName() {
+		return memberName;
+	}
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
+	public String getMemberHeadUrl() {
+		return memberHeadUrl;
+	}
+	public void setMemberHeadUrl(String memberHeadUrl) {
+		this.memberHeadUrl = memberHeadUrl;
+	}
+	public String getAttentionMemberName() {
+		return attentionMemberName;
+	}
+	public void setAttentionMemberName(String attentionMemberName) {
+		this.attentionMemberName = attentionMemberName;
+	}
+	public String getAttentionMemberHeadUrl() {
+		return attentionMemberHeadUrl;
+	}
+	public void setAttentionMemberHeadUrl(String attentionMemberHeadUrl) {
+		this.attentionMemberHeadUrl = attentionMemberHeadUrl;
 	}
 }

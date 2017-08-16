@@ -29,6 +29,7 @@ import com.yn.cfer.community.model.DynamicsMaterial;
 import com.yn.cfer.community.model.FansForClient;
 import com.yn.cfer.community.model.Member;
 import com.yn.cfer.community.model.MemberAttention;
+import com.yn.cfer.community.model.Picture;
 import com.yn.cfer.community.model.Summary;
 import com.yn.cfer.community.service.DynamicsService;
 import com.yn.cfer.web.common.constant.ErrorCode;
@@ -353,6 +354,27 @@ public class DynamicsServiceImpl implements DynamicsService {
 			for(Dynamics dy : dyList) {
 				// 关注里默认两条评论
 				list.add(getDetail(dy.getId(),memberId, 2));
+			}
+			return list;
+		}
+		return null;
+	}
+	public List<Picture> pictureList(Integer memberId, Integer lastId, Integer count) {
+		List<Dynamics> dyList = null;
+		if(lastId == -1) {
+			dyList = dynamicsDao.findByMemberIdDefault(memberId, count);
+		} else {
+			dyList = dynamicsDao.findByMemberIdHistory(memberId, lastId, count);
+		}
+		if(dyList != null && dyList.size() >= 1) {
+			List<Picture> list = new ArrayList<Picture>();
+			Picture pic = null;
+			for(Dynamics dy : dyList) {
+				pic = new Picture();
+				pic.setDynamicsId(dy.getId());
+				pic.setMemberId(dy.getMemberId());
+				pic.setUrl(dy.getMaterials().get(0) != null ? dy.getMaterials().get(0).getUrl() : null);
+				list.add(pic);
 			}
 			return list;
 		}

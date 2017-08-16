@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.yn.cfer.community.model.CommunityRequest;
 import com.yn.cfer.community.model.DynamicsForClient;
 import com.yn.cfer.community.model.FansForClient;
+import com.yn.cfer.community.model.Picture;
 import com.yn.cfer.community.model.Summary;
 import com.yn.cfer.community.service.DynamicsService;
 import com.yn.cfer.community.service.MemberAttentionService;
@@ -263,6 +264,22 @@ public class CommunityController {
     	}
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
 		responseMessage.setData(dynamicsService.getPersonalList(memberId, lastId, count));
+    	return responseMessage;
+    }
+	@RequestMapping(value = "picture_list")
+    @ResponseBody
+    public ResponseMessage<List<Picture>> pictureList(@RequestBody CommunityRequest message) {
+    	ResponseMessage<List<Picture>> responseMessage = new ResponseMessage<List<Picture>>();
+    	Integer memberId = message.getMemberId();
+    	Integer count = message.getCount() == null ? 10 : message.getCount();
+    	Integer lastId = message.getLastId() == null ? -1 : message.getLastId();
+    	if(memberId == null) {
+    		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
+    		responseMessage.setMessage("miss required param");
+    		return responseMessage;
+    	}
+		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+		responseMessage.setData(dynamicsService.pictureList(memberId, lastId, count));
     	return responseMessage;
     }
 }

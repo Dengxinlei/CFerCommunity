@@ -17,6 +17,10 @@ public class CommentRequest {
 	@SerializedName("reply_member_id")
 	private Integer replyMemberId;
 	private String content;
+	/**
+	 * 1：上拉  2：下拉 默认2
+	 */
+	private Integer orientation;
 	public Integer getLastId() {
 		return lastId;
 	}
@@ -52,5 +56,11 @@ public class CommentRequest {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public Integer getOrientation() {
+		return orientation;
+	}
+	public void setOrientation(Integer orientation) {
+		this.orientation = orientation;
 	}
 }

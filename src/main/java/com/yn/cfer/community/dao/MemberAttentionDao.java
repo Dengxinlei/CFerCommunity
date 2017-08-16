@@ -32,4 +32,6 @@ public interface MemberAttentionDao {
 	public MemberAttention find(@Param("memberId") Integer memberId, @Param("attentionMemberId") Integer attentionMemberId);
 	
 	public int updateById(MemberAttention memberAttention);
+	public int countFansByAttentionMemberId(Integer memberId);
+	public int countAttentedByMemberId(Integer memberId);
 }

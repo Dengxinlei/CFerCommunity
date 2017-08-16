@@ -36,6 +36,8 @@ public interface DynamicsDao {
 	public List<Dynamics> findHistory(@Param("lastId") Integer lastId, @Param("count")Integer count);
 	
 	public Dynamics findById(Integer id);
+	public List<Dynamics> findByMemberIdDefault(@Param("memberId") Integer memberId, @Param("count") Integer count);
+	public List<Dynamics> findByMemberIdHistory(@Param("memberId") Integer memberId, @Param("lastId") Integer lastId, @Param("count") Integer count);
 	
 	public int updateActionCount(Map<String, Object> map);
 	
@@ -45,5 +47,7 @@ public interface DynamicsDao {
 	public List<Dynamics> findAttentedMemberDynamicsListDefault(@Param("memberId") Integer memberId, @Param("count") Integer count);
 	public List<Dynamics> findAttentedMemberDynamicsListLatest(@Param("memberId") Integer memberId, @Param("lastId") Integer lastId, @Param("count") Integer count);
 	public List<Dynamics> findAttentedMemberDynamicsListHistory(@Param("memberId") Integer memberId, @Param("lastId") Integer lastId, @Param("count") Integer count);
+	
+	public int countByMemberId(Integer memberId);
 }
 

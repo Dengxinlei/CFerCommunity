@@ -62,4 +62,10 @@
     <select id="findAttentedHistory" resultMap="BaseResultMap">
     	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2 AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count}
     </select>
+    <select id="countFansByAttentionMemberId" resultType="java.lang.Integer">
+    	SELECT count(ID) FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId}
+    </select>
+    <select id="countAttentedByMemberId" resultType="java.lang.Integer">
+    	SELECT count(ID) FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId}
+    </select>
 </mapper>

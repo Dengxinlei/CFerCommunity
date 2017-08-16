@@ -92,4 +92,13 @@
     <select id = "findAttentedMemberDynamicsListHistory" resultMap="BaseResultMap">
     	SELECT ID FROM T_CY_DYNAMICS WHERE MEMBER_ID IN (SELECT ATTENTION_MEMBER_ID FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2) AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count} 
     </select>
+    <select id="findByMemberIdDefault" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE MEMBER_ID = #{memberId} ORDER BY CREATE_TIME DESC LIMIT #{count}; 
+    </select>
+    <select id="findByMemberIdHistory" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE MEMBER_ID = #{memberId} AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count}; 
+    </select>
+    <select id="countByMemberId" resultType="java.lang.Integer">
+    	SELECT count(ID) FROM T_CY_DYNAMICS WHERE MEMBER_ID = #{memberId}
+    </select>
 </mapper>

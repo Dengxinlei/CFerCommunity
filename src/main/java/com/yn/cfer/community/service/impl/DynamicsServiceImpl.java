@@ -29,6 +29,7 @@ import com.yn.cfer.community.model.DynamicsMaterial;
 import com.yn.cfer.community.model.FansForClient;
 import com.yn.cfer.community.model.Member;
 import com.yn.cfer.community.model.MemberAttention;
+import com.yn.cfer.community.model.Summary;
 import com.yn.cfer.community.service.DynamicsService;
 import com.yn.cfer.web.common.constant.ErrorCode;
 import com.yn.cfer.web.exceptions.BusinessException;
@@ -149,7 +150,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 			dc.setIsPraise(1);
 		}
 		map.put("dynamics", dc);
-		map.put("commentList", buildCommentForClientList(commentDao.findDefault(dynamicsId, 20)));
+		map.put("commentList", buildCommentForClientList(commentDao.findDefault(dynamicsId, count)));
 		return map;
 	}
 	
@@ -315,6 +316,37 @@ public class DynamicsServiceImpl implements DynamicsService {
 			} else {
 				dyList = dynamicsDao.findAttentedMemberDynamicsListHistory(memberId, lastId, count);
 			}
+		}
+		if(dyList != null && dyList.size() >= 1) {
+			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+			for(Dynamics dy : dyList) {
+				// 关注里默认两条评论
+				list.add(getDetail(dy.getId(),memberId, 2));
+			}
+			return list;
+		}
+		return null;
+	}
+	public Summary getMemberSummary(Integer memberId) {
+		Member member = memberDao.findById(memberId);
+		if(member == null) {
+			return null;
+		}
+		Summary sy = new Summary();
+		sy.setMemberId(memberId);
+		sy.setMemberName(member.getName());
+		sy.setMemberHeadUrl(member.getAvatar());
+		sy.setDynamicsCount(dynamicsDao.countByMemberId(memberId));
+		sy.setFansCount(memberAttentionDao.countFansByAttentionMemberId(memberId));
+		sy.setAttentedCount(memberAttentionDao.countAttentedByMemberId(memberId));
+		return sy;
+	}
+	public List<Map<String, Object>> getPersonalList(Integer memberId, Integer lastId, Integer count) {
+		List<Dynamics> dyList = null;
+		if(lastId == -1) {
+			dyList = dynamicsDao.findByMemberIdDefault(memberId, count);
+		} else {
+			dyList = dynamicsDao.findByMemberIdHistory(memberId, lastId, count);
 		}
 		if(dyList != null && dyList.size() >= 1) {
 			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();

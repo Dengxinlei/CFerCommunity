@@ -26,16 +26,17 @@ public class CommentController {
     @ResponseBody
     public ResponseMessage<List<CommentForClient>> list(@RequestBody CommentRequest message) {
     	ResponseMessage<List<CommentForClient>> responseMessage = new ResponseMessage<List<CommentForClient>>();
-    	Integer lastId = message.getLastId();
+    	Integer lastId = message.getLastId() == null ? -1 : message.getLastId();
     	Integer count = message.getCount() == null ? 20 : message.getCount();
     	Integer dynamicsId = message.getDynamicsId();
-    	if(lastId == null || dynamicsId == null) {
+    	Integer orientation = message.getOrientation() == null ? 2 : message.getOrientation();
+    	if(dynamicsId == null) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
     		responseMessage.setMessage("miss required param");
     		return responseMessage;
     	}
     	responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-    	responseMessage.setData(commentService.getComments(dynamicsId, lastId, count));
+    	responseMessage.setData(commentService.getComments(dynamicsId, lastId, count, orientation));
     	return responseMessage;
     }
 	@RequestMapping(value = "create")

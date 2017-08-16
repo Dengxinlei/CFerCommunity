@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.yn.cfer.community.model.DynamicsForClient;
 import com.yn.cfer.community.model.FansForClient;
+import com.yn.cfer.community.model.Summary;
 import com.yn.cfer.web.exceptions.BusinessException;
 
 /**
@@ -77,4 +78,19 @@ public interface DynamicsService {
 	 * @return
 	 */
 	public List<Map<String, Object>> attentionList(Integer memberId, Integer lastId, Integer orientation, Integer count);
+	/**
+	 * 获取会员信息总览
+	 * @param memberId
+	 * @return
+	 */
+	public Summary getMemberSummary(Integer memberId);
+	/**
+	 * 获取个人发布的动态列表
+	 * @param memberId
+	 * @param lastId
+	 * @param count
+	 * @return
+	 */
+	public List<Map<String, Object>> getPersonalList(Integer memberId, Integer lastId, Integer count);
+	
 }

@@ -30,4 +30,7 @@
     <select id="findHistory" resultMap="BaseResultMap">
     	SELECT <include refid="base_col"></include> FROM T_CY_COMMENT WHERE DYNAMICS_ID = #{dynamicsId} AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC limit #{count};
     </select>
+    <select id="findLatest" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_CY_COMMENT WHERE DYNAMICS_ID = #{dynamicsId} AND ID &gt; #{lastId} ORDER BY CREATE_TIME DESC limit #{count};
+    </select>
 </mapper>

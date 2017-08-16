@@ -33,8 +33,18 @@ public class CommentServiceImpl implements CommentService {
 	private DynamicsDao dynamicsDao;
 	@Autowired
 	private DynamicsActionRecordDao dynamicsActionRecordDao;
-	public List<CommentForClient> getComments(Integer dynamicsId, Integer lastId, Integer count) {
-		return buildCommentForClientList(commentDao.findHistory(dynamicsId, lastId, count));
+	public List<CommentForClient> getComments(Integer dynamicsId, Integer lastId, Integer count, Integer orientation) {
+		List<Comment> commentList = null;
+		if(lastId == -1) {
+			commentList = commentDao.findDefault(dynamicsId, count);
+		} else {
+			if(orientation == 1) {
+				commentList = commentDao.findLatest(dynamicsId, lastId, count);
+			} else {
+				commentList = commentDao.findHistory(dynamicsId, lastId, count);
+			}
+		}
+		return buildCommentForClientList(commentList);
 	}
 	private List<CommentForClient> buildCommentForClientList(List<Comment> commentList) {
 		if(commentList != null) {

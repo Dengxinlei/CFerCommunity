@@ -61,6 +61,7 @@ public class CommentServiceImpl implements CommentService {
 	private CommentForClient buildCommentForClient(Comment comment) {
 		if(comment != null) {
 			CommentForClient cc = new CommentForClient();
+			cc.setId(comment.getId());
 			cc.setAuthor(comment.getMemberName());
 			cc.setContent(comment.getContent());
 			cc.setHeadUrl(comment.getMemberHeadUrl());

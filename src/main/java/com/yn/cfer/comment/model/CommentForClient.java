@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * @author user
  */
 public class CommentForClient {
+	private Integer id;
 	private String author;
 	@SerializedName("member_id")
 	private Integer memberId;
@@ -52,5 +53,11 @@ public class CommentForClient {
 	}
 	public void setReply(String reply) {
 		this.reply = reply;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
 	}
 }

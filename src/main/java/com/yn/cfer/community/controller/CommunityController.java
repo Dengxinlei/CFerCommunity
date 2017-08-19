@@ -3,6 +3,7 @@
  */
 package com.yn.cfer.community.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -94,8 +95,8 @@ public class CommunityController {
     }
 	@RequestMapping(value = "praise")
     @ResponseBody
-    public ResponseMessage<Integer> praise(@RequestBody CommunityRequest message) {
-    	ResponseMessage<Integer> responseMessage = new ResponseMessage<Integer>();
+    public ResponseMessage<Map<String, Object>> praise(@RequestBody CommunityRequest message) {
+    	ResponseMessage<Map<String, Object>> responseMessage = new ResponseMessage<Map<String, Object>>();
     	Integer dynamicsId = message.getDynamicsId();
     	Integer memberId = message.getMemberId();
     	if(dynamicsId == null || memberId == null) {
@@ -105,7 +106,9 @@ public class CommunityController {
     	}
 		try {
 			responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-			responseMessage.setData(dynamicsService.praise(dynamicsId, memberId));
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("type", dynamicsService.praise(dynamicsId, memberId));
+			responseMessage.setData(map);
 		} catch (BusinessException e) {
 			e.printStackTrace();
 			responseMessage.setCode(e.getCode());
@@ -129,8 +132,12 @@ public class CommunityController {
     		return responseMessage;
     	}
 		try {
-			responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-			responseMessage.setData(dynamicsService.report(dynamicsId, memberId));
+			if(dynamicsService.report(dynamicsId, memberId)) {
+				responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+			} else {
+				responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
+			}
+			responseMessage.setData(null);
 		} catch (BusinessException e) {
 			e.printStackTrace();
 			responseMessage.setCode(e.getCode());

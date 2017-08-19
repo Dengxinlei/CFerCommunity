@@ -53,8 +53,13 @@ public class CommentController {
     		return responseMessage;
     	}
     	try {
-    		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-			responseMessage.setData(commentService.create(dynamicsId, memberId, content, replyMemberId));
+    		
+    		if(commentService.create(dynamicsId, memberId, content, replyMemberId)){
+    			responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+    		} else {
+    			responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
+    		}
+			responseMessage.setData(null);
 		} catch (BusinessException e) {
 			e.printStackTrace();
 			responseMessage.setCode(e.getCode());

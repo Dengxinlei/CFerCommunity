@@ -182,7 +182,8 @@ public class DynamicsServiceImpl implements DynamicsService {
 	}
 	
 	@Transactional
-	public boolean praise(Integer dynamicsId, Integer memberId) throws BusinessException {
+	public Integer praise(Integer dynamicsId, Integer memberId) throws BusinessException {
+		Integer type = 1;
 		Dynamics dy = dynamicsDao.findById(dynamicsId);
 		if(dy == null) {
 			throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "动态不存在");
@@ -192,6 +193,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 		map.put("dynamicsId", dynamicsId);
 		map.put("praisedCount", dy.getPraisedCount());
 		if(dar != null) {
+			type = 2;
 			map.put("type", 2);
 			dynamicsDao.updateActionCount(map);
 			dynamicsActionRecordDao.delete(dynamicsId, memberId);
@@ -200,7 +202,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 			dynamicsDao.updateActionCount(map);
 			saveActionRecord(dynamicsId, memberId, DynamicsActionRecord.TYPE_PRAISE);
 		}
-		return true;
+		return type;
 	}
 	private int saveActionRecord(Integer dynamicsId, Integer memberId, Integer type) {
 		DynamicsActionRecord actionRecord = new DynamicsActionRecord();

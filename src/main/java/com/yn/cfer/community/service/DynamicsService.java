@@ -46,10 +46,10 @@ public interface DynamicsService {
 	 * 动态-点赞
 	 * @param dynamicsId
 	 * @param memberId
-	 * @return
+	 * @return 1 赞  2 取消赞
 	 * @throws BusinessException
 	 */
-	public boolean praise(Integer dynamicsId, Integer memberId) throws BusinessException;
+	public Integer praise(Integer dynamicsId, Integer memberId) throws BusinessException;
 	/**
 	 * 动态-举报
 	 * @param dynamicsId

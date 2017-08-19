@@ -94,8 +94,8 @@ public class CommunityController {
     }
 	@RequestMapping(value = "praise")
     @ResponseBody
-    public ResponseMessage<Boolean> praise(@RequestBody CommunityRequest message) {
-    	ResponseMessage<Boolean> responseMessage = new ResponseMessage<Boolean>();
+    public ResponseMessage<Integer> praise(@RequestBody CommunityRequest message) {
+    	ResponseMessage<Integer> responseMessage = new ResponseMessage<Integer>();
     	Integer dynamicsId = message.getDynamicsId();
     	Integer memberId = message.getMemberId();
     	if(dynamicsId == null || memberId == null) {
@@ -113,7 +113,7 @@ public class CommunityController {
 		} catch(Exception ex) {
 			ex.printStackTrace();
 			responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
-			responseMessage.setMessage("点赞失败");
+			responseMessage.setMessage("失败");
 		}
     	return responseMessage;
     }
@@ -275,7 +275,7 @@ public class CommunityController {
     	Integer lastId = message.getLastId() == null ? -1 : message.getLastId();
     	if(memberId == null) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
-    		responseMessage.setMessage("miss required param");
+    		responseMessage.setMessage("miss required param"); 
     		return responseMessage;
     	}
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);

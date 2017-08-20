@@ -15,6 +15,11 @@ public class Summary {
 	private String memberName;
 	@SerializedName("member_head_url")
 	private String memberHeadUrl;
+	private Integer age;
+	/**
+	 * 0: 男   1： 女
+	 */
+	private Integer gendar;
 	@SerializedName("fans_count")
 	private Integer fansCount;
 	@SerializedName("attented_count")
@@ -56,5 +61,17 @@ public class Summary {
 	}
 	public void setDynamicsCount(Integer dynamicsCount) {
 		this.dynamicsCount = dynamicsCount;
+	}
+	public Integer getAge() {
+		return age;
+	}
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+	public Integer getGendar() {
+		return gendar;
+	}
+	public void setGendar(Integer gendar) {
+		this.gendar = gendar;
 	}
 }

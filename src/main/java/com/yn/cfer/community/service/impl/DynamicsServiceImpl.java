@@ -4,6 +4,7 @@
 package com.yn.cfer.community.service.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -118,9 +119,12 @@ public class DynamicsServiceImpl implements DynamicsService {
 		return null;
 	}
 	@Transactional
-	public DynamicsForClient publish(Integer memberId, String description, List<String> picUrls) {
+	public DynamicsForClient publish(Integer memberId, String description, List<String> picUrls)  throws BusinessException {
 		// 根据memberId查询会员
 		Member member = memberDao.findById(memberId);
+		if(member == null) {
+			throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "会员不存在");
+		}
 		Dynamics dy = new Dynamics();
 		dy.setDescription(description);
 		dy.setHeadUrl(member.getAvatar());
@@ -330,12 +334,40 @@ public class DynamicsServiceImpl implements DynamicsService {
 		}
 		return null;
 	}
+	// 由出生日期获得年龄  
+    private Integer getAge(Date birthDay) {
+    	if(birthDay == null) {
+    		return 0;
+    	}
+        Calendar cal = Calendar.getInstance();  
+        if (cal.before(birthDay)) {  
+            return 0;  
+        }  
+        int yearNow = cal.get(Calendar.YEAR);  
+        int monthNow = cal.get(Calendar.MONTH);  
+        int dayOfMonthNow = cal.get(Calendar.DAY_OF_MONTH);  
+        cal.setTime(birthDay);  
+        int yearBirth = cal.get(Calendar.YEAR);  
+        int monthBirth = cal.get(Calendar.MONTH);  
+        int dayOfMonthBirth = cal.get(Calendar.DAY_OF_MONTH);  
+        int age = yearNow - yearBirth;  
+        if (monthNow <= monthBirth) {  
+            if (monthNow == monthBirth) {  
+                if (dayOfMonthNow < dayOfMonthBirth) age--;  
+            }else{  
+                age--;  
+            }  
+        }  
+        return age;  
+    }  
 	public Summary getMemberSummary(Integer memberId) {
 		Member member = memberDao.findById(memberId);
 		if(member == null) {
 			return null;
 		}
 		Summary sy = new Summary();
+		sy.setGendar(member.getSex());
+		sy.setAge(getAge(member.getBirthday()));
 		sy.setMemberId(memberId);
 		sy.setMemberName(member.getName());
 		sy.setMemberHeadUrl(member.getAvatar());

@@ -32,6 +32,21 @@ public class MemberAttentionServiceImpl implements MemberAttentionService {
 			throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "已添加关注");
 		}
 		Date now = new Date();
+		MemberAttention self = memberAttentionDao.find(memberId, memberId);
+		// 没有关注自己,则关注自己
+		if(self == null) {
+			self = new MemberAttention();
+			self.setAttentionMemberId(memberId);
+			self.setMemberId(memberId);
+			self.setMemberName(m.getName());
+			self.setMemberHeadUrl(m.getAvatar());
+			self.setAttentionMemberName(m.getName());
+			self.setAttentionMemberHeadUrl(m.getAvatar());
+			self.setCreateTime(now);
+			self.setStatus(MemberAttention.STATUS_ONLY_ONE);
+			memberAttentionDao.add(self);
+		}
+		
 		MemberAttention ma = new MemberAttention();
 		ma.setAttentionMemberId(attentionMemberId);
 		ma.setMemberId(memberId);

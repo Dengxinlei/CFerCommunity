@@ -44,28 +44,28 @@
     </update>
     
     <select id="findFansListDefault" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND STATUS != 2 ORDER BY CREATE_TIME DESC limit #{count}
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND STATUS != 2 AND MEMBER_ID != #{memberId} ORDER BY CREATE_TIME DESC limit #{count}
     </select>
     <select id="findFansListLatest" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND STATUS != 2 AND ID &gt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count}
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND STATUS != 2 AND ID &gt; #{lastId}  AND MEMBER_ID != #{memberId} ORDER BY CREATE_TIME DESC LIMIT #{count}
     </select>
     <select id="findFansListHistory" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND STATUS != 2 AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count}
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND STATUS != 2 AND ID &lt; #{lastId}  AND MEMBER_ID != #{memberId} ORDER BY CREATE_TIME DESC LIMIT #{count}
     </select>
     
     <select id="findAttentedListDefault" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2 ORDER BY CREATE_TIME DESC LIMIT #{count}
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2  AND ATTENTION_MEMBER_ID != #{memberId} ORDER BY CREATE_TIME DESC LIMIT #{count}
     </select>
     <select id="findAttentedListLatest" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2 AND ID &gt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count}
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2 AND ID &gt; #{lastId} AND ATTENTION_MEMBER_ID != #{memberId} ORDER BY CREATE_TIME DESC LIMIT #{count}
     </select>
     <select id="findAttentedHistory" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2 AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count}
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2 AND ID &lt; #{lastId} AND ATTENTION_MEMBER_ID != #{memberId} ORDER BY CREATE_TIME DESC LIMIT #{count}
     </select>
     <select id="countFansByAttentionMemberId" resultType="java.lang.Integer">
-    	SELECT count(ID) FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId}
+    	SELECT count(ID) FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND MEMBER_ID != #{memberId}
     </select>
     <select id="countAttentedByMemberId" resultType="java.lang.Integer">
-    	SELECT count(ID) FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId}
+    	SELECT count(ID) FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND MEMBER_ID != #{memberId} AND ATTENTION_MEMBER_ID != #{memberId}
     </select>
 </mapper>

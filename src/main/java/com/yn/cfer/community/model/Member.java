@@ -18,6 +18,9 @@ public class Member {
 	private String name;
 	private String phone;
 	private String pinCode;
+	/**
+	 * 0: 男   1： 女
+	 */
 	private Integer sex;
 	private Integer status;
 	private Integer weight;

@@ -70,6 +70,9 @@ public class CommunityController {
     	try{
     		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
     		responseMessage.setData(dynamicsService.publish(memberId, description, picUrls));
+    	} catch (BusinessException be) {
+    		responseMessage.setCode(be.getCode());
+    		responseMessage.setMessage(be.getMessage());
     	} catch(Exception e) {
     		e.printStackTrace();
     		responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);

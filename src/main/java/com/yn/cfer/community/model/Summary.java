@@ -26,6 +26,11 @@ public class Summary {
 	private Integer attentedCount;
 	@SerializedName("dynamics_count")
 	private Integer dynamicsCount;
+	/**
+	 * 是否已关注  0：未关注   1：已关注
+	 */
+	@SerializedName("is_attented")
+	private Integer isAttented = 0;
 	public Integer getMemberId() {
 		return memberId;
 	}
@@ -73,5 +78,11 @@ public class Summary {
 	}
 	public void setGendar(Integer gendar) {
 		this.gendar = gendar;
+	}
+	public Integer getIsAttented() {
+		return isAttented;
+	}
+	public void setIsAttented(Integer isAttented) {
+		this.isAttented = isAttented;
 	}
 }

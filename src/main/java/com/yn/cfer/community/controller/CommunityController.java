@@ -251,13 +251,14 @@ public class CommunityController {
     public ResponseMessage<Summary> summary(@RequestBody CommunityRequest message) {
     	ResponseMessage<Summary> responseMessage = new ResponseMessage<Summary>();
     	Integer memberId = message.getMemberId();
-    	if(memberId == null) {
+    	Integer attentionMemberId = message.getAttentionMemberId();
+    	if(memberId == null || attentionMemberId == null) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
     		responseMessage.setMessage("miss required param");
     		return responseMessage;
     	}
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.getMemberSummary(memberId));
+		responseMessage.setData(dynamicsService.getMemberSummary(memberId, attentionMemberId));
     	return responseMessage;
     }
 	@RequestMapping(value = "personal_dynamics_list")

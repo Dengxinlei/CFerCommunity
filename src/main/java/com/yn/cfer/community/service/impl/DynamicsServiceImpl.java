@@ -360,20 +360,24 @@ public class DynamicsServiceImpl implements DynamicsService {
         }  
         return age;  
     }  
-	public Summary getMemberSummary(Integer memberId) {
-		Member member = memberDao.findById(memberId);
+	public Summary getMemberSummary(Integer memberId, Integer attentionMemberId) {
+		Member member = memberDao.findById(attentionMemberId);
 		if(member == null) {
 			return null;
 		}
 		Summary sy = new Summary();
 		sy.setGendar(member.getSex());
 		sy.setAge(getAge(member.getBirthday()));
-		sy.setMemberId(memberId);
+		sy.setMemberId(attentionMemberId);
 		sy.setMemberName(member.getName());
 		sy.setMemberHeadUrl(member.getAvatar());
-		sy.setDynamicsCount(dynamicsDao.countByMemberId(memberId));
-		sy.setFansCount(memberAttentionDao.countFansByAttentionMemberId(memberId));
-		sy.setAttentedCount(memberAttentionDao.countAttentedByMemberId(memberId));
+		sy.setDynamicsCount(dynamicsDao.countByMemberId(attentionMemberId));
+		sy.setFansCount(memberAttentionDao.countFansByAttentionMemberId(attentionMemberId));
+		sy.setAttentedCount(memberAttentionDao.countAttentedByMemberId(attentionMemberId));
+		MemberAttention ma = memberAttentionDao.find(memberId, attentionMemberId);
+		if(ma != null) {
+			sy.setIsAttented(1);
+		}
 		return sy;
 	}
 	public List<Map<String, Object>> getPersonalList(Integer memberId, Integer lastId, Integer count) {

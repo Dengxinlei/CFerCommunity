@@ -84,7 +84,7 @@ public interface DynamicsService {
 	 * @param memberId
 	 * @return
 	 */
-	public Summary getMemberSummary(Integer memberId);
+	public Summary getMemberSummary(Integer memberId, Integer attentionMemberId);
 	/**
 	 * 获取个人发布的动态列表
 	 * @param memberId

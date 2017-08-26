@@ -23,6 +23,8 @@ public class CommunityRequest {
 	private String description;
 	@SerializedName("member_id")
 	private Integer memberId;
+	@SerializedName("dest_member_id")
+	private Integer destMemberId;
 	@SerializedName("attention_member_id")
 	private Integer attentionMemberId;
 	@SerializedName("pic_urls")
@@ -83,5 +85,11 @@ public class CommunityRequest {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public Integer getDestMemberId() {
+		return destMemberId;
+	}
+	public void setDestMemberId(Integer destMemberId) {
+		this.destMemberId = destMemberId;
 	}
 }

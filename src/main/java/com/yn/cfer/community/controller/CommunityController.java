@@ -265,7 +265,7 @@ public class CommunityController {
     @ResponseBody
     public ResponseMessage<List<Map<String, Object>>> getPersonalList(@RequestBody CommunityRequest message) {
     	ResponseMessage<List<Map<String, Object>>> responseMessage = new ResponseMessage<List<Map<String, Object>>>();
-    	Integer memberId = message.getMemberId();
+    	Integer memberId = message.getDestMemberId();
     	Integer count = message.getCount() == null ? 10 : message.getCount();
     	Integer lastId = message.getLastId() == null ? -1 : message.getLastId();
     	if(memberId == null) {

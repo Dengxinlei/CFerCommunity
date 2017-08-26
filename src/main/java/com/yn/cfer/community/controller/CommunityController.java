@@ -159,6 +159,7 @@ public class CommunityController {
     	ResponseMessage<Boolean> responseMessage = new ResponseMessage<Boolean>();
     	Integer memberId = message.getMemberId();
     	Integer attentionMemberId = message.getAttentionMemberId();
+    	Integer type = message.getType();
     	if(memberId == null || attentionMemberId == null) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
     		responseMessage.setMessage("miss required param");

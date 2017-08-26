@@ -32,6 +32,7 @@ public class CommunityRequest {
 	@SerializedName("dynamics_id")
 	private Integer dynamicsId;
 	private String name;
+	private Integer type;
 	public Integer getLastId() {
 		return lastId;
 	}
@@ -91,5 +92,11 @@ public class CommunityRequest {
 	}
 	public void setDestMemberId(Integer destMemberId) {
 		this.destMemberId = destMemberId;
+	}
+	public Integer getType() {
+		return type;
+	}
+	public void setType(Integer type) {
+		this.type = type;
 	}
 }

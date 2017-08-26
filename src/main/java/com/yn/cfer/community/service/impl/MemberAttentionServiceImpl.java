@@ -18,7 +18,7 @@ public class MemberAttentionServiceImpl implements MemberAttentionService {
 	private MemberAttentionDao memberAttentionDao;
 	@Autowired
 	private MemberDao memberDao;
-	public boolean attention(Integer memberId, Integer attentionMemberId) throws BusinessException {
+	public boolean attention(Integer memberId, Integer attentionMemberId, Integer type) throws BusinessException {
 		Member m = memberDao.findById(memberId);
 		if(m == null) {
 			throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "会员不存在");
@@ -27,6 +27,14 @@ public class MemberAttentionServiceImpl implements MemberAttentionService {
 		if(m2 == null) {
 			throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "被关注会员不存在");
 		}
+		
+		// 取消关注
+		if(type != null && type.intValue() == 2) {
+			
+		} else {
+			
+		}
+		
 		MemberAttention dbMa = memberAttentionDao.find(memberId, attentionMemberId);
 		if(dbMa != null) {
 			throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "已添加关注");

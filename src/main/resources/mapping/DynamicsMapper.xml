@@ -14,6 +14,7 @@
         <result column="REPORT_COUNT" property="reportCount" jdbcType="INTEGER"/>
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="PHONE" property="phone" jdbcType="VARCHAR"/>
         <collection property="materials" ofType="com.yn.cfer.community.model.DynamicsMaterial" column="ID" select="findMaterials">
         	<id column="ID" property="id"/>
         	<result column="DYNAMICS_ID" property="dynamicsId"/>
@@ -25,10 +26,10 @@
         </collection>
     </resultMap>
     <sql id="base_col" >
-    	ID, MEMBER_ID, OWNER, HEAD_URL, DESCRIPTION, LOCATION, STATUS, PRAISED_COUNT, COMMENT_COUNT, REPORT_COUNT, CREATE_TIME, UPDATE_TIME
+    	ID, MEMBER_ID, OWNER, HEAD_URL, DESCRIPTION, LOCATION, STATUS, PRAISED_COUNT, COMMENT_COUNT, REPORT_COUNT, CREATE_TIME, UPDATE_TIME, PHONE
     </sql>
     <sql id="base_col_without_id" >
-    	MEMBER_ID, OWNER, HEAD_URL, DESCRIPTION, LOCATION, STATUS, PRAISED_COUNT, COMMENT_COUNT, REPORT_COUNT, CREATE_TIME, UPDATE_TIME
+    	MEMBER_ID, OWNER, HEAD_URL, DESCRIPTION, LOCATION, STATUS, PRAISED_COUNT, COMMENT_COUNT, REPORT_COUNT, CREATE_TIME, UPDATE_TIME, PHONE
     </sql>
     <sql id="material_col_without_id" >
     	DYNAMICS_ID, URL, TYPE, CONTENT, CREATE_TIME, UPDATE_TIME
@@ -36,7 +37,7 @@
     <insert id="add" parameterType="com.yn.cfer.community.model.Dynamics" useGeneratedKeys="true" keyProperty="id">
     	INSERT INTO T_CY_DYNAMICS (<include refid="base_col_without_id"></include>)
     	VALUES (#{memberId}, #{owner}, #{headUrl}, #{description}, #{location}, #{status},
-    	 #{praisedCount}, #{commentCount}, #{reportCount}, #{createTime}, #{updateTime})
+    	 #{praisedCount}, #{commentCount}, #{reportCount}, #{createTime}, #{updateTime}, #{phone})
     </insert>
     <select id="findDefault" resultMap="BaseResultMap">
     	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE REPORT_COUNT &lt;= 9 ORDER BY CREATE_TIME DESC LIMIT #{count};
@@ -78,10 +79,10 @@
     	 WHERE ID = #{dynamicsId}
     </update>
     <select id="findLikeByNameDefault" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE OWNER LIKE CONCAT('%', #{owner},'%') ORDER BY CREATE_TIME DESC LIMIT #{count}; 
+    	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE OWNER LIKE CONCAT('%', #{owner},'%') OR PHONE LIKE CONCAT('%', #{owner},'%') ORDER BY CREATE_TIME DESC LIMIT #{count}; 
     </select>
     <select id="findLikeByNameHistory" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE OWNER LIKE CONCAT('%', #{owner},'%') AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count}; 
+    	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE (OWNER LIKE CONCAT('%', #{owner},'%')  OR PHONE LIKE CONCAT('%', #{owner},'%')) AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count}; 
     </select>
     <select id = "findAttentedMemberDynamicsListDefault" resultMap="BaseResultMap">
     	SELECT ID FROM T_CY_DYNAMICS WHERE MEMBER_ID IN (SELECT ATTENTION_MEMBER_ID FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2) ORDER BY CREATE_TIME DESC LIMIT #{count} 

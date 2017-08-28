@@ -132,6 +132,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 		dy.setMemberId(memberId);
 		dy.setOwner(member.getName());
 		dy.setCreateTime(new Date());
+		dy.setPhone(member.getPhone());
 		dynamicsDao.add(dy);
 		List<DynamicsMaterial> dmList = new ArrayList<DynamicsMaterial>();
 		DynamicsMaterial dm = null;

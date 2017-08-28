@@ -44,8 +44,10 @@ public class Dynamics {
 	 * 举报数量
 	 */
 	private Integer reportCount = 0;
-	
-	
+	/**
+	 * 用户手机号码
+	 */
+	private String phone;
 	private Date createTime;
 	private Date updateTime;
 	
@@ -127,5 +129,11 @@ public class Dynamics {
 	}
 	public void setReportCount(Integer reportCount) {
 		this.reportCount = reportCount;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 }

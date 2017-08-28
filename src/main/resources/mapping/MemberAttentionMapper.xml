@@ -30,7 +30,7 @@
     	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND STATUS != 2 ORDER BY CREATE_TIME DESC
     </select>
     <select id="find" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND ATTENTION_MEMBER_ID = #{attentionMemberId} AND STATUS != 2
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND ATTENTION_MEMBER_ID = #{attentionMemberId}
     </select>
     <update id="updateById" parameterType="com.yn.cfer.community.model.MemberAttention">
     	UPDATE T_MEMBER_ATTENTION
@@ -66,6 +66,9 @@
     	SELECT count(ID) FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND MEMBER_ID != #{memberId}
     </select>
     <select id="countAttentedByMemberId" resultType="java.lang.Integer">
-    	SELECT count(ID) FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND MEMBER_ID != #{memberId} AND ATTENTION_MEMBER_ID != #{memberId}
+    	SELECT count(ID) FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND ATTENTION_MEMBER_ID != #{memberId}
+    </select>
+    <select id="findFansTop10" resultMap="BaseResultMap">
+    	SELECT ID,ATTENTION_MEMBER_ID, ATTENTION_MEMBER_NAME, ATTENTION_MEMBER_HEAD_URL FROM T_MEMBER_ATTENTION WHERE MEMBER_ID != ATTENTION_MEMBER_ID AND ATTENTION_MEMBER_ID != #{memberId}  GROUP BY ATTENTION_MEMBER_ID ORDER BY COUNT(ID) DESC LIMIT 10;
     </select>
 </mapper>

@@ -34,20 +34,16 @@ public interface DynamicsDao {
 	 * @return
 	 */
 	public List<Dynamics> findHistory(@Param("lastId") Integer lastId, @Param("count")Integer count);
-	
 	public Dynamics findById(Integer id);
 	public List<Dynamics> findByMemberIdDefault(@Param("memberId") Integer memberId, @Param("count") Integer count);
 	public List<Dynamics> findByMemberIdHistory(@Param("memberId") Integer memberId, @Param("lastId") Integer lastId, @Param("count") Integer count);
-	
 	public int updateActionCount(Map<String, Object> map);
-	
 	public List<Dynamics> findLikeByNameDefault(@Param("owner") String owner, @Param("count") Integer count);
 	public List<Dynamics> findLikeByNameHistory(@Param("owner") String owner,@Param("lastId") Integer lastId, @Param("count") Integer count);
-	
 	public List<Dynamics> findAttentedMemberDynamicsListDefault(@Param("memberId") Integer memberId, @Param("count") Integer count);
 	public List<Dynamics> findAttentedMemberDynamicsListLatest(@Param("memberId") Integer memberId, @Param("lastId") Integer lastId, @Param("count") Integer count);
 	public List<Dynamics> findAttentedMemberDynamicsListHistory(@Param("memberId") Integer memberId, @Param("lastId") Integer lastId, @Param("count") Integer count);
-	
 	public int countByMemberId(Integer memberId);
+	public List<Dynamics> findTop10(Integer memberId);
 }
 

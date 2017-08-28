@@ -101,4 +101,7 @@
     <select id="countByMemberId" resultType="java.lang.Integer">
     	SELECT count(ID) FROM T_CY_DYNAMICS WHERE MEMBER_ID = #{memberId}
     </select>
+    <select id="findTop10" resultMap="BaseResultMap">
+    	SELECT ID, MEMBER_ID, OWNER, HEAD_URL from T_CY_DYNAMICS WHERE MEMBER_ID != #{memberId} GROUP BY MEMBER_ID ORDER BY COUNT(ID) DESC LIMIT 10;
+    </select>
 </mapper>

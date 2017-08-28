@@ -262,7 +262,12 @@ public class DynamicsServiceImpl implements DynamicsService {
 		}
 		return buildFansForClientList(maList, 1);
 	}
-	
+	/**
+	 * 
+	 * @param ma
+	 * @param type 1=关注  2=粉丝
+	 * @return
+	 */
 	private FansForClient buildFansForClient(MemberAttention ma, Integer type) {
 		if(ma != null) {
 			FansForClient fc = new FansForClient();
@@ -277,7 +282,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 				fc.setMemberName(ma.getMemberName());
 			}
 			fc.setId(ma.getId());
-			fc.setStatus(ma.getStatus());
+			fc.setStatus(ma.getStatus() == null ? -1 : ma.getStatus());
 			return fc;
 		}
 		return null;
@@ -417,5 +422,60 @@ public class DynamicsServiceImpl implements DynamicsService {
 			return list;
 		}
 		return null;
+	}
+	
+	public List<FansForClient> recommendAttentionList(Integer memberId) {
+		int dynamicsCount = dynamicsDao.countByMemberId(memberId);
+		int attentedCount = memberAttentionDao.countAttentedByMemberId(memberId);
+		if(dynamicsCount == 0 && attentedCount == 0) {
+			List<FansForClient> ffcList = buildFansForClientList(memberAttentionDao.findFansTop10(memberId), 1);
+			if(ffcList == null || ffcList.size() == 0) {
+				List<Dynamics> dyList =dynamicsDao.findTop10(memberId);
+				// 构建fansForClient
+				MemberAttention ma = null;
+				List<MemberAttention> maList = new ArrayList<MemberAttention>();
+				if(dyList != null && dyList.size() >= 1) {
+					for(Dynamics dy : dyList) {
+						ma = new MemberAttention();
+						ma.setAttentionMemberId(dy.getMemberId());
+						ma.setAttentionMemberHeadUrl(dy.getHeadUrl());
+						ma.setAttentionMemberName(dy.getOwner());
+						ma.setStatus(-1);
+						maList.add(ma);
+					}
+				} else {
+					// 根据注册时间升序
+					List<Member> mbList = memberDao.findTop10(memberId);
+					for(Member mb : mbList) {
+						ma = new MemberAttention();
+						ma.setAttentionMemberId(mb.getId());
+						ma.setAttentionMemberHeadUrl(mb.getAvatar());
+						ma.setAttentionMemberName(mb.getName());
+						ma.setStatus(-1);
+						maList.add(ma);
+					}
+				}
+				return buildFansForClientList(maList, 1);
+			} else {
+				return ffcList;
+			}
+		}
+		return null;
+	}
+	public List<FansForClient> searchAttention(Integer memberId, String name) {
+		List<Member> mbList = memberDao.findByLikeName(memberId, name);
+		MemberAttention ma = null;
+		List<MemberAttention> maList = new ArrayList<MemberAttention>();
+		if(mbList != null && mbList.size() >= 1) {
+			for(Member mb : mbList) {
+				ma = new MemberAttention();
+				ma.setAttentionMemberId(mb.getId());
+				ma.setAttentionMemberHeadUrl(mb.getAvatar());
+				ma.setAttentionMemberName(mb.getName());
+				ma.setStatus(-1);
+				maList.add(ma);
+			}
+		}
+		return buildFansForClientList(maList, 1);
 	}
 }

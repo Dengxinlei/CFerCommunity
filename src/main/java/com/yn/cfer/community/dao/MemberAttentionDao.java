@@ -34,4 +34,5 @@ public interface MemberAttentionDao {
 	public int updateById(MemberAttention memberAttention);
 	public int countFansByAttentionMemberId(Integer memberId);
 	public int countAttentedByMemberId(Integer memberId);
+	public List<MemberAttention> findFansTop10(Integer memberId);
 }

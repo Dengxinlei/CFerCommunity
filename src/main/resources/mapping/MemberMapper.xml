@@ -28,4 +28,10 @@
     <select id="findById" resultMap="BaseResultMap">
     	SELECT <include refid="base_col"></include> FROM T_MEMBER WHERE ID = #{id};
     </select>
+    <select id="findTop10" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER WHERE ID != #{id} ORDER BY ID LIMIT 10;
+    </select>
+    <select id="findByLikeName" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER WHERE (`NAME` LIKE CONCAT('%', #{name},'%') OR PHONE LIKE CONCAT('%', #{name},'%')) AND ID != #{id} limit 20;
+    </select>
 </mapper>

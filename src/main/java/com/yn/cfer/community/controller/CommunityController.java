@@ -155,8 +155,8 @@ public class CommunityController {
 	
 	@RequestMapping(value = "attention")
     @ResponseBody
-    public ResponseMessage<Boolean> attention(@RequestBody CommunityRequest message) {
-    	ResponseMessage<Boolean> responseMessage = new ResponseMessage<Boolean>();
+    public ResponseMessage<Map<String, Object>> attention(@RequestBody CommunityRequest message) {
+    	ResponseMessage<Map<String, Object>> responseMessage = new ResponseMessage<Map<String, Object>>();
     	Integer memberId = message.getMemberId();
     	Integer attentionMemberId = message.getAttentionMemberId();
     	Integer type = message.getType();
@@ -167,7 +167,9 @@ public class CommunityController {
     	}
 		try {
 			responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-			responseMessage.setData(memberAttentionService.attention(memberId, attentionMemberId));
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("type", memberAttentionService.attention(memberId, attentionMemberId, type));
+			responseMessage.setData(map);
 		} catch (BusinessException e) {
 			e.printStackTrace();
 			responseMessage.setCode(e.getCode());
@@ -292,6 +294,45 @@ public class CommunityController {
     	}
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
 		responseMessage.setData(dynamicsService.pictureList(memberId, lastId, count));
+    	return responseMessage;
+    }
+	/**
+	 * 推荐关注-列表
+	 * @param message
+	 * @return
+	 */
+	@RequestMapping(value = "recommend_attention_list")
+    @ResponseBody
+    public ResponseMessage<List<FansForClient>> recommendAttentionList(@RequestBody CommunityRequest message) {
+    	ResponseMessage<List<FansForClient>> responseMessage = new ResponseMessage<List<FansForClient>>();
+    	Integer memberId = message.getMemberId();
+    	if(memberId == null) {
+    		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
+    		responseMessage.setMessage("miss required param"); 
+    		return responseMessage;
+    	}
+		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+		responseMessage.setData(dynamicsService.recommendAttentionList(memberId));
+    	return responseMessage;
+    }
+	/**
+	 * 根据昵称或者账号搜索需要关注的列表
+	 * @param message
+	 * @return
+	 */
+	@RequestMapping(value = "search_attention")
+    @ResponseBody
+    public ResponseMessage<List<FansForClient>> searchAttention(@RequestBody CommunityRequest message) {
+    	ResponseMessage<List<FansForClient>> responseMessage = new ResponseMessage<List<FansForClient>>();
+    	Integer memberId = message.getMemberId();
+    	String name = message.getName();
+    	if(memberId == null || StringUtils.isBlank(name)) {
+    		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
+    		responseMessage.setMessage("miss required param"); 
+    		return responseMessage;
+    	}
+		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+		responseMessage.setData(dynamicsService.searchAttention(memberId, name));
     	return responseMessage;
     }
 }

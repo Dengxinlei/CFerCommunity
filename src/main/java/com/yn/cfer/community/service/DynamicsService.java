@@ -96,5 +96,8 @@ public interface DynamicsService {
 	
 	public List<Picture> pictureList(Integer memberId, Integer lastId, Integer count);
 	
+	public List<FansForClient> recommendAttentionList(Integer memberId);
+	
+	public List<FansForClient> searchAttention(Integer memberId, String name);
 	
 }

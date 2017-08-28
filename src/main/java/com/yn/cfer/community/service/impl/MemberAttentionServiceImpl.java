@@ -18,7 +18,8 @@ public class MemberAttentionServiceImpl implements MemberAttentionService {
 	private MemberAttentionDao memberAttentionDao;
 	@Autowired
 	private MemberDao memberDao;
-	public boolean attention(Integer memberId, Integer attentionMemberId, Integer type) throws BusinessException {
+	public Integer attention(Integer memberId, Integer attentionMemberId, Integer type) throws BusinessException {
+		type = type == null ? 1 : type; 
 		Member m = memberDao.findById(memberId);
 		if(m == null) {
 			throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "会员不存在");
@@ -28,52 +29,67 @@ public class MemberAttentionServiceImpl implements MemberAttentionService {
 			throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "被关注会员不存在");
 		}
 		
+		MemberAttention dbMa = memberAttentionDao.find(memberId, attentionMemberId);
 		// 取消关注
 		if(type != null && type.intValue() == 2) {
-			
+			if(dbMa == null) {
+				throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "未添加过关注,无法取消");
+			}
+			if(dbMa.getStatus().intValue() == MemberAttention.STATUS_CANCEL) {
+				throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "已取消关注");
+			}
+			MemberAttention updateMa = new MemberAttention();
+			updateMa.setId(dbMa.getId());
+			updateMa.setStatus(MemberAttention.STATUS_CANCEL);
+			memberAttentionDao.updateById(updateMa);
 		} else {
-			
+			if(dbMa != null && dbMa.getStatus().intValue() != MemberAttention.STATUS_CANCEL) {
+				throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "已添加关注");
+			} 
+			Date now = new Date();
+			MemberAttention self = memberAttentionDao.find(memberId, memberId);
+			// 没有关注自己,则关注自己
+			if(self == null) {
+				self = new MemberAttention();
+				self.setAttentionMemberId(memberId);
+				self.setMemberId(memberId);
+				self.setMemberName(m.getName());
+				self.setMemberHeadUrl(m.getAvatar());
+				self.setAttentionMemberName(m.getName());
+				self.setAttentionMemberHeadUrl(m.getAvatar());
+				self.setCreateTime(now);
+				self.setStatus(MemberAttention.STATUS_ONLY_ONE);
+				memberAttentionDao.add(self);
+			}
+			MemberAttention dbMa2 = memberAttentionDao.find(attentionMemberId, memberId);
+			if(dbMa != null && dbMa.getStatus().intValue() == 2) {
+				if(dbMa2 != null) {
+					dbMa.setStatus(MemberAttention.STATUS_EACH_OTHER);
+				} else {
+					dbMa.setStatus(MemberAttention.STATUS_ONLY_ONE);
+				}
+				memberAttentionDao.updateById(dbMa);
+			} else {
+				MemberAttention ma = new MemberAttention();
+				ma.setAttentionMemberId(attentionMemberId);
+				ma.setMemberId(memberId);
+				ma.setMemberName(m.getName());
+				ma.setMemberHeadUrl(m.getAvatar());
+				ma.setAttentionMemberName(m2.getName());
+				ma.setAttentionMemberHeadUrl(m2.getAvatar());
+				ma.setCreateTime(now);
+				if(dbMa2 != null) {
+					// 将状态更新为互关注
+					dbMa2.setStatus(MemberAttention.STATUS_EACH_OTHER);
+					memberAttentionDao.updateById(dbMa2);
+					ma.setStatus(MemberAttention.STATUS_EACH_OTHER);
+				} else {
+					ma.setStatus(MemberAttention.STATUS_ONLY_ONE);
+				}
+				memberAttentionDao.add(ma);
+			}
 		}
-		
-		MemberAttention dbMa = memberAttentionDao.find(memberId, attentionMemberId);
-		if(dbMa != null) {
-			throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "已添加关注");
-		}
-		Date now = new Date();
-		MemberAttention self = memberAttentionDao.find(memberId, memberId);
-		// 没有关注自己,则关注自己
-		if(self == null) {
-			self = new MemberAttention();
-			self.setAttentionMemberId(memberId);
-			self.setMemberId(memberId);
-			self.setMemberName(m.getName());
-			self.setMemberHeadUrl(m.getAvatar());
-			self.setAttentionMemberName(m.getName());
-			self.setAttentionMemberHeadUrl(m.getAvatar());
-			self.setCreateTime(now);
-			self.setStatus(MemberAttention.STATUS_ONLY_ONE);
-			memberAttentionDao.add(self);
-		}
-		
-		MemberAttention ma = new MemberAttention();
-		ma.setAttentionMemberId(attentionMemberId);
-		ma.setMemberId(memberId);
-		ma.setMemberName(m.getName());
-		ma.setMemberHeadUrl(m.getAvatar());
-		ma.setAttentionMemberName(m2.getName());
-		ma.setAttentionMemberHeadUrl(m2.getAvatar());
-		ma.setCreateTime(now);
-		MemberAttention dbMa2 = memberAttentionDao.find(attentionMemberId, memberId);
-		if(dbMa2 != null) {
-			// 将状态更新为互关注
-			dbMa2.setStatus(MemberAttention.STATUS_EACH_OTHER);
-			memberAttentionDao.updateById(dbMa2);
-			ma.setStatus(MemberAttention.STATUS_EACH_OTHER);
-		} else {
-			ma.setStatus(MemberAttention.STATUS_ONLY_ONE);
-		}
-		memberAttentionDao.add(ma);
-		return true;
+		return type;
 	}
 	
 

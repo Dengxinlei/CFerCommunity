@@ -63,10 +63,10 @@
     	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2 AND ID &lt; #{lastId} AND ATTENTION_MEMBER_ID != #{memberId} ORDER BY CREATE_TIME DESC LIMIT #{count}
     </select>
     <select id="countFansByAttentionMemberId" resultType="java.lang.Integer">
-    	SELECT count(ID) FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND MEMBER_ID != #{memberId}
+    	SELECT count(ID) FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND MEMBER_ID != #{memberId} AND STATUS != 2
     </select>
     <select id="countAttentedByMemberId" resultType="java.lang.Integer">
-    	SELECT count(ID) FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND ATTENTION_MEMBER_ID != #{memberId}
+    	SELECT count(ID) FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND ATTENTION_MEMBER_ID != #{memberId} AND STATUS != 2
     </select>
     <select id="findFansTop10" resultMap="BaseResultMap">
     	SELECT ID,ATTENTION_MEMBER_ID, ATTENTION_MEMBER_NAME, ATTENTION_MEMBER_HEAD_URL FROM T_MEMBER_ATTENTION WHERE MEMBER_ID != ATTENTION_MEMBER_ID AND ATTENTION_MEMBER_ID != #{memberId}  GROUP BY ATTENTION_MEMBER_ID ORDER BY COUNT(ID) DESC LIMIT 10;

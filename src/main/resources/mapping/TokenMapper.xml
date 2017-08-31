@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yn.cfer.community.dao.UserDao">
+    <resultMap id="BaseResultMap" type="com.yn.cfer.community.model.Token">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="BOX_ID" property="boxId" jdbcType="INTEGER"/>
+        <result column="IS_DELETED" property="isDeleted" jdbcType="INTEGER"/>
+        <result column="PASSWORD" property="password" jdbcType="VARCHAR"/>
+        <result column="RELATED_ID" property="relatedId" jdbcType="INTEGER"/>
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+        <result column="USER_TYPE" property="userType" jdbcType="VARCHAR"/>
+        <!-- <result column="HEAD_URL" property="headUrl" jdbcType="VARCHAR"/> -->
+    </resultMap>
+    <sql id="base_col" >
+    	ID, BOX_ID, IS_DELETED, PASSWORD, RELATED_ID, USER_NAME, USER_TYPE
+    </sql>
+    <sql id="base_col_without_id" >
+    	BOX_ID, IS_DELETED, PASSWORD, RELATED_ID, USER_NAME, USER_TYPE
+    </sql>
+    <select id="findById" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_USER WHERE ID = #{id};
+    </select>
+</mapper>

@@ -42,8 +42,8 @@ public class CommentController {
     }
 	@RequestMapping(value = "create")
     @ResponseBody
-    public ResponseMessage<Boolean> create(@RequestBody CommentRequest message) {
-    	ResponseMessage<Boolean> responseMessage = new ResponseMessage<Boolean>();
+    public ResponseMessage<CommentForClient> create(@RequestBody CommentRequest message) {
+    	ResponseMessage<CommentForClient> responseMessage = new ResponseMessage<CommentForClient>();
     	Integer dynamicsId = message.getDynamicsId();
     	Integer replyMemberId = message.getReplyMemberId();
     	String content = message.getContent();
@@ -53,12 +53,8 @@ public class CommentController {
     		return responseMessage;
     	}
     	try {
-    		if(commentService.create(dynamicsId, RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), content, replyMemberId)){
-    			responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-    		} else {
-    			responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
-    		}
-			responseMessage.setData(null);
+    		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+			responseMessage.setData(commentService.create(dynamicsId, RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), content, replyMemberId));
 		} catch (BusinessException e) {
 			e.printStackTrace();
 			responseMessage.setCode(e.getCode());

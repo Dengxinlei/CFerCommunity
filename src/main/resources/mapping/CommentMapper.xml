@@ -21,7 +21,7 @@
     <sql id="base_col_without_id" >
     	DYNAMICS_ID, MEMBER_ID, MEMBER_NAME, MEMBER_HEAD_URL, CONTENT, TYPE, REPLY_MEMBER_ID, REPLY_MEMBER_NAME, REPLY_MEMBER_HEAD_URL, CREATE_TIME, UPDATE_TIME
     </sql>
-    <insert id="add" parameterType="com.yn.cfer.comment.model.Comment">
+    <insert id="add" parameterType="com.yn.cfer.comment.model.Comment" useGeneratedKeys="true" keyProperty="id">
     	INSERT INTO T_CY_COMMENT (<include refid="base_col_without_id"></include>) VALUES(#{dynamicsId}, #{memberId}, #{memberName}, #{memberHeadUrl}, #{content}, #{type}, #{replyMemberId}, #{replyMemberName}, #{replyMemberHeadUrl}, #{createTime}, #{updateTime})
     </insert>
     <select id="findDefault" resultMap="BaseResultMap">

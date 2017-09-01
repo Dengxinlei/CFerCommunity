@@ -1,5 +1,6 @@
 package com.yn.cfer.comment.service.impl;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +74,7 @@ public class CommentServiceImpl implements CommentService {
 		return null;
 	}
 	@Transactional
-	public boolean create(Integer dynamicsId, Integer memberId, String content, Integer replyMemberId) throws BusinessException{
+	public CommentForClient create(Integer dynamicsId, Integer memberId, String content, Integer replyMemberId) throws BusinessException{
 		Member member = memberDao.findById(memberId);
 		if(member == null) {
 			throw new BusinessException(ErrorCode.ERROR_CODE_MEMBER_IS_NOT_EXISTS, "会员不存在");
@@ -99,14 +100,15 @@ public class CommentServiceImpl implements CommentService {
 			create.setReplyMemberId(replyMemberId);
 			create.setReplyMemberName(replyMember.getName());
 		}
-		int result = commentDao.add(create);
+		commentDao.add(create);
+		create.setCreateTime(new Date());
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("dynamicsId", dynamicsId);
 		map.put("commentCount", dynamics.getCommentCount());
 		map.put("type", 1);
 		dynamicsDao.updateActionCount(map);
 		saveActionRecord(dynamicsId, memberId, DynamicsActionRecord.TYPE_COMMENT);
-		return result == 1;
+		return buildCommentForClient(create);
 	}
 	private int saveActionRecord(Integer dynamicsId, Integer memberId, Integer type) {
 		DynamicsActionRecord actionRecord = new DynamicsActionRecord();

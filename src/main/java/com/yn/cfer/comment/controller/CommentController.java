@@ -14,6 +14,7 @@ import com.yn.cfer.comment.service.CommentService;
 import com.yn.cfer.web.common.constant.ErrorCode;
 import com.yn.cfer.web.exceptions.BusinessException;
 import com.yn.cfer.web.protocol.ResponseMessage;
+import com.yn.cfer.web.servlet.RequestExecuteTimesFilter;
 /**
  * @author user
  */
@@ -44,17 +45,15 @@ public class CommentController {
     public ResponseMessage<Boolean> create(@RequestBody CommentRequest message) {
     	ResponseMessage<Boolean> responseMessage = new ResponseMessage<Boolean>();
     	Integer dynamicsId = message.getDynamicsId();
-    	Integer memberId = message.getMemberId();
     	Integer replyMemberId = message.getReplyMemberId();
     	String content = message.getContent();
-    	if(dynamicsId == null || memberId == null || StringUtils.isBlank(content)) {
+    	if(dynamicsId == null || StringUtils.isBlank(content)) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
     		responseMessage.setMessage("miss required param");
     		return responseMessage;
     	}
     	try {
-    		
-    		if(commentService.create(dynamicsId, memberId, content, replyMemberId)){
+    		if(commentService.create(dynamicsId, RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), content, replyMemberId)){
     			responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
     		} else {
     			responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);

@@ -10,6 +10,8 @@ import com.yn.cfer.community.model.DynamicsForClient;
 import com.yn.cfer.community.model.FansForClient;
 import com.yn.cfer.community.model.Picture;
 import com.yn.cfer.community.model.Summary;
+import com.yn.cfer.community.model.Token;
+import com.yn.cfer.community.model.User;
 import com.yn.cfer.web.exceptions.BusinessException;
 
 /**
@@ -100,4 +102,6 @@ public interface DynamicsService {
 	
 	public List<FansForClient> searchAttention(Integer memberId, String name);
 	
+	public Token findTokenByTokenKey(String token);
+	public User findUserById(Integer userId);
 }

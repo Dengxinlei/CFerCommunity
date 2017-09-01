@@ -27,6 +27,9 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.yn.cfer.community.model.Token;
+import com.yn.cfer.community.model.User;
+import com.yn.cfer.community.service.DynamicsService;
 import com.yn.cfer.web.common.constant.ErrorCode;
 import com.yn.cfer.web.protocol.MyRequestWrapper;
 
@@ -34,6 +37,7 @@ public class RequestExecuteTimesFilter implements Filter {
     private Logger logger = LoggerFactory.getLogger(RequestExecuteTimesFilter.class);
     // key: | String | 用户上传上来的登录token    value: | JSONObject | "memberId"=会员Id, "userId"=用户Id, "userType"=用户类型, "expire"=失效时间（2017-02-03 22:36:12）
     public final static Map<String, JSONObject> memberIdCache = new HashMap<String, JSONObject>();
+    private DynamicsService dynamicsService;
     public void destroy() {
     }
     public void doFilter(ServletRequest request, ServletResponse response,
@@ -56,6 +60,34 @@ public class RequestExecuteTimesFilter implements Filter {
         		response(ErrorCode.ERROR_CODE_MISS_TOKEN, "缺少token参数", response);
         		return;
         	}
+        	JSONObject cacheUserInfo = memberIdCache.get(token);
+        	if(cacheUserInfo == null) {
+        		Token tk = dynamicsService.findTokenByTokenKey(token);
+        		if(tk == null) {
+        			logger.debug("DB is not exists token:[{}]", token);
+            		response(ErrorCode.ERROR_CODE_TOKEN_IS_EXPIRED, "服务端token不存在", response);
+            		return;
+        		}
+        		User user = dynamicsService.findUserById(tk.getUserId());
+        		if(user == null) {
+        			logger.debug("DB is not exists user:[{}]", tk.getUserId());
+        			response(ErrorCode.ERROR_CODE_USER_IS_NOT_EXISTS, "用户不存在", response);
+        			return;
+        		}
+        		// 用户类型为4的认定为会员
+        		if(user.getUserType() != 4) {
+        			logger.debug("DB is user type is mistake:[{}] type:[{}]", tk.getUserId(), user.getUserType());
+        			response(ErrorCode.ERROR_CODE_USER_TYPE_ERROR, "用户类型不正确", response);
+        			return;
+        		}
+        		// 加入缓存
+        		cacheUserInfo = new JSONObject();
+        		cacheUserInfo.put("userId", tk.getUserId());
+        		cacheUserInfo.put("memberId", user.getRelatedId());
+        		cacheUserInfo.put("userType", user.getUserType());
+        		cacheUserInfo.put("expire", tk.getExpireTime());
+        		memberIdCache.put(token, cacheUserInfo);
+        	}
         	if(tokenIsExpired(token)) {
         		response(ErrorCode.ERROR_CODE_TOKEN_IS_EXPIRED, "token已失效", response);
         		return;
@@ -72,8 +104,15 @@ public class RequestExecuteTimesFilter implements Filter {
     public void init(FilterConfig arg0) throws ServletException {
     	ServletContext sc = arg0.getServletContext(); 
         XmlWebApplicationContext cxt = (XmlWebApplicationContext)WebApplicationContextUtils.getWebApplicationContext(sc);
-//      if(cxt != null && cxt.getBean("usersService") != null && usersService == null)
-//        usersService = (UsersService) cxt.getBean("usersService");
+        if(cxt != null && cxt.getBean(DynamicsService.class) != null && dynamicsService == null)
+        	dynamicsService = cxt.getBean(DynamicsService.class);
+    }
+    public static Integer getCurrentUserMemberId(String token) {
+    	JSONObject userInfo = memberIdCache.get(token);
+    	if(userInfo != null) {
+    		return userInfo.getInteger("memberId");
+    	}
+    	return -1;
     }
     private boolean tokenIsExpired(String token) {
     	JSONObject userInfo = memberIdCache.get(token);
@@ -99,6 +138,7 @@ public class RequestExecuteTimesFilter implements Filter {
     }
     private void response(Integer code, String message, ServletResponse response) {
     	try {
+    		response.setContentType("application/json;charset=UTF-8");
 			PrintWriter writer = response.getWriter();
 			JSONObject resp = new JSONObject();
 			resp.put("code", code);

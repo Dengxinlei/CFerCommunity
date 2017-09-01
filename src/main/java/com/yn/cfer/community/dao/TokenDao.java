@@ -1,9 +1,9 @@
 package com.yn.cfer.community.dao;
 
-import com.yn.cfer.community.model.User;
+import com.yn.cfer.community.model.Token;
 /**
  * @author user
  */
 public interface TokenDao {
-	public User findById(Integer userId);
+	public Token findByTokenKey(String token);
 }

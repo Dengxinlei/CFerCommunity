@@ -21,8 +21,6 @@ public class CommunityRequest {
 	private Integer orientation;
 	
 	private String description;
-	@SerializedName("member_id")
-	private Integer memberId;
 	@SerializedName("dest_member_id")
 	private Integer destMemberId;
 	@SerializedName("attention_member_id")
@@ -33,6 +31,7 @@ public class CommunityRequest {
 	private Integer dynamicsId;
 	private String name;
 	private Integer type;
+	private String token;
 	public Integer getLastId() {
 		return lastId;
 	}
@@ -56,12 +55,6 @@ public class CommunityRequest {
 	}
 	public void setDescription(String description) {
 		this.description = description;
-	}
-	public Integer getMemberId() {
-		return memberId;
-	}
-	public void setMemberId(Integer memberId) {
-		this.memberId = memberId;
 	}
 	public List<String> getPicUrls() {
 		return picUrls;
@@ -98,5 +91,11 @@ public class CommunityRequest {
 	}
 	public void setType(Integer type) {
 		this.type = type;
+	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
 	}
 }

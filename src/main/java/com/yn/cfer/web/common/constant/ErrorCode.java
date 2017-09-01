@@ -14,9 +14,13 @@ public class ErrorCode {
      */
     public static final int ERROR_CODE_FAILURE = 1;
     /**
+     * 用户不存在
+     */
+    public static final int ERROR_CODE_USER_IS_NOT_EXISTS = 100;
+    /**
      * 用户类型不正确
      */
-    public static final int ERROR_CODE_USER_TYPE_ERROR = 2;
+    public static final int ERROR_CODE_USER_TYPE_ERROR = 101;
     /**
      * 缺少参数
      */

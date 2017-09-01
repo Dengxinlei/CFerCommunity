@@ -22,6 +22,7 @@ import com.yn.cfer.community.dao.DynamicsDao;
 import com.yn.cfer.community.dao.DynamicsMaterialDao;
 import com.yn.cfer.community.dao.MemberAttentionDao;
 import com.yn.cfer.community.dao.MemberDao;
+import com.yn.cfer.community.dao.TokenDao;
 import com.yn.cfer.community.dao.UserDao;
 import com.yn.cfer.community.model.Dynamics;
 import com.yn.cfer.community.model.DynamicsActionRecord;
@@ -32,6 +33,8 @@ import com.yn.cfer.community.model.Member;
 import com.yn.cfer.community.model.MemberAttention;
 import com.yn.cfer.community.model.Picture;
 import com.yn.cfer.community.model.Summary;
+import com.yn.cfer.community.model.Token;
+import com.yn.cfer.community.model.User;
 import com.yn.cfer.community.service.DynamicsService;
 import com.yn.cfer.web.common.constant.ErrorCode;
 import com.yn.cfer.web.exceptions.BusinessException;
@@ -47,6 +50,8 @@ public class DynamicsServiceImpl implements DynamicsService {
 	private DynamicsMaterialDao dynamicsMaterialDao;
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private TokenDao tokenDao;
 	@Autowired
 	private CommentDao commentDao;
 	@Autowired
@@ -478,5 +483,11 @@ public class DynamicsServiceImpl implements DynamicsService {
 			}
 		}
 		return buildFansForClientList(maList, 1);
+	}
+	public Token findTokenByTokenKey(String token) {
+		return tokenDao.findByTokenKey(token);
+	}
+	public User findUserById(Integer userId) {
+		return userDao.findById(userId);
 	}
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONObject;
 import com.yn.cfer.community.model.CommunityRequest;
 import com.yn.cfer.community.model.DynamicsForClient;
 import com.yn.cfer.community.model.FansForClient;
@@ -25,6 +26,7 @@ import com.yn.cfer.community.service.MemberAttentionService;
 import com.yn.cfer.web.common.constant.ErrorCode;
 import com.yn.cfer.web.exceptions.BusinessException;
 import com.yn.cfer.web.protocol.ResponseMessage;
+import com.yn.cfer.web.servlet.RequestExecuteTimesFilter;
 
 /**
  * @author user
@@ -41,17 +43,11 @@ public class CommunityController {
     @ResponseBody
     public ResponseMessage<List<DynamicsForClient>> hotList(@RequestBody CommunityRequest message) {
     	ResponseMessage<List<DynamicsForClient>> responseMessage = new ResponseMessage<List<DynamicsForClient>>();
-    	Integer memberId = message.getMemberId();
-    	Integer lastId = message.getLastId();
+    	Integer lastId = message.getLastId() == null ? -1 : message.getLastId();
     	Integer count = message.getCount() == null ? 20 : message.getCount();
     	Integer orientation = message.getOrientation() == null ? 2 : message.getOrientation();
-    	if(lastId == null || memberId == null) {
-    		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
-    		responseMessage.setMessage("miss required param");
-    		return responseMessage;
-    	}
     	responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-    	responseMessage.setData(dynamicsService.getHotList(lastId, orientation, memberId, count));
+    	responseMessage.setData(dynamicsService.getHotList(lastId, orientation, RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), count));
     	return responseMessage;
     }
 	
@@ -60,16 +56,15 @@ public class CommunityController {
     public ResponseMessage<DynamicsForClient> dynamicsPublish(@RequestBody CommunityRequest message) {
     	ResponseMessage<DynamicsForClient> responseMessage = new ResponseMessage<DynamicsForClient>();
     	String description = message.getDescription();
-    	Integer memberId = message.getMemberId();
     	List<String> picUrls = message.getPicUrls();
-    	if(StringUtils.isBlank(description) || memberId == null || picUrls == null || picUrls.size() == 0) {
+    	if(StringUtils.isBlank(description) || picUrls == null || picUrls.size() == 0) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
     		responseMessage.setMessage("miss required param");
     		return responseMessage;
     	}
     	try{
     		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-    		responseMessage.setData(dynamicsService.publish(memberId, description, picUrls));
+    		responseMessage.setData(dynamicsService.publish(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), description, picUrls));
     	} catch (BusinessException be) {
     		responseMessage.setCode(be.getCode());
     		responseMessage.setMessage(be.getMessage());
@@ -85,15 +80,14 @@ public class CommunityController {
     public ResponseMessage<Map<String, Object>> dynamicsDetail(@RequestBody CommunityRequest message) {
     	ResponseMessage<Map<String, Object>> responseMessage = new ResponseMessage<Map<String, Object>>();
     	Integer dynamicsId = message.getDynamicsId();
-    	Integer memberId = message.getMemberId();
     	Integer count = message.getCount() == null ? 20 : message.getCount();
-    	if(dynamicsId == null || memberId == null) {
+    	if(dynamicsId == null) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
     		responseMessage.setMessage("miss required param");
     		return responseMessage;
     	}
     	responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.getDetail(dynamicsId, memberId, count));
+		responseMessage.setData(dynamicsService.getDetail(dynamicsId, RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), count));
     	return responseMessage;
     }
 	@RequestMapping(value = "praise")
@@ -101,8 +95,7 @@ public class CommunityController {
     public ResponseMessage<Map<String, Object>> praise(@RequestBody CommunityRequest message) {
     	ResponseMessage<Map<String, Object>> responseMessage = new ResponseMessage<Map<String, Object>>();
     	Integer dynamicsId = message.getDynamicsId();
-    	Integer memberId = message.getMemberId();
-    	if(dynamicsId == null || memberId == null) {
+    	if(dynamicsId == null) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
     		responseMessage.setMessage("miss required param");
     		return responseMessage;
@@ -110,7 +103,7 @@ public class CommunityController {
 		try {
 			responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("type", dynamicsService.praise(dynamicsId, memberId));
+			map.put("type", dynamicsService.praise(dynamicsId, RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken())));
 			responseMessage.setData(map);
 		} catch (BusinessException e) {
 			e.printStackTrace();
@@ -128,14 +121,13 @@ public class CommunityController {
     public ResponseMessage<Boolean> report(@RequestBody CommunityRequest message) {
     	ResponseMessage<Boolean> responseMessage = new ResponseMessage<Boolean>();
     	Integer dynamicsId = message.getDynamicsId();
-    	Integer memberId = message.getMemberId();
-    	if(dynamicsId == null || memberId == null) {
+    	if(dynamicsId == null) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
     		responseMessage.setMessage("miss required param");
     		return responseMessage;
     	}
 		try {
-			if(dynamicsService.report(dynamicsId, memberId)) {
+			if(dynamicsService.report(dynamicsId, RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()))) {
 				responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
 			} else {
 				responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
@@ -157,10 +149,9 @@ public class CommunityController {
     @ResponseBody
     public ResponseMessage<Map<String, Object>> attention(@RequestBody CommunityRequest message) {
     	ResponseMessage<Map<String, Object>> responseMessage = new ResponseMessage<Map<String, Object>>();
-    	Integer memberId = message.getMemberId();
     	Integer attentionMemberId = message.getAttentionMemberId();
     	Integer type = message.getType();
-    	if(memberId == null || attentionMemberId == null) {
+    	if(attentionMemberId == null) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
     		responseMessage.setMessage("miss required param");
     		return responseMessage;
@@ -168,7 +159,7 @@ public class CommunityController {
 		try {
 			responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("type", memberAttentionService.attention(memberId, attentionMemberId, type));
+			map.put("type", memberAttentionService.attention(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), attentionMemberId, type));
 			responseMessage.setData(map);
 		} catch (BusinessException e) {
 			e.printStackTrace();
@@ -185,83 +176,63 @@ public class CommunityController {
     @ResponseBody
     public ResponseMessage<List<FansForClient>> fans_list(@RequestBody CommunityRequest message) {
     	ResponseMessage<List<FansForClient>> responseMessage = new ResponseMessage<List<FansForClient>>();
-    	Integer memberId = message.getMemberId();
     	Integer orientation = message.getOrientation() == null ? 2 : message.getOrientation();
     	Integer count = message.getCount() == null ? 20 : message.getCount();
     	Integer lastId = message.getLastId() == null ? -1 : message.getLastId();
-    	if(memberId == null) {
-    		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
-    		responseMessage.setMessage("miss required param");
-    		return responseMessage;
-    	}
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.getFansList(memberId, lastId, orientation, count));
+		responseMessage.setData(dynamicsService.getFansList(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), lastId, orientation, count));
     	return responseMessage;
     }
 	@RequestMapping(value = "attented_list")
     @ResponseBody
     public ResponseMessage<List<FansForClient>> attented_list(@RequestBody CommunityRequest message) {
     	ResponseMessage<List<FansForClient>> responseMessage = new ResponseMessage<List<FansForClient>>();
-    	Integer memberId = message.getMemberId();
     	Integer orientation = message.getOrientation() == null ? 2 : message.getOrientation();
     	Integer count = message.getCount() == null ? 20 : message.getCount();
     	Integer lastId = message.getLastId() == null ? -1 : message.getLastId();
-    	if(memberId == null) {
-    		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
-    		responseMessage.setMessage("miss required param");
-    		return responseMessage;
-    	}
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.getAttentedList(memberId, lastId, orientation, count));
+		responseMessage.setData(dynamicsService.getAttentedList(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), lastId, orientation, count));
     	return responseMessage;
     }
 	@RequestMapping(value = "search")
     @ResponseBody
     public ResponseMessage<List<Map<String, Object>>> search(@RequestBody CommunityRequest message) {
     	ResponseMessage<List<Map<String, Object>>> responseMessage = new ResponseMessage<List<Map<String, Object>>>();
-    	Integer memberId = message.getMemberId();
     	Integer count = message.getCount() == null ? 10 : message.getCount();
     	Integer lastId = message.getLastId() == null ? -1 : message.getLastId();
     	String name = message.getName();
-    	if(memberId == null || StringUtils.isBlank(name)) {
+    	if(StringUtils.isBlank(name)) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
     		responseMessage.setMessage("miss required param");
     		return responseMessage;
     	}
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.searchLikeByName(memberId, name, lastId, count));
+		responseMessage.setData(dynamicsService.searchLikeByName(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), name, lastId, count));
     	return responseMessage;
     }
 	@RequestMapping(value = "attention_list")
     @ResponseBody
     public ResponseMessage<List<Map<String, Object>>> attentionList(@RequestBody CommunityRequest message) {
     	ResponseMessage<List<Map<String, Object>>> responseMessage = new ResponseMessage<List<Map<String, Object>>>();
-    	Integer memberId = message.getMemberId();
     	Integer count = message.getCount() == null ? 10 : message.getCount();
     	Integer lastId = message.getLastId() == null ? -1 : message.getLastId();
     	Integer orientation = message.getOrientation() == null ? 2 : message.getOrientation();
-    	if(memberId == null) {
-    		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
-    		responseMessage.setMessage("miss required param");
-    		return responseMessage;
-    	}
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.attentionList(memberId, lastId, orientation, count));
+		responseMessage.setData(dynamicsService.attentionList(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), lastId, orientation, count));
     	return responseMessage;
     }
 	@RequestMapping(value = "summary")
     @ResponseBody
     public ResponseMessage<Summary> summary(@RequestBody CommunityRequest message) {
     	ResponseMessage<Summary> responseMessage = new ResponseMessage<Summary>();
-    	Integer memberId = message.getMemberId();
     	Integer attentionMemberId = message.getAttentionMemberId();
-    	if(memberId == null || attentionMemberId == null) {
+    	if(attentionMemberId == null) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
     		responseMessage.setMessage("miss required param");
     		return responseMessage;
     	}
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.getMemberSummary(memberId, attentionMemberId));
+		responseMessage.setData(dynamicsService.getMemberSummary(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), attentionMemberId));
     	return responseMessage;
     }
 	@RequestMapping(value = "personal_dynamics_list")
@@ -284,16 +255,10 @@ public class CommunityController {
     @ResponseBody
     public ResponseMessage<List<Picture>> pictureList(@RequestBody CommunityRequest message) {
     	ResponseMessage<List<Picture>> responseMessage = new ResponseMessage<List<Picture>>();
-    	Integer memberId = message.getMemberId();
     	Integer count = message.getCount() == null ? 10 : message.getCount();
     	Integer lastId = message.getLastId() == null ? -1 : message.getLastId();
-    	if(memberId == null) {
-    		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
-    		responseMessage.setMessage("miss required param"); 
-    		return responseMessage;
-    	}
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.pictureList(memberId, lastId, count));
+		responseMessage.setData(dynamicsService.pictureList(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), lastId, count));
     	return responseMessage;
     }
 	/**
@@ -305,14 +270,8 @@ public class CommunityController {
     @ResponseBody
     public ResponseMessage<List<FansForClient>> recommendAttentionList(@RequestBody CommunityRequest message) {
     	ResponseMessage<List<FansForClient>> responseMessage = new ResponseMessage<List<FansForClient>>();
-    	Integer memberId = message.getMemberId();
-    	if(memberId == null) {
-    		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
-    		responseMessage.setMessage("miss required param"); 
-    		return responseMessage;
-    	}
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.recommendAttentionList(memberId));
+		responseMessage.setData(dynamicsService.recommendAttentionList(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken())));
     	return responseMessage;
     }
 	/**
@@ -324,15 +283,23 @@ public class CommunityController {
     @ResponseBody
     public ResponseMessage<List<FansForClient>> searchAttention(@RequestBody CommunityRequest message) {
     	ResponseMessage<List<FansForClient>> responseMessage = new ResponseMessage<List<FansForClient>>();
-    	Integer memberId = message.getMemberId();
     	String name = message.getName();
-    	if(memberId == null || StringUtils.isBlank(name)) {
+    	if(StringUtils.isBlank(name)) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
     		responseMessage.setMessage("miss required param"); 
     		return responseMessage;
     	}
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.searchAttention(memberId, name));
+		responseMessage.setData(dynamicsService.searchAttention(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), name));
+    	return responseMessage;
+    }
+	
+	@RequestMapping(value = "getMemberIdCache", method= RequestMethod.GET)
+    @ResponseBody
+    public ResponseMessage<Map<String, JSONObject>> getMemberIdCache() {
+    	ResponseMessage<Map<String, JSONObject>> responseMessage = new ResponseMessage<Map<String, JSONObject>>();
+		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+		responseMessage.setData(RequestExecuteTimesFilter.memberIdCache);
     	return responseMessage;
     }
 }

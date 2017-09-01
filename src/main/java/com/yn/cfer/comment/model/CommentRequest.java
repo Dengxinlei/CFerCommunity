@@ -12,11 +12,10 @@ public class CommentRequest {
 	private Integer count;
 	@SerializedName("dynamics_id")
 	private Integer dynamicsId;
-	@SerializedName("member_id")
-	private Integer memberId;
 	@SerializedName("reply_member_id")
 	private Integer replyMemberId;
 	private String content;
+	private String token;
 	/**
 	 * 1：上拉  2：下拉 默认2
 	 */
@@ -39,12 +38,6 @@ public class CommentRequest {
 	public void setDynamicsId(Integer dynamicsId) {
 		this.dynamicsId = dynamicsId;
 	}
-	public Integer getMemberId() {
-		return memberId;
-	}
-	public void setMemberId(Integer memberId) {
-		this.memberId = memberId;
-	}
 	public Integer getReplyMemberId() {
 		return replyMemberId;
 	}
@@ -62,5 +55,11 @@ public class CommentRequest {
 	}
 	public void setOrientation(Integer orientation) {
 		this.orientation = orientation;
+	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
 	}
 }

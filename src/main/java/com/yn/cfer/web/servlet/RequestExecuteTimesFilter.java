@@ -19,6 +19,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.poi.hssf.util.HSSFColor.DARK_TEAL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,14 +31,19 @@ import com.alibaba.fastjson.JSONObject;
 import com.yn.cfer.community.model.Token;
 import com.yn.cfer.community.model.User;
 import com.yn.cfer.community.service.DynamicsService;
+import com.yn.cfer.community.service.MemberAttentionService;
 import com.yn.cfer.web.common.constant.ErrorCode;
+import com.yn.cfer.web.exceptions.BusinessException;
 import com.yn.cfer.web.protocol.MyRequestWrapper;
 
 public class RequestExecuteTimesFilter implements Filter {
     private Logger logger = LoggerFactory.getLogger(RequestExecuteTimesFilter.class);
     // key: | String | 用户上传上来的登录token    value: | JSONObject | "memberId"=会员Id, "userId"=用户Id, "userType"=用户类型, "expire"=失效时间（2017-02-03 22:36:12）
     public final static Map<String, JSONObject> memberIdCache = new HashMap<String, JSONObject>();
+    // key: | Integer | 用户memberId  value: | Integer | 是否关注自己   1：关注   0: 未关注 
+    public final static Map<Integer, Integer> attentionSelf = new HashMap<Integer, Integer>();
     private DynamicsService dynamicsService;
+    private MemberAttentionService memberAttentionService;
     public void destroy() {
     }
     public void doFilter(ServletRequest request, ServletResponse response,
@@ -92,7 +98,7 @@ public class RequestExecuteTimesFilter implements Filter {
         		response(ErrorCode.ERROR_CODE_TOKEN_IS_EXPIRED, "token已失效", response);
         		return;
         	}
-        	
+        	attentionSelf(token);
         }
         long t1 = System.currentTimeMillis();
         logger.debug("RequestId=[{}], RequestExecuteTimesFilter-> Path=[{}], Content=[{}] IP=[{}]", t1, requestUri, content, remoteIp);
@@ -106,7 +112,11 @@ public class RequestExecuteTimesFilter implements Filter {
         XmlWebApplicationContext cxt = (XmlWebApplicationContext)WebApplicationContextUtils.getWebApplicationContext(sc);
         if(cxt != null && cxt.getBean(DynamicsService.class) != null && dynamicsService == null)
         	dynamicsService = cxt.getBean(DynamicsService.class);
+        
+        if(cxt != null && cxt.getBean(MemberAttentionService.class) != null && memberAttentionService == null)
+        	memberAttentionService = cxt.getBean(MemberAttentionService.class);
     }
+    
     public static Integer getCurrentUserMemberId(String token) {
     	JSONObject userInfo = memberIdCache.get(token);
     	if(userInfo != null) {
@@ -130,11 +140,20 @@ public class RequestExecuteTimesFilter implements Filter {
     	return false;
     }
     // 根据客户端上传token 获取member_id
-    private void getMemberId(String token) {
-    	// 根据token 查询T_TOKEN表
-    	// 根据USER_ID查询 T_USER表
-    	// 比对USER_TYPE 如果不等于4返回无效用户
-    	// 将拿到的用户信息存入缓存
+    private void attentionSelf(String token) {
+    	// 查询自己是否关注过自己 有则什么也不干， 没有则关注自己
+    	Integer memberId = getCurrentUserMemberId(token);
+    	Integer isAttented = attentionSelf.get(memberId);
+    	if(isAttented == null || isAttented.intValue() == 0) {
+    		try {
+				int result = memberAttentionService.attentionSelf(memberId);
+				attentionSelf.put(memberId, result);
+			} catch (BusinessException e) {
+				logger.error("attentionSelf exception: {}", ExceptionUtils.getFullStackTrace(e));
+			}
+    		
+    	}
+    	
     }
     private void response(Integer code, String message, ServletResponse response) {
     	try {

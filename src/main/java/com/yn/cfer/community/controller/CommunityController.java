@@ -299,6 +299,7 @@ public class CommunityController {
     public ResponseMessage<Map<String, JSONObject>> getMemberIdCache() {
     	ResponseMessage<Map<String, JSONObject>> responseMessage = new ResponseMessage<Map<String, JSONObject>>();
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+		responseMessage.setMessage("memberCount: ["+ RequestExecuteTimesFilter.memberIdCache.size() +"]");
 		responseMessage.setData(RequestExecuteTimesFilter.memberIdCache);
     	return responseMessage;
     }

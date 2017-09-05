@@ -28,7 +28,11 @@ public class ErrorCode {
     /**
      * 会员不存在
      */
-    public static final int ERROR_CODE_MEMBER_IS_NOT_EXISTS = 4;
+    public static final int ERROR_CODE_MEMBER_IS_NOT_EXISTS = 200;
+    /**
+     * 教练不存在
+     */
+    public static final int ERROR_CODE_COACH_IS_NOT_EXISTS = 300;
     /**
      * 缺少token参数
      */

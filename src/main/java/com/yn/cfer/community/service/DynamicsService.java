@@ -12,12 +12,14 @@ import com.yn.cfer.community.model.Picture;
 import com.yn.cfer.community.model.Summary;
 import com.yn.cfer.community.model.Token;
 import com.yn.cfer.community.model.User;
+import com.yn.cfer.community.model.UserDetail;
 import com.yn.cfer.web.exceptions.BusinessException;
 
 /**
  * @author user
  */
 public interface DynamicsService {
+	public UserDetail getUserDetailById(Integer userId) throws BusinessException;
 	/**
 	 * 获取热门列表
 	 * @param lastId
@@ -86,7 +88,7 @@ public interface DynamicsService {
 	 * @param memberId
 	 * @return
 	 */
-	public Summary getMemberSummary(Integer memberId, Integer attentionMemberId);
+	public Summary getUserSummary(Integer memberId, Integer attentionMemberId)  throws BusinessException;
 	/**
 	 * 获取个人发布的动态列表
 	 * @param memberId

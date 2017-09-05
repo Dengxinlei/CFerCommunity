@@ -63,12 +63,12 @@ public class CommentServiceImpl implements CommentService {
 		if(comment != null) {
 			CommentForClient cc = new CommentForClient();
 			cc.setId(comment.getId());
-			cc.setAuthor(comment.getMemberName());
+			cc.setAuthor(comment.getUserName());
 			cc.setContent(comment.getContent());
-			cc.setHeadUrl(comment.getMemberHeadUrl());
+			cc.setHeadUrl(comment.getUserHeadUrl());
 			cc.setPublishTime(comment.getCreateTime());
-			cc.setReply(comment.getReplyMemberName());
-			cc.setMemberId(comment.getMemberId());
+			cc.setReply(comment.getReplyUserName());
+			cc.setUserId(comment.getUserId());
 			return cc;
 		}
 		return null;
@@ -87,18 +87,18 @@ public class CommentServiceImpl implements CommentService {
 		Comment create = new Comment();
 		create.setContent(content);
 		create.setDynamicsId(dynamicsId);
-		create.setMemberHeadUrl(member.getAvatar());
-		create.setMemberName(member.getName());
-		create.setMemberId(memberId);
+		create.setUserHeadUrl(member.getAvatar());
+		create.setUserName(member.getName());
+		create.setUserId(memberId);
 		create.setType(Comment.TYPE_DYNAMICS);
 		if(replyMemberId != null) {
 			Member replyMember = memberDao.findById(replyMemberId);
 			if(replyMember == null) {
 				throw new BusinessException(ErrorCode.ERROR_CODE_MEMBER_IS_NOT_EXISTS, "被回复会员不存在");
 			}
-			create.setReplyMemberHeadUrl(replyMember.getAvatar());
-			create.setReplyMemberId(replyMemberId);
-			create.setReplyMemberName(replyMember.getName());
+			create.setReplyUserHeadUrl(replyMember.getAvatar());
+			create.setReplyUserId(replyMemberId);
+			create.setReplyUserName(replyMember.getName());
 		}
 		commentDao.add(create);
 		create.setCreateTime(new Date());
@@ -114,7 +114,7 @@ public class CommentServiceImpl implements CommentService {
 		DynamicsActionRecord actionRecord = new DynamicsActionRecord();
 		actionRecord.setDynamicsId(dynamicsId);
 		actionRecord.setType(type);
-		actionRecord.setMemberId(memberId);
+		actionRecord.setUserId(memberId);
 		return dynamicsActionRecordDao.add(actionRecord);
 	}
 }

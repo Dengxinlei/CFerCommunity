@@ -9,12 +9,12 @@ import com.google.gson.annotations.SerializedName;
  * @author 总览
  */
 public class Summary {
-	@SerializedName("member_id")
-	private Integer memberId;
-	@SerializedName("member_name")
-	private String memberName;
-	@SerializedName("member_head_url")
-	private String memberHeadUrl;
+	@SerializedName("user_id")
+	private Integer userId;
+	@SerializedName("user_name")
+	private String userName;
+	@SerializedName("user_head_url")
+	private String userHeadUrl;
 	private Integer age;
 	/**
 	 * 0: 男   1： 女
@@ -31,23 +31,24 @@ public class Summary {
 	 */
 	@SerializedName("is_attented")
 	private Integer isAttented = 0;
-	public Integer getMemberId() {
-		return memberId;
+	
+	public Integer getUserId() {
+		return userId;
 	}
-	public void setMemberId(Integer memberId) {
-		this.memberId = memberId;
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
-	public String getMemberName() {
-		return memberName;
+	public String getUserName() {
+		return userName;
 	}
-	public void setMemberName(String memberName) {
-		this.memberName = memberName;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
-	public String getMemberHeadUrl() {
-		return memberHeadUrl;
+	public String getUserHeadUrl() {
+		return userHeadUrl;
 	}
-	public void setMemberHeadUrl(String memberHeadUrl) {
-		this.memberHeadUrl = memberHeadUrl;
+	public void setUserHeadUrl(String userHeadUrl) {
+		this.userHeadUrl = userHeadUrl;
 	}
 	public Integer getFansCount() {
 		return fansCount;

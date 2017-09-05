@@ -31,7 +31,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.yn.cfer.community.model.Token;
 import com.yn.cfer.community.model.User;
 import com.yn.cfer.community.service.DynamicsService;
-import com.yn.cfer.community.service.MemberAttentionService;
+import com.yn.cfer.community.service.UserAttentionService;
 import com.yn.cfer.web.common.constant.ErrorCode;
 import com.yn.cfer.web.exceptions.BusinessException;
 import com.yn.cfer.web.protocol.MyRequestWrapper;
@@ -43,7 +43,7 @@ public class RequestExecuteTimesFilter implements Filter {
     // key: | Integer | 用户memberId  value: | Integer | 是否关注自己   1：关注   0: 未关注 
     public final static Map<Integer, Integer> attentionSelf = new HashMap<Integer, Integer>();
     private DynamicsService dynamicsService;
-    private MemberAttentionService memberAttentionService;
+    private UserAttentionService memberAttentionService;
     public void destroy() {
     }
     public void doFilter(ServletRequest request, ServletResponse response,
@@ -80,8 +80,9 @@ public class RequestExecuteTimesFilter implements Filter {
         			response(ErrorCode.ERROR_CODE_USER_IS_NOT_EXISTS, "用户不存在", response);
         			return;
         		}
-        		// 用户类型为4的认定为会员
-        		if(user.getUserType() != 4) {
+        		// 用户类型为4的认定为会员  3是教练
+        		int userType = user.getUserType();
+        		if(userType != 4 && userType != 3) {
         			logger.debug("DB is user type is mistake:[{}] type:[{}]", tk.getUserId(), user.getUserType());
         			response(ErrorCode.ERROR_CODE_USER_TYPE_ERROR, "用户类型不正确", response);
         			return;
@@ -89,7 +90,11 @@ public class RequestExecuteTimesFilter implements Filter {
         		// 加入缓存
         		cacheUserInfo = new JSONObject();
         		cacheUserInfo.put("userId", tk.getUserId());
-        		cacheUserInfo.put("memberId", user.getRelatedId());
+        		if(userType == 3) {
+        			cacheUserInfo.put("coachId", user.getRelatedId());
+        		} else if(userType == 4) {
+        			cacheUserInfo.put("memberId", user.getRelatedId());
+        		}
         		cacheUserInfo.put("userType", user.getUserType());
         		cacheUserInfo.put("expire", tk.getExpireTime());
         		memberIdCache.put(token, cacheUserInfo);
@@ -113,8 +118,8 @@ public class RequestExecuteTimesFilter implements Filter {
         if(cxt != null && cxt.getBean(DynamicsService.class) != null && dynamicsService == null)
         	dynamicsService = cxt.getBean(DynamicsService.class);
         
-        if(cxt != null && cxt.getBean(MemberAttentionService.class) != null && memberAttentionService == null)
-        	memberAttentionService = cxt.getBean(MemberAttentionService.class);
+        if(cxt != null && cxt.getBean(UserAttentionService.class) != null && memberAttentionService == null)
+        	memberAttentionService = cxt.getBean(UserAttentionService.class);
     }
     
     public static Integer getCurrentUserMemberId(String token) {

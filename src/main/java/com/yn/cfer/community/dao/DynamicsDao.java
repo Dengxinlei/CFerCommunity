@@ -35,15 +35,15 @@ public interface DynamicsDao {
 	 */
 	public List<Dynamics> findHistory(@Param("lastId") Integer lastId, @Param("count")Integer count);
 	public Dynamics findById(Integer id);
-	public List<Dynamics> findByMemberIdDefault(@Param("memberId") Integer memberId, @Param("count") Integer count);
-	public List<Dynamics> findByMemberIdHistory(@Param("memberId") Integer memberId, @Param("lastId") Integer lastId, @Param("count") Integer count);
+	public List<Dynamics> findByUserIdDefault(@Param("userId") Integer userId, @Param("count") Integer count);
+	public List<Dynamics> findByUserIdHistory(@Param("userId") Integer userId, @Param("lastId") Integer lastId, @Param("count") Integer count);
 	public int updateActionCount(Map<String, Object> map);
 	public List<Dynamics> findLikeByNameDefault(@Param("owner") String owner, @Param("count") Integer count);
 	public List<Dynamics> findLikeByNameHistory(@Param("owner") String owner,@Param("lastId") Integer lastId, @Param("count") Integer count);
-	public List<Dynamics> findAttentedMemberDynamicsListDefault(@Param("memberId") Integer memberId, @Param("count") Integer count);
-	public List<Dynamics> findAttentedMemberDynamicsListLatest(@Param("memberId") Integer memberId, @Param("lastId") Integer lastId, @Param("count") Integer count);
-	public List<Dynamics> findAttentedMemberDynamicsListHistory(@Param("memberId") Integer memberId, @Param("lastId") Integer lastId, @Param("count") Integer count);
-	public int countByMemberId(Integer memberId);
-	public List<Dynamics> findTop10(Integer memberId);
+	public List<Dynamics> findAttentedUserDynamicsListDefault(@Param("userId") Integer userId, @Param("count") Integer count);
+	public List<Dynamics> findAttentedUserDynamicsListLatest(@Param("userId") Integer userId, @Param("lastId") Integer lastId, @Param("count") Integer count);
+	public List<Dynamics> findAttentedUserDynamicsListHistory(@Param("userId") Integer userId, @Param("lastId") Integer lastId, @Param("count") Integer count);
+	public int countByUserId(Integer userId);
+	public List<Dynamics> findTop10(Integer userId);
 }
 

@@ -17,24 +17,27 @@ import org.springframework.transaction.annotation.Transactional;
 import com.yn.cfer.comment.dao.CommentDao;
 import com.yn.cfer.comment.model.Comment;
 import com.yn.cfer.comment.model.CommentForClient;
+import com.yn.cfer.community.dao.CoachDao;
 import com.yn.cfer.community.dao.DynamicsActionRecordDao;
 import com.yn.cfer.community.dao.DynamicsDao;
 import com.yn.cfer.community.dao.DynamicsMaterialDao;
-import com.yn.cfer.community.dao.MemberAttentionDao;
 import com.yn.cfer.community.dao.MemberDao;
 import com.yn.cfer.community.dao.TokenDao;
+import com.yn.cfer.community.dao.UserAttentionDao;
 import com.yn.cfer.community.dao.UserDao;
+import com.yn.cfer.community.model.Coach;
 import com.yn.cfer.community.model.Dynamics;
 import com.yn.cfer.community.model.DynamicsActionRecord;
 import com.yn.cfer.community.model.DynamicsForClient;
 import com.yn.cfer.community.model.DynamicsMaterial;
 import com.yn.cfer.community.model.FansForClient;
 import com.yn.cfer.community.model.Member;
-import com.yn.cfer.community.model.MemberAttention;
 import com.yn.cfer.community.model.Picture;
 import com.yn.cfer.community.model.Summary;
 import com.yn.cfer.community.model.Token;
 import com.yn.cfer.community.model.User;
+import com.yn.cfer.community.model.UserAttention;
+import com.yn.cfer.community.model.UserDetail;
 import com.yn.cfer.community.service.DynamicsService;
 import com.yn.cfer.web.common.constant.ErrorCode;
 import com.yn.cfer.web.exceptions.BusinessException;
@@ -57,10 +60,12 @@ public class DynamicsServiceImpl implements DynamicsService {
 	@Autowired
 	private MemberDao memberDao;
 	@Autowired
+	private CoachDao coachDao;
+	@Autowired
 	private DynamicsActionRecordDao dynamicsActionRecordDao;
 	@Autowired
-	private MemberAttentionDao memberAttentionDao;
-	public List<DynamicsForClient> getHotList(Integer lastId, Integer orientation, Integer memberId, Integer count) {
+	private UserAttentionDao userAttentionDao;
+	public List<DynamicsForClient> getHotList(Integer lastId, Integer orientation, Integer UserId, Integer count) {
 		// TODO Auto-generated method stub
 		List<Dynamics> dynamicsList = null;
 		if(lastId.intValue() == -1) {
@@ -72,9 +77,9 @@ public class DynamicsServiceImpl implements DynamicsService {
 				dynamicsList = dynamicsDao.findHistory(lastId, count);
 			}
 		}
-		return buildDynamicsForClientList(dynamicsList, memberId);
+		return buildDynamicsForClientList(dynamicsList, UserId);
 	}
-	private List<DynamicsForClient> buildDynamicsForClientList(List<Dynamics> dynamicsList, Integer memberId) {
+	private List<DynamicsForClient> buildDynamicsForClientList(List<Dynamics> dynamicsList, Integer UserId) {
 		if(dynamicsList != null && dynamicsList.size() >= 1) {
 			List<DynamicsForClient> destination = new ArrayList<DynamicsForClient>();
 			DynamicsForClient dyClient = null;
@@ -84,7 +89,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 				dynamicsIds.add(dy.getId());
 				destination.add(dyClient);
 			}
-			List<DynamicsActionRecord> actionRecords = dynamicsActionRecordDao.findByDynamicsIdsAndUserId(dynamicsIds, memberId, DynamicsActionRecord.TYPE_PRAISE);
+			List<DynamicsActionRecord> actionRecords = dynamicsActionRecordDao.findByDynamicsIdsAndUserId(dynamicsIds, UserId, DynamicsActionRecord.TYPE_PRAISE);
 			if(actionRecords != null && actionRecords.size() >= 1) {
 				for(int i = 0; i < destination.size(); i++) {
 					for(int j = 0; j < actionRecords.size(); j++) {
@@ -105,7 +110,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 			dyClient.setId(dy.getId());
 			dyClient.setLocation(dy.getLocation());
 			dyClient.setHeadUrl(dy.getHeadUrl());
-			dyClient.setMemberId(dy.getMemberId());
+			dyClient.setUserId(dy.getUserId());
 			dyClient.setOwner(dy.getOwner());
 			dyClient.setDescription(dy.getDescription());
 			dyClient.setCoverUrl(dy.getMaterials() != null && dy.getMaterials().size() >= 1? dy.getMaterials().get(0).getUrl() : null);
@@ -124,20 +129,21 @@ public class DynamicsServiceImpl implements DynamicsService {
 		return null;
 	}
 	@Transactional
-	public DynamicsForClient publish(Integer memberId, String description, List<String> picUrls)  throws BusinessException {
-		// 根据memberId查询会员
-		Member member = memberDao.findById(memberId);
-		if(member == null) {
-			throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "会员不存在");
+	public DynamicsForClient publish(Integer userId, String description, List<String> picUrls)  throws BusinessException {
+		// 根据UserId查询用户
+		User user = userDao.findById(userId);
+		if(user == null) {
+			throw new BusinessException(ErrorCode.ERROR_CODE_USER_IS_NOT_EXISTS, "用户不存在");
 		}
+		UserDetail ud = getUserDetailById(userId);
 		Dynamics dy = new Dynamics();
 		dy.setDescription(description);
-		dy.setHeadUrl(member.getAvatar());
+		dy.setHeadUrl(ud.getHeadUrl());
 		dy.setStatus(Dynamics.STATUS_NORMAL);
-		dy.setMemberId(memberId);
-		dy.setOwner(member.getName());
+		dy.setUserId(userId);
+		dy.setOwner(ud.getName());
 		dy.setCreateTime(new Date());
-		dy.setPhone(member.getPhone());
+		dy.setPhone(ud.getMobile());
 		dynamicsDao.add(dy);
 		List<DynamicsMaterial> dmList = new ArrayList<DynamicsMaterial>();
 		DynamicsMaterial dm = null;
@@ -153,10 +159,10 @@ public class DynamicsServiceImpl implements DynamicsService {
 		return buildDynamicsForClient(dy);
 	}
 	
-	public Map<String, Object> getDetail(Integer dynamicsId, Integer memberId, Integer count) {
+	public Map<String, Object> getDetail(Integer dynamicsId, Integer UserId, Integer count) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		DynamicsForClient dc = buildDynamicsForClient(dynamicsDao.findById(dynamicsId));
-		if(dynamicsActionRecordDao.findByDynamicsIdAndUserId(dynamicsId, memberId, DynamicsActionRecord.TYPE_PRAISE) != null) {
+		if(dynamicsActionRecordDao.findByDynamicsIdAndUserId(dynamicsId, UserId, DynamicsActionRecord.TYPE_PRAISE) != null) {
 			// 已赞
 			dc.setIsPraise(1);
 		}
@@ -180,25 +186,25 @@ public class DynamicsServiceImpl implements DynamicsService {
 	private CommentForClient buildCommentForClient(Comment comment) {
 		if(comment != null) {
 			CommentForClient cc = new CommentForClient();
-			cc.setAuthor(comment.getMemberName());
+			cc.setAuthor(comment.getUserName());
 			cc.setContent(comment.getContent());
-			cc.setHeadUrl(comment.getMemberHeadUrl());
+			cc.setHeadUrl(comment.getUserHeadUrl());
 			cc.setPublishTime(comment.getCreateTime());
-			cc.setReply(comment.getReplyMemberName());
-			cc.setMemberId(comment.getMemberId());
+			cc.setReply(comment.getReplyUserName());
+			cc.setUserId(comment.getUserId());
 			return cc;
 		}
 		return null;
 	}
 	
 	@Transactional
-	public Integer praise(Integer dynamicsId, Integer memberId) throws BusinessException {
+	public Integer praise(Integer dynamicsId, Integer UserId) throws BusinessException {
 		Integer type = 1;
 		Dynamics dy = dynamicsDao.findById(dynamicsId);
 		if(dy == null) {
 			throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "动态不存在");
 		}
-		DynamicsActionRecord dar = dynamicsActionRecordDao.findByDynamicsIdAndUserId(dynamicsId, memberId, DynamicsActionRecord.TYPE_PRAISE);
+		DynamicsActionRecord dar = dynamicsActionRecordDao.findByDynamicsIdAndUserId(dynamicsId, UserId, DynamicsActionRecord.TYPE_PRAISE);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("dynamicsId", dynamicsId);
 		map.put("praisedCount", dy.getPraisedCount());
@@ -206,19 +212,19 @@ public class DynamicsServiceImpl implements DynamicsService {
 			type = 2;
 			map.put("type", 2);
 			dynamicsDao.updateActionCount(map);
-			dynamicsActionRecordDao.delete(dynamicsId, memberId);
+			dynamicsActionRecordDao.delete(dynamicsId, UserId);
 		} else {
 			map.put("type", 1);
 			dynamicsDao.updateActionCount(map);
-			saveActionRecord(dynamicsId, memberId, DynamicsActionRecord.TYPE_PRAISE);
+			saveActionRecord(dynamicsId, UserId, DynamicsActionRecord.TYPE_PRAISE);
 		}
 		return type;
 	}
-	private int saveActionRecord(Integer dynamicsId, Integer memberId, Integer type) {
+	private int saveActionRecord(Integer dynamicsId, Integer UserId, Integer type) {
 		DynamicsActionRecord actionRecord = new DynamicsActionRecord();
 		actionRecord.setDynamicsId(dynamicsId);
 		actionRecord.setType(type);
-		actionRecord.setMemberId(memberId);
+		actionRecord.setUserId(UserId);
 		return dynamicsActionRecordDao.add(actionRecord);
 	}
 	@Transactional
@@ -240,30 +246,30 @@ public class DynamicsServiceImpl implements DynamicsService {
 		}
 		return true;
 	}
-	public List<FansForClient> getFansList(Integer memberId, Integer lastId, Integer orientation, Integer count) {
-		List<MemberAttention> maList = null;
+	public List<FansForClient> getFansList(Integer UserId, Integer lastId, Integer orientation, Integer count) {
+		List<UserAttention> maList = null;
 		if(lastId.intValue() == -1) {
-			maList = memberAttentionDao.findFansListDefault(memberId, count);
+			maList = userAttentionDao.findFansListDefault(UserId, count);
 		} else {
 			// 顶部滑动
 			if(orientation.intValue() == 1) {
-				maList = memberAttentionDao.findFansListLatest(memberId, lastId, count);
+				maList = userAttentionDao.findFansListLatest(UserId, lastId, count);
 			} else {
-				maList = memberAttentionDao.findFansListHistory(memberId, lastId, count);
+				maList = userAttentionDao.findFansListHistory(UserId, lastId, count);
 			}
 		}
 		return buildFansForClientList(maList, 2);
 	}
-	public List<FansForClient> getAttentedList(Integer memberId, Integer lastId, Integer orientation, Integer count) {
-		List<MemberAttention> maList = null;
+	public List<FansForClient> getAttentedList(Integer UserId, Integer lastId, Integer orientation, Integer count) {
+		List<UserAttention> maList = null;
 		if(lastId.intValue() == -1) {
-			maList = memberAttentionDao.findAttentedListDefault(memberId, count);
+			maList = userAttentionDao.findAttentedListDefault(UserId, count);
 		} else {
 			// 顶部滑动
 			if(orientation.intValue() == 1) {
-				maList = memberAttentionDao.findAttentedListLatest(memberId, lastId, count);
+				maList = userAttentionDao.findAttentedListLatest(UserId, lastId, count);
 			} else {
-				maList = memberAttentionDao.findAttentedHistory(memberId, lastId, count);
+				maList = userAttentionDao.findAttentedHistory(UserId, lastId, count);
 			}
 		}
 		return buildFansForClientList(maList, 1);
@@ -274,30 +280,30 @@ public class DynamicsServiceImpl implements DynamicsService {
 	 * @param type 1=关注  2=粉丝
 	 * @return
 	 */
-	private FansForClient buildFansForClient(MemberAttention ma, Integer type) {
-		if(ma != null) {
+	private FansForClient buildFansForClient(UserAttention ua, Integer type) {
+		if(ua != null) {
 			FansForClient fc = new FansForClient();
 			// 关注
 			if(type == 1) {
-				fc.setHeadUrl(ma.getAttentionMemberHeadUrl());
-				fc.setMemberId(ma.getAttentionMemberId());
-				fc.setMemberName(ma.getAttentionMemberName());
+				fc.setHeadUrl(ua.getAttentionUserHeadUrl());
+				fc.setUserId(ua.getAttentionUserId());
+				fc.setUserName(ua.getAttentionUserName());
 			} else if(type == 2) {	// 粉丝
-				fc.setHeadUrl(ma.getMemberHeadUrl());
-				fc.setMemberId(ma.getMemberId());
-				fc.setMemberName(ma.getMemberName());
+				fc.setHeadUrl(ua.getUserHeadUrl());
+				fc.setUserId(ua.getUserId());
+				fc.setUserName(ua.getUserName());
 			}
-			fc.setId(ma.getId());
-			fc.setStatus(ma.getStatus() == null ? -1 : ma.getStatus());
+			fc.setId(ua.getId());
+			fc.setStatus(ua.getStatus() == null ? -1 : ua.getStatus());
 			return fc;
 		}
 		return null;
 	}
-	private List<FansForClient> buildFansForClientList(List<MemberAttention> maList, Integer type) {
+	private List<FansForClient> buildFansForClientList(List<UserAttention> maList, Integer type) {
 		if(maList != null && maList.size() >= 1) {
 			List<FansForClient> ffcList = new ArrayList<FansForClient>();
 			FansForClient fc = null;
-			for(MemberAttention ma : maList) {
+			for(UserAttention ma : maList) {
 				fc = buildFansForClient(ma, type);
 				ffcList.add(fc);
 			}
@@ -305,7 +311,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 		}
 		return null;
 	}
-	public List<Map<String, Object>> searchLikeByName(Integer memberId, String name, Integer lastId, Integer count) {
+	public List<Map<String, Object>> searchLikeByName(Integer UserId, String name, Integer lastId, Integer count) {
 		List<Dynamics> dyList = null;
 		if(lastId == -1) {
 			dyList = dynamicsDao.findLikeByNameDefault(name, count);
@@ -317,29 +323,29 @@ public class DynamicsServiceImpl implements DynamicsService {
 			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 			for(Dynamics dy : dyList) {
 				// 关注里默认两条评论
-				list.add(getDetail(dy.getId(),memberId, 2));
+				list.add(getDetail(dy.getId(),UserId, 2));
 			}
 			return list;
 		}
 		return null;
 	}
-	public List<Map<String, Object>> attentionList(Integer memberId, Integer lastId, Integer orientation,
+	public List<Map<String, Object>> attentionList(Integer UserId, Integer lastId, Integer orientation,
 			Integer count) {
 		List<Dynamics> dyList = null;
 		if(lastId == -1) {
-			dyList = dynamicsDao.findAttentedMemberDynamicsListDefault(memberId, count);
+			dyList = dynamicsDao.findAttentedUserDynamicsListDefault(UserId, count);
 		} else {
 			if(orientation == 1) {
-				dyList = dynamicsDao.findAttentedMemberDynamicsListLatest(memberId, lastId, count);
+				dyList = dynamicsDao.findAttentedUserDynamicsListLatest(UserId, lastId, count);
 			} else {
-				dyList = dynamicsDao.findAttentedMemberDynamicsListHistory(memberId, lastId, count);
+				dyList = dynamicsDao.findAttentedUserDynamicsListHistory(UserId, lastId, count);
 			}
 		}
 		if(dyList != null && dyList.size() >= 1) {
 			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 			for(Dynamics dy : dyList) {
 				// 关注里默认两条评论
-				list.add(getDetail(dy.getId(),memberId, 2));
+				list.add(getDetail(dy.getId(),UserId, 2));
 			}
 			return list;
 		}
@@ -371,49 +377,50 @@ public class DynamicsServiceImpl implements DynamicsService {
         }  
         return age;  
     }  
-	public Summary getMemberSummary(Integer memberId, Integer attentionMemberId) {
-		Member member = memberDao.findById(attentionMemberId);
-		if(member == null) {
+	public Summary getUserSummary(Integer userId, Integer attentionUserId) throws BusinessException{
+		User user = userDao.findById(userId);
+		if(user == null) {
 			return null;
 		}
+		UserDetail ud = getUserDetailById(attentionUserId);
 		Summary sy = new Summary();
-		sy.setGendar(member.getSex());
-		sy.setAge(getAge(member.getBirthday()));
-		sy.setMemberId(attentionMemberId);
-		sy.setMemberName(member.getName());
-		sy.setMemberHeadUrl(member.getAvatar());
-		sy.setDynamicsCount(dynamicsDao.countByMemberId(attentionMemberId));
-		sy.setFansCount(memberAttentionDao.countFansByAttentionMemberId(attentionMemberId));
-		sy.setAttentedCount(memberAttentionDao.countAttentedByMemberId(attentionMemberId));
-		MemberAttention ma = memberAttentionDao.find(memberId, attentionMemberId);
+		sy.setGendar(ud.getSex());
+		sy.setAge(getAge(ud.getBirthday()));
+		sy.setUserId(attentionUserId);
+		sy.setUserName(ud.getName());
+		sy.setUserHeadUrl(ud.getHeadUrl());
+		sy.setDynamicsCount(dynamicsDao.countByUserId(attentionUserId));
+		sy.setFansCount(userAttentionDao.countFansByAttentionUserId(attentionUserId));
+		sy.setAttentedCount(userAttentionDao.countAttentedByUserId(attentionUserId));
+		UserAttention ma = userAttentionDao.find(userId, attentionUserId);
 		if(ma != null) {
 			sy.setIsAttented(1);
 		}
 		return sy;
 	}
-	public List<Map<String, Object>> getPersonalList(Integer memberId, Integer lastId, Integer count) {
+	public List<Map<String, Object>> getPersonalList(Integer UserId, Integer lastId, Integer count) {
 		List<Dynamics> dyList = null;
 		if(lastId == -1) {
-			dyList = dynamicsDao.findByMemberIdDefault(memberId, count);
+			dyList = dynamicsDao.findByUserIdDefault(UserId, count);
 		} else {
-			dyList = dynamicsDao.findByMemberIdHistory(memberId, lastId, count);
+			dyList = dynamicsDao.findByUserIdHistory(UserId, lastId, count);
 		}
 		if(dyList != null && dyList.size() >= 1) {
 			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 			for(Dynamics dy : dyList) {
 				// 关注里默认两条评论
-				list.add(getDetail(dy.getId(),memberId, 2));
+				list.add(getDetail(dy.getId(),UserId, 2));
 			}
 			return list;
 		}
 		return null;
 	}
-	public List<Picture> pictureList(Integer memberId, Integer lastId, Integer count) {
+	public List<Picture> pictureList(Integer UserId, Integer lastId, Integer count) {
 		List<Dynamics> dyList = null;
 		if(lastId == -1) {
-			dyList = dynamicsDao.findByMemberIdDefault(memberId, count);
+			dyList = dynamicsDao.findByUserIdDefault(UserId, count);
 		} else {
-			dyList = dynamicsDao.findByMemberIdHistory(memberId, lastId, count);
+			dyList = dynamicsDao.findByUserIdHistory(UserId, lastId, count);
 		}
 		if(dyList != null && dyList.size() >= 1) {
 			List<Picture> list = new ArrayList<Picture>();
@@ -421,7 +428,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 			for(Dynamics dy : dyList) {
 				pic = new Picture();
 				pic.setDynamicsId(dy.getId());
-				pic.setMemberId(dy.getMemberId());
+				pic.setUserId(dy.getUserId());
 				pic.setUrl(dy.getMaterials().get(0) != null ? dy.getMaterials().get(0).getUrl() : null);
 				list.add(pic);
 			}
@@ -430,35 +437,35 @@ public class DynamicsServiceImpl implements DynamicsService {
 		return null;
 	}
 	
-	public List<FansForClient> recommendAttentionList(Integer memberId) {
-		int dynamicsCount = dynamicsDao.countByMemberId(memberId);
-		int attentedCount = memberAttentionDao.countAttentedByMemberId(memberId);
+	public List<FansForClient> recommendAttentionList(Integer userId) {
+		int dynamicsCount = dynamicsDao.countByUserId(userId);
+		int attentedCount = userAttentionDao.countAttentedByUserId(userId);
 		if(dynamicsCount == 0 && attentedCount == 0) {
-			List<FansForClient> ffcList = buildFansForClientList(memberAttentionDao.findFansTop10(memberId), 1);
+			List<FansForClient> ffcList = buildFansForClientList(userAttentionDao.findFansTop10(userId), 1);
 			if(ffcList == null || ffcList.size() == 0) {
-				List<Dynamics> dyList =dynamicsDao.findTop10(memberId);
+				List<Dynamics> dyList =dynamicsDao.findTop10(userId);
 				// 构建fansForClient
-				MemberAttention ma = null;
-				List<MemberAttention> maList = new ArrayList<MemberAttention>();
+				UserAttention ua = null;
+				List<UserAttention> maList = new ArrayList<UserAttention>();
 				if(dyList != null && dyList.size() >= 1) {
 					for(Dynamics dy : dyList) {
-						ma = new MemberAttention();
-						ma.setAttentionMemberId(dy.getMemberId());
-						ma.setAttentionMemberHeadUrl(dy.getHeadUrl());
-						ma.setAttentionMemberName(dy.getOwner());
-						ma.setStatus(-1);
-						maList.add(ma);
+						ua = new UserAttention();
+						ua.setAttentionUserId(dy.getUserId());
+						ua.setAttentionUserHeadUrl(dy.getHeadUrl());
+						ua.setAttentionUserName(dy.getOwner());
+						ua.setStatus(-1);
+						maList.add(ua);
 					}
 				} else {
 					// 根据注册时间升序
-					List<Member> mbList = memberDao.findTop10(memberId);
+					List<Member> mbList = memberDao.findTop10(userId);
 					for(Member mb : mbList) {
-						ma = new MemberAttention();
-						ma.setAttentionMemberId(mb.getId());
-						ma.setAttentionMemberHeadUrl(mb.getAvatar());
-						ma.setAttentionMemberName(mb.getName());
-						ma.setStatus(-1);
-						maList.add(ma);
+						ua = new UserAttention();
+						ua.setAttentionUserId(mb.getId());
+						ua.setAttentionUserHeadUrl(mb.getAvatar());
+						ua.setAttentionUserName(mb.getName());
+						ua.setStatus(-1);
+						maList.add(ua);
 					}
 				}
 				return buildFansForClientList(maList, 1);
@@ -468,16 +475,16 @@ public class DynamicsServiceImpl implements DynamicsService {
 		}
 		return null;
 	}
-	public List<FansForClient> searchAttention(Integer memberId, String name) {
-		List<Member> mbList = memberDao.findByLikeName(memberId, name);
-		MemberAttention ma = null;
-		List<MemberAttention> maList = new ArrayList<MemberAttention>();
+	public List<FansForClient> searchAttention(Integer userId, String name) {
+		List<Member> mbList = memberDao.findByLikeName(userId, name);
+		UserAttention ma = null;
+		List<UserAttention> maList = new ArrayList<UserAttention>();
 		if(mbList != null && mbList.size() >= 1) {
 			for(Member mb : mbList) {
-				ma = new MemberAttention();
-				ma.setAttentionMemberId(mb.getId());
-				ma.setAttentionMemberHeadUrl(mb.getAvatar());
-				ma.setAttentionMemberName(mb.getName());
+				ma = new UserAttention();
+				ma.setAttentionUserId(mb.getId());
+				ma.setAttentionUserHeadUrl(mb.getAvatar());
+				ma.setAttentionUserName(mb.getName());
 				ma.setStatus(-1);
 				maList.add(ma);
 			}
@@ -489,5 +496,36 @@ public class DynamicsServiceImpl implements DynamicsService {
 	}
 	public User findUserById(Integer userId) {
 		return userDao.findById(userId);
+	}
+	/**
+	 * 获取用户名称和头像等信息
+	 */
+	public UserDetail getUserDetailById(Integer userId)  throws BusinessException {
+		User u = userDao.findById(userId);
+		if(u == null) {
+			 throw new BusinessException(ErrorCode.ERROR_CODE_USER_IS_NOT_EXISTS, "用户不存在");
+		}
+		UserDetail detail = null;
+		if(u.getUserType() == 3) {
+			detail = new UserDetail();
+			Coach c = coachDao.findById(u.getRelatedId());
+			if(c == null) {
+				throw new BusinessException(ErrorCode.ERROR_CODE_COACH_IS_NOT_EXISTS, "教练不存在");
+			}
+			detail = new UserDetail();
+			detail.setHeadUrl(c.getAvatar());
+			detail.setName(c.getName());
+			detail.setMobile(c.getPhone());
+		} else if(u.getUserType() == 3) {
+			Member m = memberDao.findById(u.getRelatedId());
+			if(m == null) {
+				throw new BusinessException(ErrorCode.ERROR_CODE_MEMBER_IS_NOT_EXISTS, "会员不存在");
+			}
+			detail = new UserDetail();
+			detail.setHeadUrl(m.getAvatar());
+			detail.setName(m.getName());
+			detail.setMobile(m.getPhone());
+		}
+		return detail;
 	}
 }

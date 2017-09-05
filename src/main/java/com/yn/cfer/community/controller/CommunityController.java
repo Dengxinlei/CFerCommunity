@@ -22,7 +22,7 @@ import com.yn.cfer.community.model.FansForClient;
 import com.yn.cfer.community.model.Picture;
 import com.yn.cfer.community.model.Summary;
 import com.yn.cfer.community.service.DynamicsService;
-import com.yn.cfer.community.service.MemberAttentionService;
+import com.yn.cfer.community.service.UserAttentionService;
 import com.yn.cfer.web.common.constant.ErrorCode;
 import com.yn.cfer.web.exceptions.BusinessException;
 import com.yn.cfer.web.protocol.ResponseMessage;
@@ -37,7 +37,7 @@ public class CommunityController {
 	@Autowired
 	private DynamicsService dynamicsService;
 	@Autowired
-	private MemberAttentionService memberAttentionService;
+	private UserAttentionService memberAttentionService;
 	
 	@RequestMapping(value = "hot_list")
     @ResponseBody
@@ -231,8 +231,13 @@ public class CommunityController {
     		responseMessage.setMessage("miss required param");
     		return responseMessage;
     	}
-		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.getMemberSummary(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), attentionMemberId));
+		try {
+			responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+			responseMessage.setData(dynamicsService.getUserSummary(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), attentionMemberId));
+		} catch (BusinessException e) {
+			responseMessage.setCode(e.getCode());
+			responseMessage.setMessage(e.getMessage());
+		}
     	return responseMessage;
     }
 	@RequestMapping(value = "personal_dynamics_list")

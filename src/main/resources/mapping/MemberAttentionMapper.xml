@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yn.cfer.community.dao.MemberAttentionDao">
-    <resultMap id="BaseResultMap" type="com.yn.cfer.community.model.MemberAttention">
+<mapper namespace="com.yn.cfer.community.dao.UserAttentionDao">
+    <resultMap id="BaseResultMap" type="com.yn.cfer.community.model.UserAttention">
         <id column="ID" property="id" jdbcType="INTEGER"/>
-        <result column="MEMBER_ID" property="memberId" jdbcType="INTEGER"/>
-        <result column="MEMBER_NAME" property="memberName" jdbcType="VARCHAR"/>
-        <result column="MEMBER_HEAD_URL" property="memberHeadUrl" jdbcType="VARCHAR"/>
-        <result column="ATTENTION_MEMBER_ID" property="attentionMemberId" jdbcType="INTEGER"/>
-        <result column="ATTENTION_MEMBER_NAME" property="attentionMemberName" jdbcType="VARCHAR"/>
-        <result column="ATTENTION_MEMBER_HEAD_URL" property="attentionMemberHeadUrl" jdbcType="INTEGER"/>
+        <result column="USER_ID" property="userId" jdbcType="INTEGER"/>
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+        <result column="USER_HEAD_URL" property="userHeadUrl" jdbcType="VARCHAR"/>
+        <result column="ATTENTION_USER_ID" property="attentionUserId" jdbcType="INTEGER"/>
+        <result column="ATTENTION_USER_NAME" property="attentionUserName" jdbcType="VARCHAR"/>
+        <result column="ATTENTION_USER_HEAD_URL" property="attentionUserHeadUrl" jdbcType="VARCHAR"/>
         <result column="STATUS" property="status" jdbcType="INTEGER"/>
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="base_col" >
-    	ID, MEMBER_ID,MEMBER_NAME, MEMBER_HEAD_URL, ATTENTION_MEMBER_ID, ATTENTION_MEMBER_NAME, ATTENTION_MEMBER_HEAD_URL,  STATUS, CREATE_TIME, UPDATE_TIME
+    	ID, USER_ID,USER_NAME, USER_HEAD_URL, ATTENTION_USER_ID, ATTENTION_USER_NAME, ATTENTION_USER_HEAD_URL,  STATUS, CREATE_TIME, UPDATE_TIME
     </sql>
     <sql id="base_col_without_id" >
-    	MEMBER_ID,MEMBER_NAME, MEMBER_HEAD_URL, ATTENTION_MEMBER_ID, ATTENTION_MEMBER_NAME, ATTENTION_MEMBER_HEAD_URL,  STATUS, CREATE_TIME, UPDATE_TIME
+    	USER_ID,USER_NAME, USER_HEAD_URL, ATTENTION_USER_ID, ATTENTION_USER_NAME, ATTENTION_USER_HEAD_URL,  STATUS, CREATE_TIME, UPDATE_TIME
     </sql>
     <insert id="add" parameterType="com.yn.cfer.community.model.MemberAttention">
-    	INSERT INTO T_MEMBER_ATTENTION (<include refid="base_col_without_id"></include>)
-    	VALUES (#{memberId}, #{memberName}, #{memberHeadUrl},#{attentionMemberId}, #{attentionMemberName}, #{attentionMemberHeadUrl},#{status},#{createTime},#{updateTime})
+    	INSERT INTO T_USER_ATTENTION (<include refid="base_col_without_id"></include>)
+    	VALUES (#{userId}, #{userName}, #{userHeadUrl},#{attentionUserId}, #{attentionUserName}, #{attentionUserHeadUrl},#{status},#{createTime},#{updateTime})
     </insert>
-    <select id="findByMemberId" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2 ORDER BY CREATE_TIME DESC
+    <select id="findByUserId" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_USER_ATTENTION WHERE USER_ID = #{userId} AND STATUS != 2 ORDER BY CREATE_TIME DESC
     </select>
-    <select id="findByAttentionMemberId" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND STATUS != 2 ORDER BY CREATE_TIME DESC
+    <select id="findByAttentionUserId" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_USER_ATTENTION WHERE ATTENTION_USER_ID = #{userId} AND STATUS != 2 ORDER BY CREATE_TIME DESC
     </select>
     <select id="find" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND ATTENTION_MEMBER_ID = #{attentionMemberId}
+    	SELECT <include refid="base_col"></include> FROM T_USER_ATTENTION WHERE USER_ID = #{userId} AND ATTENTION_USER_ID = #{attentionUserId}
     </select>
     <update id="updateById" parameterType="com.yn.cfer.community.model.MemberAttention">
-    	UPDATE T_MEMBER_ATTENTION
+    	UPDATE T_USER_ATTENTION
     	<trim prefix="SET" suffixOverrides=",">
     		<if test="status != null">
     			STATUS = #{status},
@@ -44,31 +44,31 @@
     </update>
     
     <select id="findFansListDefault" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND STATUS != 2 AND MEMBER_ID != #{memberId} ORDER BY CREATE_TIME DESC limit #{count}
+    	SELECT <include refid="base_col"></include> FROM T_USER_ATTENTION WHERE ATTENTION_USER_ID = #{userId} AND STATUS != 2 AND USER_ID != #{userId} ORDER BY CREATE_TIME DESC limit #{count}
     </select>
     <select id="findFansListLatest" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND STATUS != 2 AND ID &gt; #{lastId}  AND MEMBER_ID != #{memberId} ORDER BY CREATE_TIME DESC LIMIT #{count}
+    	SELECT <include refid="base_col"></include> FROM T_USER_ATTENTION WHERE ATTENTION_USER_ID = #{userId} AND STATUS != 2 AND ID &gt; #{lastId}  AND USER_ID != #{userId} ORDER BY CREATE_TIME DESC LIMIT #{count}
     </select>
     <select id="findFansListHistory" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND STATUS != 2 AND ID &lt; #{lastId}  AND MEMBER_ID != #{memberId} ORDER BY CREATE_TIME DESC LIMIT #{count}
+    	SELECT <include refid="base_col"></include> FROM T_USER_ATTENTION WHERE ATTENTION_USER_ID = #{userId} AND STATUS != 2 AND ID &lt; #{lastId}  AND USER_ID != #{userId} ORDER BY CREATE_TIME DESC LIMIT #{count}
     </select>
     
     <select id="findAttentedListDefault" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2  AND ATTENTION_MEMBER_ID != #{memberId} ORDER BY CREATE_TIME DESC LIMIT #{count}
+    	SELECT <include refid="base_col"></include> FROM T_USER_ATTENTION WHERE USER_ID = #{userId} AND STATUS != 2  AND ATTENTION_USER_ID != #{userId} ORDER BY CREATE_TIME DESC LIMIT #{count}
     </select>
     <select id="findAttentedListLatest" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2 AND ID &gt; #{lastId} AND ATTENTION_MEMBER_ID != #{memberId} ORDER BY CREATE_TIME DESC LIMIT #{count}
+    	SELECT <include refid="base_col"></include> FROM T_USER_ATTENTION WHERE USER_ID = #{userId} AND STATUS != 2 AND ID &gt; #{lastId} AND ATTENTION_USER_ID != #{userId} ORDER BY CREATE_TIME DESC LIMIT #{count}
     </select>
     <select id="findAttentedHistory" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2 AND ID &lt; #{lastId} AND ATTENTION_MEMBER_ID != #{memberId} ORDER BY CREATE_TIME DESC LIMIT #{count}
+    	SELECT <include refid="base_col"></include> FROM T_USER_ATTENTION WHERE USER_ID = #{userId} AND STATUS != 2 AND ID &lt; #{lastId} AND ATTENTION_USER_ID != #{userId} ORDER BY CREATE_TIME DESC LIMIT #{count}
     </select>
-    <select id="countFansByAttentionMemberId" resultType="java.lang.Integer">
-    	SELECT count(ID) FROM T_MEMBER_ATTENTION WHERE ATTENTION_MEMBER_ID = #{memberId} AND MEMBER_ID != #{memberId} AND STATUS != 2
+    <select id="countFansByAttentionUserId" resultType="java.lang.Integer">
+    	SELECT count(ID) FROM T_USER_ATTENTION WHERE ATTENTION_USER_ID = #{userId} AND MEMBER_ID != #{userId} AND STATUS != 2
     </select>
-    <select id="countAttentedByMemberId" resultType="java.lang.Integer">
-    	SELECT count(ID) FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND ATTENTION_MEMBER_ID != #{memberId} AND STATUS != 2
+    <select id="countAttentedByUserId" resultType="java.lang.Integer">
+    	SELECT count(ID) FROM T_USER_ATTENTION WHERE USER_ID = #{userId} AND ATTENTION_USER_ID != #{userId} AND STATUS != 2
     </select>
     <select id="findFansTop10" resultMap="BaseResultMap">
-    	SELECT ID,ATTENTION_MEMBER_ID, ATTENTION_MEMBER_NAME, ATTENTION_MEMBER_HEAD_URL FROM T_MEMBER_ATTENTION WHERE MEMBER_ID != ATTENTION_MEMBER_ID AND ATTENTION_MEMBER_ID != #{memberId}  GROUP BY ATTENTION_MEMBER_ID ORDER BY COUNT(ID) DESC LIMIT 10;
+    	SELECT ID,ATTENTION_MEMBER_ID, ATTENTION_MEMBER_NAME, ATTENTION_MEMBER_HEAD_URL FROM T_USER_ATTENTION WHERE USER_ID != ATTENTION_USER_ID AND ATTENTION_USER_ID != #{userId}  GROUP BY ATTENTION_USER_ID ORDER BY COUNT(ID) DESC LIMIT 10;
     </select>
 </mapper>

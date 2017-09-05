@@ -10,8 +10,8 @@ import com.google.gson.annotations.SerializedName;
 public class CommentForClient {
 	private Integer id;
 	private String author;
-	@SerializedName("member_id")
-	private Integer memberId;
+	@SerializedName("user_id")
+	private Integer userId;
 	@SerializedName("head_url")
 	private String headUrl;
 	private String content;
@@ -24,11 +24,11 @@ public class CommentForClient {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-	public Integer getMemberId() {
-		return memberId;
+	public Integer getUserId() {
+		return userId;
 	}
-	public void setMemberId(Integer memberId) {
-		this.memberId = memberId;
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 	public String getHeadUrl() {
 		return headUrl;

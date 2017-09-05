@@ -12,8 +12,8 @@ import com.google.gson.annotations.SerializedName;
 public class Picture {
 	@SerializedName("dynamics_id")
 	private Integer dynamicsId;
-	@SerializedName("member_id")
-	private Integer memberId;
+	@SerializedName("user_id")
+	private Integer userId;
 	private String url;
 	public Integer getDynamicsId() {
 		return dynamicsId;
@@ -21,11 +21,11 @@ public class Picture {
 	public void setDynamicsId(Integer dynamicsId) {
 		this.dynamicsId = dynamicsId;
 	}
-	public Integer getMemberId() {
-		return memberId;
+	public Integer getUserId() {
+		return userId;
 	}
-	public void setMemberId(Integer memberId) {
-		this.memberId = memberId;
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 	public String getUrl() {
 		return url;

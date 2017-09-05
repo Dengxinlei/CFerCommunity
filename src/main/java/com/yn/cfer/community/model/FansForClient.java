@@ -8,27 +8,27 @@ import com.google.gson.annotations.SerializedName;
  */
 public class FansForClient {
 	private Integer id;
-	@SerializedName("member_id")
-	private Integer memberId;
-	@SerializedName("member_name")
-	private String memberName;
+	@SerializedName("user_id")
+	private Integer userId;
+	@SerializedName("user_name")
+	private String userName;
 	@SerializedName("head_url")
 	private String headUrl;
 	/**
 	 * 0=单关注  1=双向关注  2=取消
 	 */
 	private Integer status;
-	public Integer getMemberId() {
-		return memberId;
+	public Integer getUserId() {
+		return userId;
 	}
-	public void setMemberId(Integer memberId) {
-		this.memberId = memberId;
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
-	public String getMemberName() {
-		return memberName;
+	public String getUserName() {
+		return userName;
 	}
-	public void setMemberName(String memberName) {
-		this.memberName = memberName;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	public String getHeadUrl() {
 		return headUrl;

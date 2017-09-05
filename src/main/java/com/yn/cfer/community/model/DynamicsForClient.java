@@ -13,8 +13,8 @@ import com.google.gson.annotations.SerializedName;
  */
 public class DynamicsForClient {
 	private Integer id;
-	@SerializedName("member_id")
-	private Integer memberId;
+	@SerializedName("user_id")
+	private Integer userId;
 	@SerializedName("cover_url")
 	private String coverUrl;
 	private String description;
@@ -41,11 +41,11 @@ public class DynamicsForClient {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getMemberId() {
-		return memberId;
+	public Integer getUserId() {
+		return userId;
 	}
-	public void setMemberId(Integer memberId) {
-		this.memberId = memberId;
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 	public String getCoverUrl() {
 		return coverUrl;

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yn.cfer.community.dao.CoachDao">
+    <resultMap id="BaseResultMap" type="com.yn.cfer.community.model.Coach">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="BOX_ID" property="boxId" jdbcType="INTEGER"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="IS_DELETED" property="isDeleted" jdbcType="INTEGER"/>
+        <result column="LEVEL" property="level" jdbcType="INTEGER"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="PHONE" property="phone" jdbcType="VARCHAR"/>
+        <result column="AVATAR" property="avatar" jdbcType="VARCHAR"/>
+        <result column="BIRTHDAY" property="birthday" jdbcType="TIMESTAMP"/>
+        <result column="HEIGHT" property="height" jdbcType="INTEGER"/>
+        <result column="SEX" property="sex" jdbcType="INTEGER"/>
+        <result column="WEIGHT" property="weight" jdbcType="DOUBLE"/>
+    </resultMap>
+    <sql id="base_col" >
+    	ID, BOX_ID, CREATE_TIME, IS_DELETED, LEVEL, NAME, PHONE, AVATAR, BIRTHDAY, HEIGHT, SEX, WEIGHT       
+    </sql>
+    <sql id="base_col_without_id" >
+    	BOX_ID, CREATE_TIME, IS_DELETED, LEVEL, NAME, PHONE, AVATAR, BIRTHDAY, HEIGHT, SEX, WEIGHT
+    </sql>
+    <select id="findById" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_COACH WHERE ID = #{id};
+    </select>
+</mapper>

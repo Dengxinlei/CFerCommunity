@@ -9,14 +9,14 @@ public class Comment {
 	public final static Integer TYPE_COMMENT = 1;
 	private Integer id;
 	private Integer dynamicsId;
-	private Integer memberId;
-	private String memberName;
-	private String memberHeadUrl;
+	private Integer userId;
+	private String userName;
+	private String userHeadUrl;
 	private String content;
 	private Integer type;
-	private Integer replyMemberId;
-	private String replyMemberName;
-	private String replyMemberHeadUrl;
+	private Integer replyUserId;
+	private String replyUserName;
+	private String replyUserHeadUrl;
 	private Date createTime;
 	private Date updateTime;
 	public Integer getId() {
@@ -56,40 +56,58 @@ public class Comment {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
-	public Integer getMemberId() {
-		return memberId;
+	public Integer getuserId() {
+		return userId;
 	}
-	public void setMemberId(Integer memberId) {
-		this.memberId = memberId;
+	public void setuserId(Integer userId) {
+		this.userId = userId;
 	}
-	public String getMemberName() {
-		return memberName;
+	public String getuserName() {
+		return userName;
 	}
-	public void setMemberName(String memberName) {
-		this.memberName = memberName;
+	public void setuserName(String userName) {
+		this.userName = userName;
 	}
-	public String getMemberHeadUrl() {
-		return memberHeadUrl;
+	public String getuserHeadUrl() {
+		return userHeadUrl;
 	}
-	public void setMemberHeadUrl(String memberHeadUrl) {
-		this.memberHeadUrl = memberHeadUrl;
+	public void setuserHeadUrl(String userHeadUrl) {
+		this.userHeadUrl = userHeadUrl;
 	}
-	public Integer getReplyMemberId() {
-		return replyMemberId;
+	public Integer getUserId() {
+		return userId;
 	}
-	public void setReplyMemberId(Integer replyMemberId) {
-		this.replyMemberId = replyMemberId;
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
-	public String getReplyMemberName() {
-		return replyMemberName;
+	public String getUserName() {
+		return userName;
 	}
-	public void setReplyMemberName(String replyMemberName) {
-		this.replyMemberName = replyMemberName;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
-	public String getReplyMemberHeadUrl() {
-		return replyMemberHeadUrl;
+	public String getUserHeadUrl() {
+		return userHeadUrl;
 	}
-	public void setReplyMemberHeadUrl(String replyMemberHeadUrl) {
-		this.replyMemberHeadUrl = replyMemberHeadUrl;
+	public void setUserHeadUrl(String userHeadUrl) {
+		this.userHeadUrl = userHeadUrl;
+	}
+	public Integer getReplyUserId() {
+		return replyUserId;
+	}
+	public void setReplyUserId(Integer replyUserId) {
+		this.replyUserId = replyUserId;
+	}
+	public String getReplyUserName() {
+		return replyUserName;
+	}
+	public void setReplyUserName(String replyUserName) {
+		this.replyUserName = replyUserName;
+	}
+	public String getReplyUserHeadUrl() {
+		return replyUserHeadUrl;
+	}
+	public void setReplyUserHeadUrl(String replyUserHeadUrl) {
+		this.replyUserHeadUrl = replyUserHeadUrl;
 	}
 }

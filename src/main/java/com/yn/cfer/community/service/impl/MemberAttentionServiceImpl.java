@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.yn.cfer.common.sts.utils.LockUtils;
 import com.yn.cfer.community.dao.MemberAttentionDao;
 import com.yn.cfer.community.dao.MemberDao;
 import com.yn.cfer.community.model.Member;
@@ -78,8 +79,14 @@ public class MemberAttentionServiceImpl implements MemberAttentionService {
 		return type;
 	}
 	public int attentionSelf(Integer memberId) throws BusinessException {
+		String lockName = "attentionSelf_"+memberId;
+		int status = LockUtils.getLock(lockName, "锁定");
+		if(status == 1) {
+			throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "操作锁定中");
+		}
 		Member m = memberDao.findById(memberId);
 		if(m == null) {
+			LockUtils.releaseLock(lockName);
 			throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "会员不存在");
 		}
 		MemberAttention self = memberAttentionDao.find(memberId, memberId);
@@ -94,8 +101,11 @@ public class MemberAttentionServiceImpl implements MemberAttentionService {
 			self.setAttentionMemberHeadUrl(m.getAvatar());
 			self.setCreateTime(new Date());
 			self.setStatus(MemberAttention.STATUS_ONLY_ONE);
-			return memberAttentionDao.add(self);
+			int saveResult = memberAttentionDao.add(self);
+			LockUtils.releaseLock(lockName);
+			return saveResult;
 		} else {
+			LockUtils.releaseLock(lockName);
 			return 1;
 		}
 	}

@@ -12,8 +12,8 @@ public class CommentRequest {
 	private Integer count;
 	@SerializedName("dynamics_id")
 	private Integer dynamicsId;
-	@SerializedName("reply_member_id")
-	private Integer replyMemberId;
+	@SerializedName("reply_user_id")
+	private Integer replyUserId;
 	private String content;
 	private String token;
 	/**
@@ -38,11 +38,11 @@ public class CommentRequest {
 	public void setDynamicsId(Integer dynamicsId) {
 		this.dynamicsId = dynamicsId;
 	}
-	public Integer getReplyMemberId() {
-		return replyMemberId;
+	public Integer getReplyUserId() {
+		return replyUserId;
 	}
-	public void setReplyMemberId(Integer replyMemberId) {
-		this.replyMemberId = replyMemberId;
+	public void setReplyUserId(Integer replyUserId) {
+		this.replyUserId = replyUserId;
 	}
 	public String getContent() {
 		return content;

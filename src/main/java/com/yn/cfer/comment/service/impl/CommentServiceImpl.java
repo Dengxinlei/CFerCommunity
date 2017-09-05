@@ -16,9 +16,13 @@ import com.yn.cfer.comment.service.CommentService;
 import com.yn.cfer.community.dao.DynamicsActionRecordDao;
 import com.yn.cfer.community.dao.DynamicsDao;
 import com.yn.cfer.community.dao.MemberDao;
+import com.yn.cfer.community.dao.UserDao;
 import com.yn.cfer.community.model.Dynamics;
 import com.yn.cfer.community.model.DynamicsActionRecord;
 import com.yn.cfer.community.model.Member;
+import com.yn.cfer.community.model.User;
+import com.yn.cfer.community.model.UserDetail;
+import com.yn.cfer.community.service.DynamicsService;
 import com.yn.cfer.web.common.constant.ErrorCode;
 import com.yn.cfer.web.exceptions.BusinessException;
 /**
@@ -29,7 +33,9 @@ public class CommentServiceImpl implements CommentService {
 	@Autowired
 	private CommentDao commentDao;
 	@Autowired
-	private MemberDao memberDao;
+	private UserDao userDao;
+	@Autowired
+	private DynamicsService dynamicsService;
 	@Autowired
 	private DynamicsDao dynamicsDao;
 	@Autowired
@@ -74,31 +80,32 @@ public class CommentServiceImpl implements CommentService {
 		return null;
 	}
 	@Transactional
-	public CommentForClient create(Integer dynamicsId, Integer memberId, String content, Integer replyMemberId) throws BusinessException{
-		Member member = memberDao.findById(memberId);
-		if(member == null) {
-			throw new BusinessException(ErrorCode.ERROR_CODE_MEMBER_IS_NOT_EXISTS, "会员不存在");
+	public CommentForClient create(Integer dynamicsId, Integer userId, String content, Integer replyUserId) throws BusinessException{
+		User user = userDao.findById(userId);
+		if(user == null) {
+			throw new BusinessException(ErrorCode.ERROR_CODE_USER_IS_NOT_EXISTS, "用户不存在");
 		}
 		Dynamics dynamics = dynamicsDao.findById(dynamicsId);
 		if(dynamics == null) {
 			throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "动态不存在");
 		}
-		
+		UserDetail ud = dynamicsService.getUserDetailById(userId);
 		Comment create = new Comment();
 		create.setContent(content);
 		create.setDynamicsId(dynamicsId);
-		create.setUserHeadUrl(member.getAvatar());
-		create.setUserName(member.getName());
-		create.setUserId(memberId);
+		create.setUserHeadUrl(ud.getHeadUrl());
+		create.setUserName(ud.getName());
+		create.setUserId(userId);
 		create.setType(Comment.TYPE_DYNAMICS);
-		if(replyMemberId != null) {
-			Member replyMember = memberDao.findById(replyMemberId);
-			if(replyMember == null) {
-				throw new BusinessException(ErrorCode.ERROR_CODE_MEMBER_IS_NOT_EXISTS, "被回复会员不存在");
+		if(replyUserId != null && replyUserId.intValue() != -1) {
+			User replyUser = userDao.findById(replyUserId);
+			if(replyUser == null) {
+				throw new BusinessException(ErrorCode.ERROR_CODE_USER_IS_NOT_EXISTS, "被回复用户不存在");
 			}
-			create.setReplyUserHeadUrl(replyMember.getAvatar());
-			create.setReplyUserId(replyMemberId);
-			create.setReplyUserName(replyMember.getName());
+			UserDetail ud2 = dynamicsService.getUserDetailById(replyUserId);
+			create.setReplyUserHeadUrl(ud2.getHeadUrl());
+			create.setReplyUserId(replyUserId);
+			create.setReplyUserName(ud2.getName());
 		}
 		commentDao.add(create);
 		create.setCreateTime(new Date());
@@ -107,14 +114,14 @@ public class CommentServiceImpl implements CommentService {
 		map.put("commentCount", dynamics.getCommentCount());
 		map.put("type", 1);
 		dynamicsDao.updateActionCount(map);
-		saveActionRecord(dynamicsId, memberId, DynamicsActionRecord.TYPE_COMMENT);
+		saveActionRecord(dynamicsId, userId, DynamicsActionRecord.TYPE_COMMENT);
 		return buildCommentForClient(create);
 	}
-	private int saveActionRecord(Integer dynamicsId, Integer memberId, Integer type) {
+	private int saveActionRecord(Integer dynamicsId, Integer userId, Integer type) {
 		DynamicsActionRecord actionRecord = new DynamicsActionRecord();
 		actionRecord.setDynamicsId(dynamicsId);
 		actionRecord.setType(type);
-		actionRecord.setUserId(memberId);
+		actionRecord.setUserId(userId);
 		return dynamicsActionRecordDao.add(actionRecord);
 	}
 }

@@ -10,5 +10,5 @@ import com.yn.cfer.web.exceptions.BusinessException;
  */
 public interface CommentService {
 	public List<CommentForClient> getComments(Integer dynamicsId, Integer lastId, Integer count, Integer orientation);
-	public CommentForClient create(Integer dynamicsId, Integer memberId, String content, Integer replyMemberId) throws BusinessException;
+	public CommentForClient create(Integer dynamicsId, Integer userId, String content, Integer replyUserId) throws BusinessException;
 }

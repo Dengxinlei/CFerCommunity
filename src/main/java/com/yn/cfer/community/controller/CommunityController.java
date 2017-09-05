@@ -47,7 +47,7 @@ public class CommunityController {
     	Integer count = message.getCount() == null ? 20 : message.getCount();
     	Integer orientation = message.getOrientation() == null ? 2 : message.getOrientation();
     	responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-    	responseMessage.setData(dynamicsService.getHotList(lastId, orientation, RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), count));
+    	responseMessage.setData(dynamicsService.getHotList(lastId, orientation, RequestExecuteTimesFilter.getCurrentUserId(message.getToken()), count));
     	return responseMessage;
     }
 	
@@ -64,7 +64,7 @@ public class CommunityController {
     	}
     	try{
     		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-    		responseMessage.setData(dynamicsService.publish(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), description, picUrls));
+    		responseMessage.setData(dynamicsService.publish(RequestExecuteTimesFilter.getCurrentUserId(message.getToken()), description, picUrls));
     	} catch (BusinessException be) {
     		responseMessage.setCode(be.getCode());
     		responseMessage.setMessage(be.getMessage());
@@ -87,7 +87,7 @@ public class CommunityController {
     		return responseMessage;
     	}
     	responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.getDetail(dynamicsId, RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), count));
+		responseMessage.setData(dynamicsService.getDetail(dynamicsId, RequestExecuteTimesFilter.getCurrentUserId(message.getToken()), count));
     	return responseMessage;
     }
 	@RequestMapping(value = "praise")
@@ -103,7 +103,7 @@ public class CommunityController {
 		try {
 			responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("type", dynamicsService.praise(dynamicsId, RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken())));
+			map.put("type", dynamicsService.praise(dynamicsId, RequestExecuteTimesFilter.getCurrentUserId(message.getToken())));
 			responseMessage.setData(map);
 		} catch (BusinessException e) {
 			e.printStackTrace();
@@ -127,7 +127,7 @@ public class CommunityController {
     		return responseMessage;
     	}
 		try {
-			if(dynamicsService.report(dynamicsId, RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()))) {
+			if(dynamicsService.report(dynamicsId, RequestExecuteTimesFilter.getCurrentUserId(message.getToken()))) {
 				responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
 			} else {
 				responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
@@ -159,7 +159,7 @@ public class CommunityController {
 		try {
 			responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("type", memberAttentionService.attention(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), attentionMemberId, type));
+			map.put("type", memberAttentionService.attention(RequestExecuteTimesFilter.getCurrentUserId(message.getToken()), attentionMemberId, type));
 			responseMessage.setData(map);
 		} catch (BusinessException e) {
 			e.printStackTrace();
@@ -180,7 +180,7 @@ public class CommunityController {
     	Integer count = message.getCount() == null ? 20 : message.getCount();
     	Integer lastId = message.getLastId() == null ? -1 : message.getLastId();
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.getFansList(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), lastId, orientation, count));
+		responseMessage.setData(dynamicsService.getFansList(RequestExecuteTimesFilter.getCurrentUserId(message.getToken()), lastId, orientation, count));
     	return responseMessage;
     }
 	@RequestMapping(value = "attented_list")
@@ -191,7 +191,7 @@ public class CommunityController {
     	Integer count = message.getCount() == null ? 20 : message.getCount();
     	Integer lastId = message.getLastId() == null ? -1 : message.getLastId();
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.getAttentedList(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), lastId, orientation, count));
+		responseMessage.setData(dynamicsService.getAttentedList(RequestExecuteTimesFilter.getCurrentUserId(message.getToken()), lastId, orientation, count));
     	return responseMessage;
     }
 	@RequestMapping(value = "search")
@@ -207,7 +207,7 @@ public class CommunityController {
     		return responseMessage;
     	}
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.searchLikeByName(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), name, lastId, count));
+		responseMessage.setData(dynamicsService.searchLikeByName(RequestExecuteTimesFilter.getCurrentUserId(message.getToken()), name, lastId, count));
     	return responseMessage;
     }
 	@RequestMapping(value = "attention_list")
@@ -218,7 +218,7 @@ public class CommunityController {
     	Integer lastId = message.getLastId() == null ? -1 : message.getLastId();
     	Integer orientation = message.getOrientation() == null ? 2 : message.getOrientation();
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.attentionList(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), lastId, orientation, count));
+		responseMessage.setData(dynamicsService.attentionList(RequestExecuteTimesFilter.getCurrentUserId(message.getToken()), lastId, orientation, count));
     	return responseMessage;
     }
 	@RequestMapping(value = "summary")
@@ -233,7 +233,7 @@ public class CommunityController {
     	}
 		try {
 			responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-			responseMessage.setData(dynamicsService.getUserSummary(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), attentionMemberId));
+			responseMessage.setData(dynamicsService.getUserSummary(RequestExecuteTimesFilter.getCurrentUserId(message.getToken()), attentionMemberId));
 		} catch (BusinessException e) {
 			responseMessage.setCode(e.getCode());
 			responseMessage.setMessage(e.getMessage());
@@ -263,7 +263,7 @@ public class CommunityController {
     	Integer count = message.getCount() == null ? 10 : message.getCount();
     	Integer lastId = message.getLastId() == null ? -1 : message.getLastId();
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.pictureList(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), lastId, count));
+		responseMessage.setData(dynamicsService.pictureList(RequestExecuteTimesFilter.getCurrentUserId(message.getToken()), lastId, count));
     	return responseMessage;
     }
 	/**
@@ -276,7 +276,7 @@ public class CommunityController {
     public ResponseMessage<List<FansForClient>> recommendAttentionList(@RequestBody CommunityRequest message) {
     	ResponseMessage<List<FansForClient>> responseMessage = new ResponseMessage<List<FansForClient>>();
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.recommendAttentionList(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken())));
+		responseMessage.setData(dynamicsService.recommendAttentionList(RequestExecuteTimesFilter.getCurrentUserId(message.getToken())));
     	return responseMessage;
     }
 	/**
@@ -295,7 +295,7 @@ public class CommunityController {
     		return responseMessage;
     	}
 		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-		responseMessage.setData(dynamicsService.searchAttention(RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), name));
+		responseMessage.setData(dynamicsService.searchAttention(RequestExecuteTimesFilter.getCurrentUserId(message.getToken()), name));
     	return responseMessage;
     }
 	

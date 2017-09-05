@@ -45,7 +45,7 @@ public class CommentController {
     public ResponseMessage<CommentForClient> create(@RequestBody CommentRequest message) {
     	ResponseMessage<CommentForClient> responseMessage = new ResponseMessage<CommentForClient>();
     	Integer dynamicsId = message.getDynamicsId();
-    	Integer replyMemberId = message.getReplyMemberId();
+    	Integer replyUserId = message.getReplyUserId();
     	String content = message.getContent();
     	if(dynamicsId == null || StringUtils.isBlank(content)) {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_MISS_PARAM);
@@ -54,7 +54,7 @@ public class CommentController {
     	}
     	try {
     		responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
-			responseMessage.setData(commentService.create(dynamicsId, RequestExecuteTimesFilter.getCurrentUserMemberId(message.getToken()), content, replyMemberId));
+			responseMessage.setData(commentService.create(dynamicsId, RequestExecuteTimesFilter.getCurrentUserId(message.getToken()), content, replyUserId));
 		} catch (BusinessException e) {
 			e.printStackTrace();
 			responseMessage.setCode(e.getCode());

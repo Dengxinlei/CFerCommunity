@@ -122,10 +122,10 @@ public class RequestExecuteTimesFilter implements Filter {
         	memberAttentionService = cxt.getBean(UserAttentionService.class);
     }
     
-    public static Integer getCurrentUserMemberId(String token) {
+    public static Integer getCurrentUserId(String token) {
     	JSONObject userInfo = memberIdCache.get(token);
     	if(userInfo != null) {
-    		return userInfo.getInteger("memberId");
+    		return userInfo.getInteger("userId");
     	}
     	return -1;
     }
@@ -147,7 +147,7 @@ public class RequestExecuteTimesFilter implements Filter {
     // 根据客户端上传token 获取member_id
     private void attentionSelf(String token) {
     	// 查询自己是否关注过自己 有则什么也不干， 没有则关注自己
-    	Integer memberId = getCurrentUserMemberId(token);
+    	Integer memberId = getCurrentUserId(token);
     	Integer isAttented = attentionSelf.get(memberId);
     	if(isAttented == null || isAttented.intValue() == 0) {
     		try {

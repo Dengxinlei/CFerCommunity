@@ -19,12 +19,11 @@ public class CommunityRequest {
 	 * 1：上拉  2：下拉 默认2
 	 */
 	private Integer orientation;
-	
 	private String description;
-	@SerializedName("dest_member_id")
-	private Integer destMemberId;
-	@SerializedName("attention_member_id")
-	private Integer attentionMemberId;
+	@SerializedName("dest_user_id")
+	private Integer destUserId;
+	@SerializedName("attention_user_id")
+	private Integer attentionUserId;
 	@SerializedName("pic_urls")
 	private List<String> picUrls;
 	@SerializedName("dynamics_id")
@@ -68,11 +67,11 @@ public class CommunityRequest {
 	public void setDynamicsId(Integer dynamicsId) {
 		this.dynamicsId = dynamicsId;
 	}
-	public Integer getAttentionMemberId() {
-		return attentionMemberId;
+	public Integer getAttentionUserId() {
+		return attentionUserId;
 	}
-	public void setAttentionMemberId(Integer attentionMemberId) {
-		this.attentionMemberId = attentionMemberId;
+	public void setAttentionUserId(Integer attentionUserId) {
+		this.attentionUserId = attentionUserId;
 	}
 	public String getName() {
 		return name;
@@ -80,11 +79,11 @@ public class CommunityRequest {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Integer getDestMemberId() {
-		return destMemberId;
+	public Integer getDestUserId() {
+		return destUserId;
 	}
-	public void setDestMemberId(Integer destMemberId) {
-		this.destMemberId = destMemberId;
+	public void setDestUserId(Integer destUserId) {
+		this.destUserId = destUserId;
 	}
 	public Integer getType() {
 		return type;

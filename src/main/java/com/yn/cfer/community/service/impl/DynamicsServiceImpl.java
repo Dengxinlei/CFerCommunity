@@ -378,7 +378,7 @@ public class DynamicsServiceImpl implements DynamicsService {
         return age;  
     }  
 	public Summary getUserSummary(Integer userId, Integer attentionUserId) throws BusinessException{
-		User user = userDao.findById(userId);
+		User user = userDao.findById(attentionUserId);
 		if(user == null) {
 			return null;
 		}
@@ -516,7 +516,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 			detail.setHeadUrl(c.getAvatar());
 			detail.setName(c.getName());
 			detail.setMobile(c.getPhone());
-		} else if(u.getUserType() == 3) {
+		} else if(u.getUserType() == 4) {
 			Member m = memberDao.findById(u.getRelatedId());
 			if(m == null) {
 				throw new BusinessException(ErrorCode.ERROR_CODE_MEMBER_IS_NOT_EXISTS, "会员不存在");

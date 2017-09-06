@@ -4,25 +4,25 @@
     <resultMap id="BaseResultMap" type="com.yn.cfer.comment.model.Comment">
         <id column="ID" property="id" jdbcType="INTEGER"/>
         <result column="DYNAMICS_ID" property="dynamicsId" jdbcType="INTEGER"/>
-        <result column="MEMBER_ID" property="memberId" jdbcType="INTEGER"/>
-        <result column="MEMBER_NAME" property="memberName" jdbcType="VARCHAR"/>
-        <result column="MEMBER_HEAD_URL" property="memberHeadUrl" jdbcType="VARCHAR"/>
+        <result column="USER_ID" property="userId" jdbcType="INTEGER"/>
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+        <result column="USER_HEAD_URL" property="userHeadUrl" jdbcType="VARCHAR"/>
         <result column="CONTENT" property="content" jdbcType="VARCHAR"/>
         <result column="TYPE" property="type" jdbcType="INTEGER"/>
-        <result column="REPLY_MEMBER_ID" property="replyMemberId" jdbcType="INTEGER"/>
-        <result column="REPLY_MEMBER_NAME" property="replyMemberName" jdbcType="VARCHAR"/>
-        <result column="REPLY_MEMBER_HEAD_URL" property="replyMemberHeadUrl" jdbcType="INTEGER"/>
+        <result column="REPLY_USER_ID" property="replyUserId" jdbcType="INTEGER"/>
+        <result column="REPLY_USER_NAME" property="replyUserName" jdbcType="VARCHAR"/>
+        <result column="REPLY_USER_HEAD_URL" property="replyUserHeadUrl" jdbcType="INTEGER"/>
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="base_col" >
-    	ID, DYNAMICS_ID, MEMBER_ID, MEMBER_NAME, MEMBER_HEAD_URL, CONTENT, TYPE, REPLY_MEMBER_ID, REPLY_MEMBER_NAME, REPLY_MEMBER_HEAD_URL, CREATE_TIME, UPDATE_TIME    
+    	ID, DYNAMICS_ID, USER_ID, USER_NAME, USER_HEAD_URL, CONTENT, TYPE, REPLY_USER_ID, REPLY_USER_NAME, REPLY_USER_HEAD_URL, CREATE_TIME, UPDATE_TIME    
     </sql>
     <sql id="base_col_without_id" >
-    	DYNAMICS_ID, MEMBER_ID, MEMBER_NAME, MEMBER_HEAD_URL, CONTENT, TYPE, REPLY_MEMBER_ID, REPLY_MEMBER_NAME, REPLY_MEMBER_HEAD_URL, CREATE_TIME, UPDATE_TIME
+    	DYNAMICS_ID, USER_ID, USER_NAME, USER_HEAD_URL, CONTENT, TYPE, REPLY_USER_ID, REPLY_USER_NAME, REPLY_USER_HEAD_URL, CREATE_TIME, UPDATE_TIME
     </sql>
     <insert id="add" parameterType="com.yn.cfer.comment.model.Comment" useGeneratedKeys="true" keyProperty="id">
-    	INSERT INTO T_CY_COMMENT (<include refid="base_col_without_id"></include>) VALUES(#{dynamicsId}, #{memberId}, #{memberName}, #{memberHeadUrl}, #{content}, #{type}, #{replyMemberId}, #{replyMemberName}, #{replyMemberHeadUrl}, #{createTime}, #{updateTime})
+    	INSERT INTO T_CY_COMMENT (<include refid="base_col_without_id"></include>) VALUES(#{dynamicsId}, #{userId}, #{userName}, #{userHeadUrl}, #{content}, #{type}, #{replyUserId}, #{replyUserName}, #{replyUserHeadUrl}, #{createTime}, #{updateTime})
     </insert>
     <select id="findDefault" resultMap="BaseResultMap">
     	SELECT <include refid="base_col"></include> FROM T_CY_COMMENT WHERE DYNAMICS_ID = #{dynamicsId} ORDER BY CREATE_TIME DESC limit #{count};

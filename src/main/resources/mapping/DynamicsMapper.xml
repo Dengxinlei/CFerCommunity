@@ -3,7 +3,7 @@
 <mapper namespace="com.yn.cfer.community.dao.DynamicsDao">
     <resultMap id="BaseResultMap" type="com.yn.cfer.community.model.Dynamics">
         <id column="ID" property="id" jdbcType="INTEGER"/>
-        <result column="MEMBER_ID" property="memberId" jdbcType="INTEGER"/>
+        <result column="USER_ID" property="userId" jdbcType="INTEGER"/>
         <result column="OWNER" property="owner" jdbcType="VARCHAR"/>
         <result column="HEAD_URL" property="headUrl" jdbcType="VARCHAR"/>
         <result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
@@ -26,17 +26,17 @@
         </collection>
     </resultMap>
     <sql id="base_col" >
-    	ID, MEMBER_ID, OWNER, HEAD_URL, DESCRIPTION, LOCATION, STATUS, PRAISED_COUNT, COMMENT_COUNT, REPORT_COUNT, CREATE_TIME, UPDATE_TIME, PHONE
+    	ID, USER_ID, OWNER, HEAD_URL, DESCRIPTION, LOCATION, STATUS, PRAISED_COUNT, COMMENT_COUNT, REPORT_COUNT, CREATE_TIME, UPDATE_TIME, PHONE
     </sql>
     <sql id="base_col_without_id" >
-    	MEMBER_ID, OWNER, HEAD_URL, DESCRIPTION, LOCATION, STATUS, PRAISED_COUNT, COMMENT_COUNT, REPORT_COUNT, CREATE_TIME, UPDATE_TIME, PHONE
+    	USER_ID, OWNER, HEAD_URL, DESCRIPTION, LOCATION, STATUS, PRAISED_COUNT, COMMENT_COUNT, REPORT_COUNT, CREATE_TIME, UPDATE_TIME, PHONE
     </sql>
     <sql id="material_col_without_id" >
     	DYNAMICS_ID, URL, TYPE, CONTENT, CREATE_TIME, UPDATE_TIME
     </sql>
     <insert id="add" parameterType="com.yn.cfer.community.model.Dynamics" useGeneratedKeys="true" keyProperty="id">
     	INSERT INTO T_CY_DYNAMICS (<include refid="base_col_without_id"></include>)
-    	VALUES (#{memberId}, #{owner}, #{headUrl}, #{description}, #{location}, #{status},
+    	VALUES (#{userId}, #{owner}, #{headUrl}, #{description}, #{location}, #{status},
     	 #{praisedCount}, #{commentCount}, #{reportCount}, #{createTime}, #{updateTime}, #{phone})
     </insert>
     <select id="findDefault" resultMap="BaseResultMap">
@@ -84,25 +84,25 @@
     <select id="findLikeByNameHistory" resultMap="BaseResultMap">
     	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE (OWNER LIKE CONCAT('%', #{owner},'%')  OR PHONE LIKE CONCAT('%', #{owner},'%')) AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count}; 
     </select>
-    <select id = "findAttentedMemberDynamicsListDefault" resultMap="BaseResultMap">
-    	SELECT ID FROM T_CY_DYNAMICS WHERE MEMBER_ID IN (SELECT ATTENTION_MEMBER_ID FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2) ORDER BY CREATE_TIME DESC LIMIT #{count} 
+    <select id = "findAttentedUserDynamicsListDefault" resultMap="BaseResultMap">
+    	SELECT ID FROM T_CY_DYNAMICS WHERE USER_ID IN (SELECT ATTENTION_USER_ID FROM T_USER_ATTENTION WHERE USER_ID = #{userId} AND STATUS != 2) ORDER BY CREATE_TIME DESC LIMIT #{count} 
     </select>
-    <select id = "findAttentedMemberDynamicsListLatest" resultMap="BaseResultMap">
-    	SELECT ID FROM T_CY_DYNAMICS WHERE MEMBER_ID IN (SELECT ATTENTION_MEMBER_ID FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2) AND ID &gt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count} 
+    <select id = "findAttentedUserDynamicsListLatest" resultMap="BaseResultMap">
+    	SELECT ID FROM T_CY_DYNAMICS WHERE USER_ID IN (SELECT ATTENTION_USER_ID FROM T_USER_ATTENTION WHERE USER_ID = #{userId} AND STATUS != 2) AND ID &gt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count} 
     </select>
-    <select id = "findAttentedMemberDynamicsListHistory" resultMap="BaseResultMap">
-    	SELECT ID FROM T_CY_DYNAMICS WHERE MEMBER_ID IN (SELECT ATTENTION_MEMBER_ID FROM T_MEMBER_ATTENTION WHERE MEMBER_ID = #{memberId} AND STATUS != 2) AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count} 
+    <select id = "findAttentedUserDynamicsListHistory" resultMap="BaseResultMap">
+    	SELECT ID FROM T_CY_DYNAMICS WHERE USER_ID IN (SELECT ATTENTION_USER_ID FROM T_USER_ATTENTION WHERE USER_ID = #{userId} AND STATUS != 2) AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count} 
     </select>
-    <select id="findByMemberIdDefault" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE MEMBER_ID = #{memberId} ORDER BY CREATE_TIME DESC LIMIT #{count}; 
+    <select id="findByUserIdDefault" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE USER_ID = #{userId} ORDER BY CREATE_TIME DESC LIMIT #{count}; 
     </select>
-    <select id="findByMemberIdHistory" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE MEMBER_ID = #{memberId} AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count}; 
+    <select id="findByUserIdHistory" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE USER_ID = #{userId} AND ID &lt; #{lastId} ORDER BY CREATE_TIME DESC LIMIT #{count}; 
     </select>
-    <select id="countByMemberId" resultType="java.lang.Integer">
-    	SELECT count(ID) FROM T_CY_DYNAMICS WHERE MEMBER_ID = #{memberId}
+    <select id="countByUserId" resultType="java.lang.Integer">
+    	SELECT count(ID) FROM T_CY_DYNAMICS WHERE USER_ID = #{userId}
     </select>
     <select id="findTop10" resultMap="BaseResultMap">
-    	SELECT ID, MEMBER_ID, OWNER, HEAD_URL from T_CY_DYNAMICS WHERE MEMBER_ID != #{memberId} GROUP BY MEMBER_ID ORDER BY COUNT(ID) DESC LIMIT 10;
+    	SELECT ID, USER_ID, OWNER, HEAD_URL from T_CY_DYNAMICS WHERE USER_ID != #{userId} GROUP BY USER_ID ORDER BY COUNT(ID) DESC LIMIT 10;
     </select>
 </mapper>

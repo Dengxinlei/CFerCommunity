@@ -19,7 +19,7 @@
     <sql id="base_col_without_id" >
     	USER_ID,USER_NAME, USER_HEAD_URL, ATTENTION_USER_ID, ATTENTION_USER_NAME, ATTENTION_USER_HEAD_URL,  STATUS, CREATE_TIME, UPDATE_TIME
     </sql>
-    <insert id="add" parameterType="com.yn.cfer.community.model.MemberAttention">
+    <insert id="add" parameterType="com.yn.cfer.community.model.UserAttention">
     	INSERT INTO T_USER_ATTENTION (<include refid="base_col_without_id"></include>)
     	VALUES (#{userId}, #{userName}, #{userHeadUrl},#{attentionUserId}, #{attentionUserName}, #{attentionUserHeadUrl},#{status},#{createTime},#{updateTime})
     </insert>
@@ -32,7 +32,7 @@
     <select id="find" resultMap="BaseResultMap">
     	SELECT <include refid="base_col"></include> FROM T_USER_ATTENTION WHERE USER_ID = #{userId} AND ATTENTION_USER_ID = #{attentionUserId}
     </select>
-    <update id="updateById" parameterType="com.yn.cfer.community.model.MemberAttention">
+    <update id="updateById" parameterType="com.yn.cfer.community.model.UserAttention">
     	UPDATE T_USER_ATTENTION
     	<trim prefix="SET" suffixOverrides=",">
     		<if test="status != null">
@@ -63,12 +63,12 @@
     	SELECT <include refid="base_col"></include> FROM T_USER_ATTENTION WHERE USER_ID = #{userId} AND STATUS != 2 AND ID &lt; #{lastId} AND ATTENTION_USER_ID != #{userId} ORDER BY CREATE_TIME DESC LIMIT #{count}
     </select>
     <select id="countFansByAttentionUserId" resultType="java.lang.Integer">
-    	SELECT count(ID) FROM T_USER_ATTENTION WHERE ATTENTION_USER_ID = #{userId} AND MEMBER_ID != #{userId} AND STATUS != 2
+    	SELECT COUNT(ID) FROM T_USER_ATTENTION WHERE ATTENTION_USER_ID = #{userId} AND USER_ID != #{userId} AND STATUS != 2
     </select>
     <select id="countAttentedByUserId" resultType="java.lang.Integer">
-    	SELECT count(ID) FROM T_USER_ATTENTION WHERE USER_ID = #{userId} AND ATTENTION_USER_ID != #{userId} AND STATUS != 2
+    	SELECT COUNT(ID) FROM T_USER_ATTENTION WHERE USER_ID = #{userId} AND ATTENTION_USER_ID != #{userId} AND STATUS != 2
     </select>
     <select id="findFansTop10" resultMap="BaseResultMap">
-    	SELECT ID,ATTENTION_MEMBER_ID, ATTENTION_MEMBER_NAME, ATTENTION_MEMBER_HEAD_URL FROM T_USER_ATTENTION WHERE USER_ID != ATTENTION_USER_ID AND ATTENTION_USER_ID != #{userId}  GROUP BY ATTENTION_USER_ID ORDER BY COUNT(ID) DESC LIMIT 10;
+    	SELECT ID,ATTENTION_USER_ID, ATTENTION_MEMBER_NAME, ATTENTION_MEMBER_HEAD_URL FROM T_USER_ATTENTION WHERE USER_ID != ATTENTION_USER_ID AND ATTENTION_USER_ID != #{userId}  GROUP BY ATTENTION_USER_ID ORDER BY COUNT(ID) DESC LIMIT 10;
     </select>
 </mapper>

@@ -31,49 +31,6 @@ public class Comment {
 	public void setDynamicsId(Integer dynamicsId) {
 		this.dynamicsId = dynamicsId;
 	}
-	
-	public String getContent() {
-		return content;
-	}
-	public void setContent(String content) {
-		this.content = content;
-	}
-	public Integer getType() {
-		return type;
-	}
-	public void setType(Integer type) {
-		this.type = type;
-	}
-	public Date getCreateTime() {
-		return createTime;
-	}
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-	public Integer getuserId() {
-		return userId;
-	}
-	public void setuserId(Integer userId) {
-		this.userId = userId;
-	}
-	public String getuserName() {
-		return userName;
-	}
-	public void setuserName(String userName) {
-		this.userName = userName;
-	}
-	public String getuserHeadUrl() {
-		return userHeadUrl;
-	}
-	public void setuserHeadUrl(String userHeadUrl) {
-		this.userHeadUrl = userHeadUrl;
-	}
 	public Integer getUserId() {
 		return userId;
 	}
@@ -92,6 +49,18 @@ public class Comment {
 	public void setUserHeadUrl(String userHeadUrl) {
 		this.userHeadUrl = userHeadUrl;
 	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public Integer getType() {
+		return type;
+	}
+	public void setType(Integer type) {
+		this.type = type;
+	}
 	public Integer getReplyUserId() {
 		return replyUserId;
 	}
@@ -109,5 +78,17 @@ public class Comment {
 	}
 	public void setReplyUserHeadUrl(String replyUserHeadUrl) {
 		this.replyUserHeadUrl = replyUserHeadUrl;
+	}
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
 	}
 }

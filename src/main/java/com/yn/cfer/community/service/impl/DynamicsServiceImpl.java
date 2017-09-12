@@ -529,6 +529,8 @@ public class DynamicsServiceImpl implements DynamicsService {
 			detail.setMobile(m.getPhone());
 			detail.setBirthday(m.getBirthday());
 			detail.setSex(m.getSex());
+		} else {
+			throw new BusinessException(ErrorCode.ERROR_CODE_USER_TYPE_ERROR, "非法用户类型");
 		}
 		return detail;
 	}

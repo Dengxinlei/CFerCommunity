@@ -516,6 +516,8 @@ public class DynamicsServiceImpl implements DynamicsService {
 			detail.setHeadUrl(c.getAvatar());
 			detail.setName(c.getName());
 			detail.setMobile(c.getPhone());
+			detail.setBirthday(c.getBirthday());
+			detail.setSex(c.getSex());
 		} else if(u.getUserType() == 4) {
 			Member m = memberDao.findById(u.getRelatedId());
 			if(m == null) {
@@ -525,6 +527,8 @@ public class DynamicsServiceImpl implements DynamicsService {
 			detail.setHeadUrl(m.getAvatar());
 			detail.setName(m.getName());
 			detail.setMobile(m.getPhone());
+			detail.setBirthday(m.getBirthday());
+			detail.setSex(m.getSex());
 		}
 		return detail;
 	}

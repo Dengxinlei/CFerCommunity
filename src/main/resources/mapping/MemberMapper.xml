@@ -12,6 +12,7 @@
         <result column="MEMBER_REMAIN_NUM" property="memberRemainNum" jdbcType="INTEGER"/>
         <result column="MEMBER_TYPE" property="memberType" jdbcType="INTEGER"/>
         <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="NICK_NAME" property="nickName" jdbcType="VARCHAR"/>
         <result column="PHONE" property="phone" jdbcType="VARCHAR"/>
         <result column="PIN_CODE" property="pinCode" jdbcType="VARCHAR"/>
         <result column="SEX" property="sex" jdbcType="INTEGER"/>
@@ -20,10 +21,10 @@
         <result column="BIRTHDAY" property="birthday" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="base_col" >
-    	ID, AVATAR, BOX_ID, HEIGHT, MEMBER_DAYS, MEMBER_START_TIME, MEMBER_END_TIME, MEMBER_REMAIN_NUM, MEMBER_TYPE,NAME,PHONE,PIN_CODE,SEX,STATUS,WEIGHT,BIRTHDAY       
+    	ID, AVATAR, BOX_ID, HEIGHT, MEMBER_DAYS, MEMBER_START_TIME, MEMBER_END_TIME, MEMBER_REMAIN_NUM, MEMBER_TYPE,NAME,NICK_NAME,PHONE,PIN_CODE,SEX,STATUS,WEIGHT,BIRTHDAY       
     </sql>
     <sql id="base_col_without_id" >
-    	AVATAR, BOX_ID, HEIGHT, MEMBER_DAYS, MEMBER_START_TIME, MEMBER_END_TIME, MEMBER_REMAIN_NUM, MEMBER_TYPE,NAME,PHONE,PIN_CODE,SEX,STATUS,WEIGHT,BIRTHDAY
+    	AVATAR, BOX_ID, HEIGHT, MEMBER_DAYS, MEMBER_START_TIME, MEMBER_END_TIME, MEMBER_REMAIN_NUM, MEMBER_TYPE,NAME,NICK_NAME,PHONE,PIN_CODE,SEX,STATUS,WEIGHT,BIRTHDAY
     </sql>
     <select id="findById" resultMap="BaseResultMap">
     	SELECT <include refid="base_col"></include> FROM T_MEMBER WHERE ID = #{id};
@@ -32,6 +33,6 @@
     	SELECT <include refid="base_col"></include> FROM T_MEMBER WHERE ID != #{id} ORDER BY ID LIMIT 10;
     </select>
     <select id="findByLikeName" resultMap="BaseResultMap">
-    	SELECT <include refid="base_col"></include> FROM T_MEMBER WHERE (`NAME` LIKE CONCAT('%', #{name},'%') OR PHONE LIKE CONCAT('%', #{name},'%')) AND ID != #{id} limit 20;
+    	SELECT <include refid="base_col"></include> FROM T_MEMBER WHERE (`NICK_NAME` LIKE CONCAT('%', #{name},'%') OR PHONE LIKE CONCAT('%', #{name},'%')) AND ID != #{id} limit 20;
     </select>
 </mapper>

@@ -106,4 +106,11 @@ public interface DynamicsService {
 	
 	public Token findTokenByTokenKey(String token);
 	public User findUserById(Integer userId);
+	/**
+	 * 更新用户昵称
+	 * @param userId
+	 * @return
+	 * @throws BusinessException
+	 */
+	public boolean updateUserNames(Integer userId) throws BusinessException;
 }

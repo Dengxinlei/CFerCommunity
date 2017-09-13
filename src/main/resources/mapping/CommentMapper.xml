@@ -33,4 +33,22 @@
     <select id="findLatest" resultMap="BaseResultMap">
     	SELECT <include refid="base_col"></include> FROM T_CY_COMMENT WHERE DYNAMICS_ID = #{dynamicsId} AND ID &gt; #{lastId} ORDER BY CREATE_TIME DESC limit #{count};
     </select>
+    <update id="updateByUserId" parameterType="com.yn.cfer.comment.model.Comment">
+    	UPDATE T_CY_COMMENT
+    	<trim prefix="SET" suffixOverrides=",">
+    		<if test="userName != null">USER_NAME = #{userName},</if>
+    		<if test="userHeadUrl != null">USER_HEAD_URL = #{userHeadUrl},</if>
+    		UPDATE_TIME = NOW()
+    	</trim>
+    	 WHERE USER_ID = #{userId}
+    </update>
+    <update id="updateByReplyUserId" parameterType="com.yn.cfer.comment.model.Comment">
+    	UPDATE T_CY_COMMENT
+    	<trim prefix="SET" suffixOverrides=",">
+    		<if test="replyUserName != null">REPLY_USER_NAME = #{replyUserName},</if>
+    		<if test="replyUserHeadUrl != null">REPLY_USER_HEAD_URL = #{replyUserHeadUrl},</if>
+    		UPDATE_TIME = NOW()
+    	</trim>
+    	 WHERE REPLY_USER_ID = #{replyUserId}
+    </update>
 </mapper>

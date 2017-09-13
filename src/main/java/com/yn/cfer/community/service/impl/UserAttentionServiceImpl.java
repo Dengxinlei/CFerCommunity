@@ -65,9 +65,9 @@ public class UserAttentionServiceImpl implements UserAttentionService {
 				UserAttention ma = new UserAttention();
 				ma.setAttentionUserId(attentionUserId);
 				ma.setUserId(userId);
-				ma.setUserName(ud1.getName());
+				ma.setUserName(ud1.getNickName());
 				ma.setUserHeadUrl(ud1.getHeadUrl());
-				ma.setAttentionUserName(ud2.getName());
+				ma.setAttentionUserName(ud2.getNickName());
 				ma.setAttentionUserHeadUrl(ud2.getHeadUrl());
 				ma.setCreateTime(now);
 				if(dbUa2 != null) {

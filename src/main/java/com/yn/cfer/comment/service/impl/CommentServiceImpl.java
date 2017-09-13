@@ -94,7 +94,7 @@ public class CommentServiceImpl implements CommentService {
 		create.setContent(content);
 		create.setDynamicsId(dynamicsId);
 		create.setUserHeadUrl(ud.getHeadUrl());
-		create.setUserName(ud.getName());
+		create.setUserName(ud.getNickName());
 		create.setUserId(userId);
 		create.setType(Comment.TYPE_DYNAMICS);
 		if(replyUserId != null && replyUserId.intValue() != -1) {
@@ -105,7 +105,7 @@ public class CommentServiceImpl implements CommentService {
 			UserDetail ud2 = dynamicsService.getUserDetailById(replyUserId);
 			create.setReplyUserHeadUrl(ud2.getHeadUrl());
 			create.setReplyUserId(replyUserId);
-			create.setReplyUserName(ud2.getName());
+			create.setReplyUserName(ud2.getNickName());
 		}
 		commentDao.add(create);
 		create.setCreateTime(new Date());

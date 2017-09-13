@@ -78,6 +78,15 @@
     	</trim>
     	 WHERE ID = #{dynamicsId}
     </update>
+    <update id="updateByUserId" parameterType="com.yn.cfer.community.model.Dynamics">
+    	UPDATE T_CY_DYNAMICS 
+    	<trim prefix="SET" suffixOverrides=",">
+    		<if test="owner != null">OWNER = #{owner},</if>
+    		<if test="headUrl != null">HEAD_URL = #{headUrl},</if>
+    		UPDATE_TIME = NOW()
+    	</trim>
+    	 WHERE USER_ID = #{userId}
+    </update>
     <select id="findLikeByNameDefault" resultMap="BaseResultMap">
     	SELECT <include refid="base_col"></include> FROM T_CY_DYNAMICS WHERE OWNER LIKE CONCAT('%', #{owner},'%') OR PHONE LIKE CONCAT('%', #{owner},'%') ORDER BY CREATE_TIME DESC LIMIT #{count}; 
     </select>

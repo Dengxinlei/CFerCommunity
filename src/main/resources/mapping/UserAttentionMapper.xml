@@ -42,6 +42,32 @@
     	</trim>
     	WHERE ID = #{id}
     </update>
+    <update id="updateByUserId" parameterType="com.yn.cfer.community.model.UserAttention">
+    	UPDATE T_USER_ATTENTION
+    	<trim prefix="SET" suffixOverrides=",">
+    		<if test="userName != null">
+    			USER_NAME = #{userName},
+    		</if>
+    		<if test="userHeadUrl != null">
+    			USER_HEAD_URL = #{userHeadUrl},
+    		</if>
+    		UPDATE_TIME = NOW()
+    	</trim>
+    	WHERE USER_ID = #{userId}
+    </update>
+    <update id="updateByAttentionUserId" parameterType="com.yn.cfer.community.model.UserAttention">
+    	UPDATE T_USER_ATTENTION
+    	<trim prefix="SET" suffixOverrides=",">
+    		<if test="attentionUserName != null">
+    			ATTENTION_USER_NAME = #{attentionUserName},
+    		</if>
+    		<if test="attentionUserHeadUrl != null">
+    			ATTENTION_USER_HEAD_URL = #{attentionUserHeadUrl},
+    		</if>
+    		UPDATE_TIME = NOW()
+    	</trim>
+    	WHERE ATTENTION_USER_ID = #{attentionUserId}
+    </update>
     
     <select id="findFansListDefault" resultMap="BaseResultMap">
     	SELECT <include refid="base_col"></include> FROM T_USER_ATTENTION WHERE ATTENTION_USER_ID = #{userId} AND STATUS != 2 AND USER_ID != #{userId} ORDER BY CREATE_TIME DESC limit #{count}

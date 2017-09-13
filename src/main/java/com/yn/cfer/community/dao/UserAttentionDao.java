@@ -32,6 +32,8 @@ public interface UserAttentionDao {
 	public UserAttention find(@Param("userId") Integer userId, @Param("attentionUserId") Integer attentionUserId);
 	
 	public int updateById(UserAttention userAttention);
+	public int updateByUserId(UserAttention userAttention);
+	public int updateByAttentionUserId(UserAttention userAttention);
 	public int countFansByAttentionUserId(Integer userId);
 	public int countAttentedByUserId(Integer userId);
 	public List<UserAttention> findFansTop10(Integer userId);

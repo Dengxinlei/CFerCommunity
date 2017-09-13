@@ -8,6 +8,7 @@
         <result column="IS_DELETED" property="isDeleted" jdbcType="INTEGER"/>
         <result column="LEVEL" property="level" jdbcType="INTEGER"/>
         <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="NICK_NAME" property="nickName" jdbcType="VARCHAR"/>
         <result column="PHONE" property="phone" jdbcType="VARCHAR"/>
         <result column="AVATAR" property="avatar" jdbcType="VARCHAR"/>
         <result column="BIRTHDAY" property="birthday" jdbcType="TIMESTAMP"/>
@@ -16,10 +17,10 @@
         <result column="WEIGHT" property="weight" jdbcType="DOUBLE"/>
     </resultMap>
     <sql id="base_col" >
-    	ID, BOX_ID, CREATE_TIME, IS_DELETED, LEVEL, NAME, PHONE, AVATAR, BIRTHDAY, HEIGHT, SEX, WEIGHT       
+    	ID, BOX_ID, CREATE_TIME, IS_DELETED, LEVEL, NAME, NICK_NAME, PHONE, AVATAR, BIRTHDAY, HEIGHT, SEX, WEIGHT       
     </sql>
     <sql id="base_col_without_id" >
-    	BOX_ID, CREATE_TIME, IS_DELETED, LEVEL, NAME, PHONE, AVATAR, BIRTHDAY, HEIGHT, SEX, WEIGHT
+    	BOX_ID, CREATE_TIME, IS_DELETED, LEVEL, NAME, NICK_NAME, PHONE, AVATAR, BIRTHDAY, HEIGHT, SEX, WEIGHT
     </sql>
     <select id="findById" resultMap="BaseResultMap">
     	SELECT <include refid="base_col"></include> FROM T_COACH WHERE ID = #{id};

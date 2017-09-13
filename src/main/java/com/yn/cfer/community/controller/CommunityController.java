@@ -304,4 +304,25 @@ public class CommunityController {
 		responseMessage.setData(RequestExecuteTimesFilter.memberIdCache);
     	return responseMessage;
     }
+	
+	@RequestMapping(value = "updateUserNames", method= RequestMethod.POST)
+    @ResponseBody
+    public ResponseMessage updateUserNames(@RequestBody CommunityRequest message) {
+    	ResponseMessage responseMessage = new ResponseMessage();
+		Integer userId = RequestExecuteTimesFilter.getCurrentUserId(message.getToken());
+		try {
+			if(dynamicsService.updateUserNames(userId)) {
+				responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+			} else {
+				responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
+			}
+		} catch (BusinessException be) {
+			responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
+			be.printStackTrace();
+		} catch(Exception e){
+			responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
+			e.printStackTrace();
+		}
+    	return responseMessage;
+    }
 }

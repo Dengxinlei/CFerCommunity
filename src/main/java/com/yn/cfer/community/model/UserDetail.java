@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class UserDetail {
 	private String name;
+	private String nickName;
 	private String headUrl;
 	private String mobile;
 	private Integer sex;
@@ -37,5 +38,11 @@ public class UserDetail {
 	}
 	public void setBirthday(Date birthday) {
 		this.birthday = birthday;
+	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 }

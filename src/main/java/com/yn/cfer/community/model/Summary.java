@@ -13,6 +13,8 @@ public class Summary {
 	private Integer userId;
 	@SerializedName("user_name")
 	private String userName;
+	@SerializedName("real_name")
+	private String realName;
 	@SerializedName("user_head_url")
 	private String userHeadUrl;
 	private Integer age;
@@ -85,5 +87,11 @@ public class Summary {
 	}
 	public void setIsAttented(Integer isAttented) {
 		this.isAttented = isAttented;
+	}
+	public String getRealName() {
+		return realName;
+	}
+	public void setRealName(String realName) {
+		this.realName = realName;
 	}
 }

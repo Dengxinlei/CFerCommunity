@@ -38,6 +38,7 @@ public interface DynamicsDao {
 	public List<Dynamics> findByUserIdDefault(@Param("userId") Integer userId, @Param("count") Integer count);
 	public List<Dynamics> findByUserIdHistory(@Param("userId") Integer userId, @Param("lastId") Integer lastId, @Param("count") Integer count);
 	public int updateActionCount(Map<String, Object> map);
+	public int updateByUserId(Dynamics dynamics);
 	public List<Dynamics> findLikeByNameDefault(@Param("owner") String owner, @Param("count") Integer count);
 	public List<Dynamics> findLikeByNameHistory(@Param("owner") String owner,@Param("lastId") Integer lastId, @Param("count") Integer count);
 	public List<Dynamics> findAttentedUserDynamicsListDefault(@Param("userId") Integer userId, @Param("count") Integer count);

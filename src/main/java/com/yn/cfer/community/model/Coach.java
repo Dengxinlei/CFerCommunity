@@ -13,12 +13,19 @@ public class Coach {
 	private Integer isDeleted;
 	private String level;
 	private String name;
+	private String nickName;
 	private String phone;
 	private String avatar;
 	private Date birthday;
 	private Integer height;
 	private Integer sex;
 	private double weight;
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
 	public Integer getId() {
 		return id;
 	}

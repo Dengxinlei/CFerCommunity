@@ -16,6 +16,7 @@ public class Member {
 	private Integer memberRemainNum;
 	private Integer memberType;
 	private String name;
+	private String nickName;
 	private String phone;
 	private String pinCode;
 	/**
@@ -25,6 +26,12 @@ public class Member {
 	private Integer status;
 	private Integer weight;
 	private Date birthday;
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
 	public Integer getId() {
 		return Id;
 	}

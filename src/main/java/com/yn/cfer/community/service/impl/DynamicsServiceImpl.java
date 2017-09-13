@@ -130,18 +130,13 @@ public class DynamicsServiceImpl implements DynamicsService {
 	}
 	@Transactional
 	public DynamicsForClient publish(Integer userId, String description, List<String> picUrls)  throws BusinessException {
-		// 根据UserId查询用户
-		User user = userDao.findById(userId);
-		if(user == null) {
-			throw new BusinessException(ErrorCode.ERROR_CODE_USER_IS_NOT_EXISTS, "用户不存在");
-		}
 		UserDetail ud = getUserDetailById(userId);
 		Dynamics dy = new Dynamics();
 		dy.setDescription(description);
 		dy.setHeadUrl(ud.getHeadUrl());
 		dy.setStatus(Dynamics.STATUS_NORMAL);
 		dy.setUserId(userId);
-		dy.setOwner(ud.getName());
+		dy.setOwner(ud.getNickName());
 		dy.setCreateTime(new Date());
 		dy.setPhone(ud.getMobile());
 		dynamicsDao.add(dy);
@@ -378,16 +373,13 @@ public class DynamicsServiceImpl implements DynamicsService {
         return age;  
     }  
 	public Summary getUserSummary(Integer userId, Integer attentionUserId) throws BusinessException{
-		User user = userDao.findById(attentionUserId);
-		if(user == null) {
-			return null;
-		}
 		UserDetail ud = getUserDetailById(attentionUserId);
 		Summary sy = new Summary();
 		sy.setGendar(ud.getSex());
 		sy.setAge(getAge(ud.getBirthday()));
 		sy.setUserId(attentionUserId);
-		sy.setUserName(ud.getName());
+		sy.setUserName(ud.getNickName());
+		sy.setRealName(ud.getName());
 		sy.setUserHeadUrl(ud.getHeadUrl());
 		sy.setDynamicsCount(dynamicsDao.countByUserId(attentionUserId));
 		sy.setFansCount(userAttentionDao.countFansByAttentionUserId(attentionUserId));
@@ -518,6 +510,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 			detail.setMobile(c.getPhone());
 			detail.setBirthday(c.getBirthday());
 			detail.setSex(c.getSex());
+			detail.setNickName(c.getNickName());
 		} else if(u.getUserType() == 4) {
 			Member m = memberDao.findById(u.getRelatedId());
 			if(m == null) {
@@ -529,9 +522,48 @@ public class DynamicsServiceImpl implements DynamicsService {
 			detail.setMobile(m.getPhone());
 			detail.setBirthday(m.getBirthday());
 			detail.setSex(m.getSex());
+			detail.setNickName(m.getNickName());
 		} else {
 			throw new BusinessException(ErrorCode.ERROR_CODE_USER_TYPE_ERROR, "非法用户类型");
 		}
 		return detail;
+	}
+	@Transactional
+	public boolean updateUserNames(Integer userId) throws BusinessException {
+		UserDetail ud = getUserDetailById(userId);
+		updateDynamicsUserName(userId, ud);
+		updateCommentUserName(userId, ud);
+		updateUAUserName(userId, ud);
+		return true;
+	}
+	private int updateDynamicsUserName(Integer userId, UserDetail ud) {
+		Dynamics dynamics = new Dynamics();
+		dynamics.setUserId(userId);
+		dynamics.setOwner(ud.getNickName());
+		dynamics.setHeadUrl(ud.getHeadUrl());
+		return dynamicsDao.updateByUserId(dynamics);
+	}
+	private int updateCommentUserName(Integer userId, UserDetail ud) {
+		Comment comment = new Comment();
+		comment.setUserId(userId);
+		comment.setUserName(ud.getNickName());
+		comment.setUserHeadUrl(ud.getHeadUrl());
+		comment.setReplyUserId(userId);
+		comment.setReplyUserName(ud.getNickName());
+		comment.setReplyUserHeadUrl(ud.getHeadUrl());
+		commentDao.updateByReplyUserId(comment);
+		return commentDao.updateByUserId(comment);
+	}
+	// 更新用户关注-用户名
+	private int updateUAUserName(Integer userId, UserDetail ud) {
+		UserAttention ua = new UserAttention();
+		ua.setUserId(userId);
+		ua.setUserName(ud.getNickName());
+		ua.setUserHeadUrl(ud.getHeadUrl());
+		ua.setAttentionUserHeadUrl(ud.getHeadUrl());
+		ua.setAttentionUserId(userId);
+		ua.setAttentionUserName(ud.getNickName());
+		userAttentionDao.updateByUserId(ua);
+		return userAttentionDao.updateByAttentionUserId(ua);
 	}
 }

@@ -385,7 +385,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 		sy.setFansCount(userAttentionDao.countFansByAttentionUserId(attentionUserId));
 		sy.setAttentedCount(userAttentionDao.countAttentedByUserId(attentionUserId));
 		UserAttention ma = userAttentionDao.find(userId, attentionUserId);
-		if(ma != null) {
+		if(ma != null && ma.getStatus().intValue() != 2) {
 			sy.setIsAttented(1);
 		}
 		return sy;

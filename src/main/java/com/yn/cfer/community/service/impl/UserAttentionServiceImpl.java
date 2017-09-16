@@ -46,15 +46,24 @@ public class UserAttentionServiceImpl implements UserAttentionService {
 			updateUa.setId(dbUa.getId());
 			updateUa.setStatus(UserAttention.STATUS_CANCEL);
 			userAttentionDao.updateById(updateUa);
+			UserAttention dbUa2 = userAttentionDao.find(attentionUserId, userId);
+			if(dbUa2 != null && dbUa2.getStatus().intValue() == UserAttention.STATUS_EACH_OTHER) {
+				updateUa = new UserAttention();
+				updateUa.setId(dbUa2.getId());
+				updateUa.setStatus(UserAttention.STATUS_ONLY_ONE);
+				userAttentionDao.updateById(updateUa);
+			}
 		} else {
 			if(dbUa != null && dbUa.getStatus().intValue() != UserAttention.STATUS_CANCEL) {
 				throw new BusinessException(ErrorCode.ERROR_CODE_FAILURE, "已添加关注");
 			} 
 			Date now = new Date();
 			UserAttention dbUa2 = userAttentionDao.find(attentionUserId, userId);
-			if(dbUa != null && dbUa.getStatus().intValue() == 2) {
-				if(dbUa2 != null) {
+			if(dbUa != null && dbUa.getStatus().intValue() == UserAttention.STATUS_CANCEL) {
+				if(dbUa2 != null && dbUa2.getStatus().intValue() == UserAttention.STATUS_ONLY_ONE) {
 					dbUa.setStatus(UserAttention.STATUS_EACH_OTHER);
+					dbUa2.setStatus(UserAttention.STATUS_EACH_OTHER);
+					userAttentionDao.updateById(dbUa2);
 				} else {
 					dbUa.setStatus(UserAttention.STATUS_ONLY_ONE);
 				}

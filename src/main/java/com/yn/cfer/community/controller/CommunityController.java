@@ -325,4 +325,19 @@ public class CommunityController {
 		}
     	return responseMessage;
     }
+	
+	@RequestMapping(value = "ad_list", method= RequestMethod.POST)
+    @ResponseBody
+    public ResponseMessage<List<JSONObject>> adList(@RequestBody CommunityRequest message) {
+    	ResponseMessage<List<JSONObject>> responseMessage = new ResponseMessage<>();
+		try {
+			responseMessage.setCode(ErrorCode.ERROR_CODE_SUCCESS);
+			responseMessage.setMessage("success");
+			responseMessage.setData(dynamicsService.getAdList());
+		} catch(Exception e){
+			responseMessage.setCode(ErrorCode.ERROR_CODE_FAILURE);
+			e.printStackTrace();
+		}
+    	return responseMessage;
+    }
 }

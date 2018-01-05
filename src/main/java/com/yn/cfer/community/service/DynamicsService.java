@@ -6,6 +6,7 @@ package com.yn.cfer.community.service;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.yn.cfer.community.model.DynamicsForClient;
 import com.yn.cfer.community.model.FansForClient;
 import com.yn.cfer.community.model.Picture;
@@ -113,4 +114,9 @@ public interface DynamicsService {
 	 * @throws BusinessException
 	 */
 	public boolean updateUserNames(Integer userId) throws BusinessException;
+	/**
+	 * 获取广告列表
+	 * @return
+	 */
+	public List<JSONObject> getAdList();
 }

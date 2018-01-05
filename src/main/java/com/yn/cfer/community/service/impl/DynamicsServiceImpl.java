@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.yn.cfer.comment.dao.CommentDao;
 import com.yn.cfer.comment.model.Comment;
 import com.yn.cfer.comment.model.CommentForClient;
@@ -22,6 +23,7 @@ import com.yn.cfer.community.dao.DynamicsActionRecordDao;
 import com.yn.cfer.community.dao.DynamicsDao;
 import com.yn.cfer.community.dao.DynamicsMaterialDao;
 import com.yn.cfer.community.dao.MemberDao;
+import com.yn.cfer.community.dao.PushDao;
 import com.yn.cfer.community.dao.TokenDao;
 import com.yn.cfer.community.dao.UserAttentionDao;
 import com.yn.cfer.community.dao.UserDao;
@@ -33,6 +35,7 @@ import com.yn.cfer.community.model.DynamicsMaterial;
 import com.yn.cfer.community.model.FansForClient;
 import com.yn.cfer.community.model.Member;
 import com.yn.cfer.community.model.Picture;
+import com.yn.cfer.community.model.Push;
 import com.yn.cfer.community.model.Summary;
 import com.yn.cfer.community.model.Token;
 import com.yn.cfer.community.model.User;
@@ -47,6 +50,7 @@ import com.yn.cfer.web.exceptions.BusinessException;
  */
 @Service
 public class DynamicsServiceImpl implements DynamicsService {
+	public static final String PUSH_TARGET_BASE_URL = "http://39.104.58.141:8080/cfer_mgmt/push/target/";
 	@Autowired
 	private DynamicsDao dynamicsDao;
 	@Autowired
@@ -63,6 +67,8 @@ public class DynamicsServiceImpl implements DynamicsService {
 	private CoachDao coachDao;
 	@Autowired
 	private DynamicsActionRecordDao dynamicsActionRecordDao;
+	@Autowired
+	private PushDao pushDao;
 	@Autowired
 	private UserAttentionDao userAttentionDao;
 	public List<DynamicsForClient> getHotList(Integer lastId, Integer orientation, Integer UserId, Integer count) {
@@ -565,5 +571,22 @@ public class DynamicsServiceImpl implements DynamicsService {
 		ua.setAttentionUserName(ud.getNickName());
 		userAttentionDao.updateByUserId(ua);
 		return userAttentionDao.updateByAttentionUserId(ua);
+	}
+	
+	@Override
+	public List<JSONObject> getAdList() {
+		List<Push> pushList = pushDao.findDoing();
+		List<JSONObject> destList = null;
+		JSONObject object = null;
+		if(pushList != null && pushList.size() > 0) {
+			destList = new ArrayList<>();
+			for(Push p : pushList) {
+				object = new JSONObject();
+				object.put("cover_url", p.getCoverUrl());
+				object.put("dest_url", PUSH_TARGET_BASE_URL+p.getId());
+				destList.add(object);
+			}
+		}
+		return destList;
 	}
 }

@@ -55,7 +55,17 @@ public class StsUtil {
 	            "    \"Statement\": [\n" +
 	            "        {\n" +
 	            "            \"Action\": [\"oss:*\"],\n" +
-	            "            \"Resource\": [\"acs:oss:*:*:cfer-social/my-cfer\",\"acs:oss:*:*:cfer-social/my-cfer/*\"],\n" +
+	            "            \"Resource\": [\"acs:oss:*:*:cfer-social/my-cfer\",\n"+
+	            "             \"acs:oss:*:*:cfer-social/my-cfer/*\", \n"+
+	            
+"             \"acs:oss:*:*:cfer-social-test/my-cfer\", \n"+
+"             \"acs:oss:*:*:cfer-social-test/my-cfer/*\", \n"+
+"             \"acs:oss:*:*:cfer-whiteboard/my-cfer\", \n"+
+"             \"acs:oss:*:*:cfer-whiteboard/my-cfer/*\", \n"+
+"             \"acs:oss:*:*:cfer-whiteboard-test/my-cfer\", \n"+
+"             \"acs:oss:*:*:cfer-whiteboard-test/my-cfer/*\" \n"+
+	            
+	            "			],\n" +
 	            "            \"Effect\": \"Allow\"\n" +
 	            "        }\n" +
 	            "    ]\n" +

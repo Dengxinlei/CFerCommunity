@@ -59,7 +59,7 @@ public class RequestExecuteTimesFilter implements Filter {
         request = new MyRequestWrapper(req);
         String requestUri = req.getRequestURI();
         String content = getBody(request.getReader());
-        if(StringUtils.isNotBlank(content)) {
+        if(StringUtils.isNotBlank(content) && !requestUri.contains("sts/info")) {
         	JSONObject obj = JSON.parseObject(content);
         	String token = obj.getString("token");
         	if(StringUtils.isBlank(token)) {
@@ -82,7 +82,7 @@ public class RequestExecuteTimesFilter implements Filter {
         		}
         		// 用户类型为4的认定为会员  3是教练
         		int userType = user.getUserType();
-        		if(userType != 4 && userType != 3) {
+        		if(userType != 4 && userType != 3 && userType != 1) {
         			logger.debug("DB is user type is mistake:[{}] type:[{}]", tk.getUserId(), user.getUserType());
         			response(ErrorCode.ERROR_CODE_USER_TYPE_ERROR, "用户类型不正确", response);
         			return;
@@ -94,6 +94,8 @@ public class RequestExecuteTimesFilter implements Filter {
         			cacheUserInfo.put("coachId", user.getRelatedId());
         		} else if(userType == 4) {
         			cacheUserInfo.put("memberId", user.getRelatedId());
+        		} else if(userType == 1) {
+        			cacheUserInfo.put("bossId", user.getRelatedId());
         		}
         		cacheUserInfo.put("userType", user.getUserType());
         		cacheUserInfo.put("expire", tk.getExpireTime());

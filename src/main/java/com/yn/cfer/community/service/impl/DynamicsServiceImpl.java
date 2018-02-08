@@ -18,6 +18,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.yn.cfer.comment.dao.CommentDao;
 import com.yn.cfer.comment.model.Comment;
 import com.yn.cfer.comment.model.CommentForClient;
+import com.yn.cfer.community.dao.BoxDao;
 import com.yn.cfer.community.dao.CoachDao;
 import com.yn.cfer.community.dao.DynamicsActionRecordDao;
 import com.yn.cfer.community.dao.DynamicsDao;
@@ -27,6 +28,7 @@ import com.yn.cfer.community.dao.PushDao;
 import com.yn.cfer.community.dao.TokenDao;
 import com.yn.cfer.community.dao.UserAttentionDao;
 import com.yn.cfer.community.dao.UserDao;
+import com.yn.cfer.community.model.Box;
 import com.yn.cfer.community.model.Coach;
 import com.yn.cfer.community.model.Dynamics;
 import com.yn.cfer.community.model.DynamicsActionRecord;
@@ -71,6 +73,8 @@ public class DynamicsServiceImpl implements DynamicsService {
 	private PushDao pushDao;
 	@Autowired
 	private UserAttentionDao userAttentionDao;
+	@Autowired
+	private BoxDao boxDao;
 	public List<DynamicsForClient> getHotList(Integer lastId, Integer orientation, Integer UserId, Integer count) {
 		// TODO Auto-generated method stub
 		List<Dynamics> dynamicsList = null;
@@ -529,6 +533,17 @@ public class DynamicsServiceImpl implements DynamicsService {
 			detail.setBirthday(m.getBirthday());
 			detail.setSex(m.getSex());
 			detail.setNickName(m.getNickName());
+		} else if(u.getUserType() == 1) {
+			Box b = boxDao.findByUserId(userId);
+			if(b == null) {
+				throw new BusinessException(ErrorCode.ERROR_CODE_MEMBER_IS_NOT_EXISTS, "场馆不存在");
+			}
+			detail = new UserDetail();
+			detail.setHeadUrl(b.getLogo());
+			detail.setName(b.getName());
+			detail.setMobile(b.getPhone());
+			detail.setBirthday(b.getCreateTime());
+			detail.setNickName(b.getName());
 		} else {
 			throw new BusinessException(ErrorCode.ERROR_CODE_USER_TYPE_ERROR, "非法用户类型");
 		}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yn.cfer.community.dao.BoxDao">
+    <resultMap id="BaseResultMap" type="com.yn.cfer.community.model.Box">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="ADDRESS" property="address" jdbcType="VARCHAR"/>
+        <result column="EMAIL" property="email" jdbcType="VARCHAR"/>
+        <result column="LOGO" property="logo" jdbcType="VARCHAR"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="PHONE" property="phone" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="INTEGER"/>
+        <result column="CONTACT_TEL" property="contactTel" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="USER_ID" property="userId" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="base_col" >
+    	ID, ADDRESS, EMAIL, LOGO, NAME, PHONE, STATUS, CONTACT_TEL, CREATE_TIME, USER_ID       
+    </sql>
+    <sql id="base_col_without_id" >
+    	ADDRESS, EMAIL, LOGO, NAME, PHONE, STATUS, CONTACT_TEL, CREATE_TIME, USER_ID
+    </sql>
+    <select id="findByUserId" resultMap="BaseResultMap">
+    	SELECT <include refid="base_col"></include> FROM T_BOX WHERE USER_ID = #{userId};
+    </select>
+</mapper>
